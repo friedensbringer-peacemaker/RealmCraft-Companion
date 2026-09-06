@@ -246,7 +246,8 @@ struct MainView: View {
             CompanionPageHeader(title: "Savegames") {
                 Button { model.backup() } label: { Label(language == "en" ? "Backup from device" : "Vom Gerät sichern", systemImage: "arrow.down.to.line") }
                     .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.scanning || model.serial.isEmpty || model.world.isEmpty || model.setup.package.isEmpty)
-                Menu {
+            } menu: {
+                Group {
                     Button(language == "en" ? "Import savegame…" : "Spielstand importieren …") { model.importPanel() }
                     if let save = model.selected {
                         Button(language == "en" ? "Restore to Quest…" : "Auf Quest wiederherstellen …") { restoreCandidate = save }
@@ -274,8 +275,7 @@ struct MainView: View {
                     Button(language == "en" ? "Set cloud backup folder…" : "Cloud-Backup-Ordner festlegen …") { model.chooseCloudBackupFolder() }
                     Button(language == "en" ? "Back up library to cloud folder" : "Library in Cloud-Ordner sichern") { model.exportLibraryToCloudFolder() }
                     Button(language == "en" ? "Open library folder" : "Bibliotheksordner öffnen") { NSWorkspace.shared.open(model.library.root) }
-                } label: { Image(systemName: "ellipsis.circle") }.menuStyle(.borderlessButton).fixedSize()
-                    .accessibilityLabel(language == "en" ? "Savegame actions" : "Spielstand-Aktionen")
+                }
             }
             HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {

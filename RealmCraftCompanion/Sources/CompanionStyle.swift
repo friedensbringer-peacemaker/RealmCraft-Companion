@@ -3,6 +3,14 @@ import SwiftUI
 enum CompanionLayout {
     static let pageInset: CGFloat = 28
     static let panelInset: CGFloat = 20
+    static let headerHeight: CGFloat = 64
+    static let actionHeight: CGFloat = 32
+    static let primaryActionWidth: CGFloat = 180
+    static let actionSpacing: CGFloat = 12
+    static let sourceWidth: CGFloat = 440
+    static let searchWidth: CGFloat = 260
+    static let illustratedSidebarWidth: CGFloat = 280
+    static let detailTitle: Font = .system(size: 24, weight: .semibold)
 }
 
 struct CompanionTheme {
@@ -14,10 +22,17 @@ struct CompanionTheme {
     var radius: CGFloat { block ? 3 : 12 }
     static let sidebarWidth: CGFloat = 220
 }
+private struct CompanionHeaderKey: EnvironmentKey {
+    static let defaultValue = false
+}
 private struct CompanionThemeKey: EnvironmentKey {
     static let defaultValue = CompanionTheme()
 }
 extension EnvironmentValues {
+    var companionHeader: Bool {
+        get { self[CompanionHeaderKey.self] }
+        set { self[CompanionHeaderKey.self] = newValue }
+    }
     var companionTheme: CompanionTheme {
         get { self[CompanionThemeKey.self] }
         set { self[CompanionThemeKey.self] = newValue }
@@ -50,11 +65,17 @@ extension View {
 }
 struct CompanionButtonStyle: ButtonStyle {
     var prominent = false
+    var width: CGFloat? = nil
+    @Environment(\.companionHeader) private var inHeader
     @Environment(\.companionTheme) private var theme
     @Environment(\.isEnabled) private var enabled
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(.system(size: 12, weight: .semibold))
-            .padding(.horizontal, 12).padding(.vertical, 7).frame(minHeight: 30)
+            .lineLimit(inHeader ? 1 : nil)
+            .padding(.horizontal, 12)
+            .padding(.vertical, inHeader || width != nil ? 0 : 7)
+            .frame(width: width ?? (inHeader && prominent ? CompanionLayout.primaryActionWidth : nil), height: inHeader || width != nil ? CompanionLayout.actionHeight : nil)
+            .frame(minHeight: CompanionLayout.actionHeight)
             .foregroundStyle(prominent ? Color.black : Color.primary)
             .background(prominent ? theme.accent : Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: theme.radius))
             .overlay(RoundedRectangle(cornerRadius: theme.radius).strokeBorder(prominent ? theme.accent.opacity(0.25) : Color.clear, lineWidth: 1))
@@ -82,12 +103,79 @@ struct BlockEmblem: View {
 
 struct CompanionPageHeader<Actions: View>: View {
     let title: String
-    @ViewBuilder var actions: () -> Actions
+    private let actions: Actions
+    private let menuContent: AnyView?
+    @AppStorage("appLanguage") private var language = "en"
+    @AppStorage("companionSkin") private var skin = "block"
+    @Environment(\.companionSettingsItems) private var settingsItems
+    private var english: Bool { language == "en" }
+
+    init(title: String, @ViewBuilder actions: () -> Actions) {
+        self.title = title
+        self.actions = actions()
+        self.menuContent = nil
+    }
+    init<Items: View>(title: String, @ViewBuilder actions: () -> Actions, @ViewBuilder menu: () -> Items) {
+        self.title = title
+        self.actions = actions()
+        self.menuContent = AnyView(menu())
+    }
     var body: some View {
-        HStack(spacing: 16) {
-            Text(title).font(.system(size: 22, weight: .semibold))
+        HStack(spacing: CompanionLayout.actionSpacing) {
+            Text(title).font(.system(size: 22, weight: .semibold)).lineLimit(1).layoutPriority(1)
             Spacer(minLength: 24)
-            actions()
-        }.padding(.horizontal, CompanionLayout.pageInset).frame(height: 64)
+            actions.environment(\.companionHeader, true)
+            Menu {
+                if let menuContent { menuContent; Divider() }
+                Text("Version \(AppInfo.version)")
+                Link(destination: AppInfo.repositoryURL) { Label(english ? "Project on GitHub" : "Projekt auf GitHub", systemImage: "arrow.up.right.square") }
+                Menu {
+                    if let settingsItems { settingsItems }
+                    else {
+                        Picker(english ? "Appearance" : "Optik", selection: $skin) {
+                            Text(english ? "Block world" : "Blockwelt").tag("block")
+                            Text(english ? "Classic" : "Klassisch").tag("classic")
+                        }
+                        Picker("Language / Sprache", selection: $language) {
+                            Text("Deutsch").tag("de"); Text("English").tag("en")
+                        }
+                    }
+                } label: { Label(english ? "General settings" : "Allgemeine Einstellungen", systemImage: "gearshape") }
+            } label: { Image(systemName: "ellipsis.circle") }
+                .companionOverflow()
+                .accessibilityLabel(english ? "Actions and settings" : "Aktionen und Einstellungen")
+                .accessibilityIdentifier("companion.page.menu")
+        }.padding(.horizontal, CompanionLayout.pageInset).frame(height: CompanionLayout.headerHeight)
+            .frame(maxWidth: .infinity)
+    }
+}
+
+private struct CompanionSettingsItemsKey: EnvironmentKey {
+    static let defaultValue: AnyView? = nil
+}
+extension EnvironmentValues {
+    var companionSettingsItems: AnyView? {
+        get { self[CompanionSettingsItemsKey.self] }
+        set { self[CompanionSettingsItemsKey.self] = newValue }
+    }
+}
+
+// Keep menus the same size as adjacent toolbar controls, including their hit area.
+extension View {
+    func companionOverflow() -> some View {
+        self.menuStyle(.borderlessButton).fixedSize()
+            .frame(width: CompanionLayout.actionHeight, height: CompanionLayout.actionHeight)
+            .contentShape(Rectangle())
+    }
+}
+
+// Short activity messages keep their lane; longer errors can grow without clipping.
+struct CompanionStatusLane<Content: View>: View {
+    @ViewBuilder var content: () -> Content
+    var body: some View {
+        HStack(spacing: 8) { content(); Spacer(minLength: 0) }
+            .font(.caption).foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, minHeight: 20, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }

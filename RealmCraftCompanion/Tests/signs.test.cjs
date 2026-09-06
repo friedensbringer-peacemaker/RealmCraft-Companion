@@ -37,3 +37,14 @@ test('search enables signs and isolates results without altering other layer set
  s.element('sign-search').oninput({target:{value:''}});assert.equal(s.signs.isolate(),false);assert.equal(s.element('search-focus-control').hidden,true);
  s.element('sign-search').oninput({target:{value:'Leiter'}});s.context.window.AtlasPrivacy.enabled=true;s.signs.refresh();assert.equal(s.signs.isolate(),false);assert.equal(s.element('search-focus-control').hidden,true);
 });
+
+test('enabling signs immediately draws text without selection and respects filters',()=>{
+ const s=setup('en'),texts=[];
+ const ctx={fillRect(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},measureText(t){return {width:t.length*7}},fillText(t){texts.push(t)}};
+ const draw=()=>s.signs.draw(ctx,()=>({x:50,y:50}),200,200);
+ draw();assert.equal(texts.length,0);
+ s.element('sign-visible').onchange({target:{checked:true}});assert.equal(s.signs.selected,null);
+ draw();assert.equal(texts.length,3);assert.ok(texts.some(t=>t.includes('Leiter')));
+ texts.length=0;s.element('sign-search').oninput({target:{value:'Leiter'}});draw();assert.equal(texts.length,1);
+ texts.length=0;s.element('sign-visible').onchange({target:{checked:false}});draw();assert.equal(texts.length,0);
+});

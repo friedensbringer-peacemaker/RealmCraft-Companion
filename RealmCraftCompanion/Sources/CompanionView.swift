@@ -48,6 +48,7 @@ struct CompanionView: View {
     @State private var exportRequest: UUID?
     @State private var requestedMapRadius: String?
     @AppStorage("agentSkill.selectedID") private var selectedSkillID = "realmcraft-world-context"
+    @State private var showMapExport = false
     @State private var showItemIcons = false
     @State private var showSpoilers = false
     @AppStorage("homeIntroductionExpanded") private var introductionExpanded = false
@@ -70,6 +71,8 @@ struct CompanionView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("RealmCraft").font(.headline)
                         Text("Companion").font(.caption).foregroundStyle(.secondary)
+                        Text("Version \(AppInfo.version)").font(.caption2).foregroundStyle(.secondary)
+                            .textSelection(.enabled)
                     }
                 }.padding(.horizontal, 18).frame(height: 74)
                 List(selection: $selected) {
@@ -104,17 +107,7 @@ struct CompanionView: View {
                     Label(model.setup.package.isEmpty ? (english ? "Quest not connected" : "Quest nicht verbunden") : (english ? "Quest connected" : "Quest verbunden"), systemImage: model.setup.package.isEmpty ? "circle" : "circle.fill")
                         .font(.caption).foregroundStyle(.secondary).help(tr(model.setup.message))
                     Menu {
-                        Button(english ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }
-                        Divider()
-                        Picker(english ? "Appearance" : "Optik", selection: $skin) {
-                            Text(english ? "Block world" : "Blockwelt").tag("block")
-                            Text(english ? "Classic" : "Klassisch").tag("classic")
-                        }
-                        Button(english ? "Exploration & spoilers…" : "Erkundung & Spoiler …") { showSpoilers = true }
-                        Button(english ? "Item icons…" : "Gegenstands-Icons …") { showItemIcons = true }
-                        Picker("Language / Sprache", selection: $language) { Text("Deutsch").tag("de"); Text("English").tag("en") }
-                        Divider()
-                        CompanionLifecycleActions(model: model, english: english)
+                        settingsMenuItems
                     } label: { Label(english ? "Settings" : "Einstellungen", systemImage: "gearshape") }
                         .menuStyle(.borderlessButton).fixedSize().disabled(model.busy)
                 }.padding(18)
@@ -140,6 +133,7 @@ struct CompanionView: View {
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .environment(\.companionSettingsItems, AnyView(settingsMenuItems))
         .frame(minWidth: 1080, minHeight: 700)
         .disabled(lifecycle.isWorking)
         .overlay(alignment: .bottomTrailing) {
@@ -155,6 +149,7 @@ struct CompanionView: View {
             FeedbackView(context: request.context, english: english, sourceWindow: request.window).companionAppearance()
         }
         .sheet(isPresented: $showSpoilers) { SpoilerSettings(english: english).companionAppearance() }
+        .sheet(isPresented: $showMapExport) { MapExportSettings(english: english).companionAppearance() }
         .sheet(isPresented: $showItemIcons) { ItemIconSettings(english: english).companionAppearance() }
         .sheet(isPresented: $model.showSetup) { SetupView(model: model, maps: maps).companionAppearance() }
         .alert(english ? "Action incomplete" : "Aktion nicht abgeschlossen", isPresented: Binding(get: { model.error != nil && feature != .saves && !model.showSetup }, set: { if !$0 { model.error = nil } })) {
@@ -163,69 +158,88 @@ struct CompanionView: View {
         .onAppear { model.connect() }
         .onReceive(poll) { _ in model.connect(force: false) }
     }
+    private var settingsMenuItems: some View {
+        Group {
+            Button(english ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }
+            Divider()
+            Picker(english ? "Appearance" : "Optik", selection: $skin) {
+                Text(english ? "Block world" : "Blockwelt").tag("block")
+                Text(english ? "Classic" : "Klassisch").tag("classic")
+            }
+            Button(english ? "Exploration & spoilers…" : "Erkundung & Spoiler …") { showSpoilers = true }
+            Button(english ? "Map export…" : "Kartenexport …") { showMapExport = true }
+            Button(english ? "Item icons…" : "Gegenstands-Icons …") { showItemIcons = true }
+            Picker("Language / Sprache", selection: $language) { Text("Deutsch").tag("de"); Text("English").tag("en") }
+            Divider()
+            CompanionLifecycleActions(model: model, english: english)
+        }.disabled(model.busy)
+    }
     private func openFeedback(_ context: FeedbackContext) {
         feedback = FeedbackRequest(context: context, window: NSApp.keyWindow ?? NSApp.mainWindow)
     }
     private var home: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 28) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(english ? "Overview" : "Übersicht").font(.system(size: 30, weight: .bold))
-                    Text(english ? "Your worlds, safely kept on this Mac." : "Deine Welten, sicher auf diesem Mac.").font(.title3).foregroundStyle(.secondary)
-                }
-                CompanionHomeActivityView(model: model, maps: maps, language: language, open: { destination, saveID in
-                    if let saveID, model.saves.contains(where: { $0.id == saveID }) { model.selection = saveID }
-                    if destination == .aiExport { openLatestExport = true }
-                    if destination == .maps { requestedMapRadius = CompanionActivity.shared.latest("map", root: model.library.root)?.radius }
-                    selected = destination.rawValue
-                }, generateMap: {
-                    if model.selected == nil { model.selection = model.saves.first?.id }
-                    requestedMapRadius = "128"
-                    if let save = model.selected, maps.ready { maps.generate(model, save: save, radius: "128", language: language) }
-                    selected = CompanionFeature.maps.rawValue
-                }, generateExport: {
-                    if model.selected == nil { model.selection = model.saves.first?.id }
-                    openLatestExport = false; exportRequest = UUID(); selected = CompanionFeature.aiExport.rawValue
-                })
-                homeIntroduction
-                if let save = model.saves.first,
-                   let image = NSImage(contentsOf: model.library.worldFolder(save).appendingPathComponent("screenshot.jpg")) {
-                    Image(nsImage: image).resizable().scaledToFill().frame(height: 230).clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: theme.radius))
-                        .allowsHitTesting(false)
-                        .accessibilityLabel(english ? "Preview of your latest saved world" : "Vorschau deiner zuletzt gesicherten Welt")
-                }
-                HStack(spacing: 36) {
-                    summary(english ? "Savegames" : "Spielstände", value: "\(model.saves.count)")
-                    summary(english ? "Storage" : "Speicher", value: displayBytes(model.saves.reduce(0) { $0 + $1.bytes }))
-                    Spacer()
-                }
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(english ? "Recently saved" : "Zuletzt gesichert").font(.headline)
-                    if model.saves.isEmpty {
-                        Text(english ? "Your library is empty. Import or back up a world in Savegames." : "Deine Bibliothek ist leer. Importiere oder sichere eine Welt unter Savegames.").foregroundStyle(.secondary)
+        VStack(spacing: 0) {
+            CompanionPageHeader(title: english ? "Overview" : "Übersicht") { EmptyView() }
+            Divider()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(english ? "Your worlds, safely kept on this Mac." : "Deine Welten, sicher auf diesem Mac.").font(.title3).foregroundStyle(.secondary)
                     }
-                    ForEach(Array(model.saves.prefix(5))) { save in
-                        Button {
-                            model.selection = save.id
-                            selected = CompanionFeature.saves.rawValue
-                        } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: "archivebox").foregroundStyle(.secondary)
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(save.title).font(.body.weight(.medium)).lineLimit(1)
-                                    Text(displayDate(save.date, language: language)).font(.caption).foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                                Text(displayBytes(save.bytes)).font(.callout).foregroundStyle(.secondary)
-                                Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
-                            }.padding(.vertical, 14).contentShape(Rectangle())
-                        }.buttonStyle(.plain)
-                        Divider()
+                    CompanionHomeActivityView(model: model, maps: maps, language: language, open: { destination, saveID in
+                        if let saveID, model.saves.contains(where: { $0.id == saveID }) { model.selection = saveID }
+                        if destination == .aiExport { openLatestExport = true }
+                        if destination == .maps { requestedMapRadius = CompanionActivity.shared.latest("map", root: model.library.root)?.radius }
+                        selected = destination.rawValue
+                    }, generateMap: {
+                        if model.selected == nil { model.selection = model.saves.first?.id }
+                        requestedMapRadius = "128"
+                        if let save = model.selected, maps.ready { maps.generate(model, save: save, radius: "128", language: language) }
+                        selected = CompanionFeature.maps.rawValue
+                    }, generateExport: {
+                        if model.selected == nil { model.selection = model.saves.first?.id }
+                        openLatestExport = false; exportRequest = UUID(); selected = CompanionFeature.aiExport.rawValue
+                    })
+                    homeIntroduction
+                    if let save = model.saves.first,
+                       let image = NSImage(contentsOf: model.library.worldFolder(save).appendingPathComponent("screenshot.jpg")) {
+                        Image(nsImage: image).resizable().scaledToFill().frame(height: 230).clipped()
+                            .clipShape(RoundedRectangle(cornerRadius: theme.radius))
+                            .allowsHitTesting(false)
+                            .accessibilityLabel(english ? "Preview of your latest saved world" : "Vorschau deiner zuletzt gesicherten Welt")
                     }
-                }
-                Text(AppInfo.title).font(.caption).foregroundStyle(.tertiary)
-            }.padding(36).frame(maxWidth: 1020, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
+                    HStack(spacing: 36) {
+                        summary(english ? "Savegames" : "Spielstände", value: "\(model.saves.count)")
+                        summary(english ? "Storage" : "Speicher", value: displayBytes(model.saves.reduce(0) { $0 + $1.bytes }))
+                        Spacer()
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(english ? "Recently saved" : "Zuletzt gesichert").font(.headline)
+                        if model.saves.isEmpty {
+                            Text(english ? "Your library is empty. Import or back up a world in Savegames." : "Deine Bibliothek ist leer. Importiere oder sichere eine Welt unter Savegames.").foregroundStyle(.secondary)
+                        }
+                        ForEach(Array(model.saves.prefix(5))) { save in
+                            Button {
+                                model.selection = save.id
+                                selected = CompanionFeature.saves.rawValue
+                            } label: {
+                                HStack(spacing: 14) {
+                                    Image(systemName: "archivebox").foregroundStyle(.secondary)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(save.title).font(.body.weight(.medium)).lineLimit(1)
+                                        Text(displayDate(save.date, language: language)).font(.caption).foregroundStyle(.secondary)
+                                    }
+                                    Spacer()
+                                    Text(displayBytes(save.bytes)).font(.callout).foregroundStyle(.secondary)
+                                    Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+                                }.padding(.vertical, 14).contentShape(Rectangle())
+                            }.buttonStyle(.plain)
+                            Divider()
+                        }
+                    }
+                    Text(AppInfo.title).font(.caption).foregroundStyle(.tertiary)
+                }.padding(CompanionLayout.pageInset).frame(maxWidth: 1020, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
     private var homeIntroduction: some View {

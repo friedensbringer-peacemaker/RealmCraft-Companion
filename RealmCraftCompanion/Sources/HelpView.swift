@@ -30,7 +30,7 @@ private extension HelpArticle {
     var category: HelpCategory {
         switch id {
         case "start", "companion", "setup", "manualTransfer", "appearance": return .gettingStarted
-        case "library", "backup", "restore", "zip", "maps", "places", "biomes", "chests", "player", "statistics", "editor": return .world
+        case "library", "backup", "restore", "zip", "maps", "navigation", "places", "biomes", "chests", "player", "statistics", "editor": return .world
         case "aiExport", "skills", "conversation": return .ai
         case "videos", "builds", "mobs", "resources": return .knowledge
         case "trouble", "feedback", "agent": return .support
@@ -50,7 +50,7 @@ private let helpArticles: [HelpArticle] = [
 RealmCraft Companion begleitet dich beim Sichern, Erkunden und Auswerten deiner RealmCraft-Welten auf dem Mac.
 
 ERSTER START
-Die achtteilige Einrichtung führt dich durch Mac-Voraussetzungen, ADB, Meta-Konto, Entwicklermodus, USB-Freigabe, Spielprüfung und Speicherort. „Später“ merkt sich deinen Fortschritt. „Companion öffnen“ beendet die Anleitung und startet keine Übertragung. Über Einstellungen → Quest einrichten öffnest du sie erneut; „Alle Einstellungen“ führt zu den Detailoptionen.
+Die Einrichtung führt dich durch Mac-Voraussetzungen, ADB, Meta-Konto, Entwicklermodus, USB-Freigabe, Spielprüfung und Speicherort. „Später“ merkt sich deinen Fortschritt. „Companion öffnen“ beendet die Anleitung und startet keine Übertragung. Über Einstellungen → Quest einrichten öffnest du sie erneut; „Alle Einstellungen“ führt zu den Detailoptionen.
 
 ERSTE SICHERUNG
 1. Speichere in RealmCraft und beende das Spiel vollständig.
@@ -66,7 +66,7 @@ Die meisten Ansichten lesen gespeicherte Daten. Änderungen im laufenden Spiel w
 RealmCraft Companion helps you back up, explore and inspect your RealmCraft worlds on a Mac.
 
 FIRST LAUNCH
-The eight-step setup guide covers Mac requirements, ADB, your Meta account, developer mode, USB authorization, game checks and storage. Later remembers your progress. Open Companion ends the guide without starting a transfer. Reopen it through Settings → Quest setup; All settings opens the detailed options.
+The setup guide covers Mac requirements, ADB, your Meta account, developer mode, USB authorization, game checks and storage. Later remembers your progress. Open Companion ends the guide without starting a transfer. Reopen it through Settings → Quest setup; All settings opens the detailed options.
 
 FIRST BACKUP
 1. Save in RealmCraft and fully close the game.
@@ -91,8 +91,9 @@ DEINE WELT
 • Editor · Beta / Preview: Gegenstände oder Level in einer neuen Sicherungskopie bearbeiten.
 
 KI-WERKZEUGE
-• KI-Export: Einen geprüften Weltkontext als Markdown oder JSON für externe Assistenten erzeugen; optional per iCloud oder AirDrop weitergeben.
+• KI-Export: Einen geprüften Weltkontext als Markdown oder JSON für externe Assistenten erzeugen; optional Navigation beifügen und per iCloud oder AirDrop weitergeben.
 • Gespräch · Beta: Per Text oder Mac-Mikrofon nach gespeicherten Orten, eigenen Vorräten, Rezepten und Anleitungen fragen.
+• Skills: Wiederverwendbare Agenten-Anweisungen und optionalen persönlichen Kontext verwalten.
 
 WISSEN & HILFE
 • Videos & Tipps: Videos nach Thema, Material und Bearbeitungsstand finden und Zeitmarken öffnen.
@@ -115,8 +116,9 @@ YOUR WORLD
 • Editor · Beta / Preview: Edit items or level in a new backup copy.
 
 AI TOOLS
-• AI export: Generate verified world context as Markdown or JSON for external assistants; optionally share through iCloud or AirDrop.
+• AI export: Generate verified world context as Markdown or JSON for external assistants; optionally include navigation and share through iCloud or AirDrop.
 • Conversation · Beta: Use text or the Mac microphone to ask about saved places, owned supplies, recipes and guides.
+• Skills: Manage reusable agent instructions and optional personal context.
 
 KNOWLEDGE & HELP
 • Videos & tips: Find videos by topic, material and review coverage, then open timestamps.
@@ -317,14 +319,16 @@ Share the app rather than your personal saves. ADB and map tools can be installe
 1. Sichere deine Welt im Bereich „Savegames“ oder importiere eine vorhandene Sicherung. Für Karten brauchst du keine angeschlossene Quest.
 2. Öffne „Karten“ und wähle den Spielstand anhand von Name, Datum und Uhrzeit.
 3. Klicke bei fehlenden Werkzeugen auf „Kartenwerkzeuge installieren“. Die App lädt eine eigene Python-Laufzeit von Astral/GitHub sowie NumPy und Pillow von PyPI herunter, prüft den Python-Download und testet die Werkzeuge. Dafür ist Internet nötig, aber weder ein Administratorpasswort noch eine vorherige Python-Installation. Du findest denselben Button auch unter Einstellungen → Quest einrichten. Vorhandene Python-Installationen bleiben unverändert.
-4. Starte mit „Ursprung ±128 Blöcke“. Für mehr Umgebung wähle ±512 oder „Alle gespeicherten Chunks“. Große Welten benötigen mehr Zeit und freien Speicher.
+4. Starte mit „Ursprung ±128 Blöcke“. Weitere Bereiche sind ±256, ±512, ±1024, ±2048 oder „Alle gespeicherten Chunks“. Große Welten benötigen mehr Zeit und freien Speicher.
 5. Klicke „Karte erzeugen“. Die Sicherung wird vor und nach der Berechnung auf Integrität geprüft. Die Karte wird separat unter Library/Application Support/RealmCraftLibrary/Maps gespeichert.
-6. Kompass anklicken: 45° drehen, mit Umschalt rückwärts. Rechtsklick auf den Kompass richtet nach Norden aus. Option/Alt + Scrollen dreht frei. Bei fokussierter Karte drehen Q/E; R setzt die Richtung zurück.
+6. Kompass anklicken: 90° drehen, mit Umschalt rückwärts. Rechtsklick auf den Kompass richtet nach Norden aus. Option/Alt + Scrollen dreht in 90°-Schritten. Ausrichtung und Spiegelung werden für die Karte gemerkt. Bei fokussierter Karte drehen Q/E; R setzt die Richtung zurück.
 7. Ziehe die Karte zum Verschieben, scrolle zum Zoomen oder suche X-/Z-Koordinaten. Wechsle zwischen Landschaft, Höhenkarte, Oberfläche und einzelnen Y-Ebenen. Nether erscheint nur, wenn gespeicherte Daten vorhanden sind.
 8. „Im Browser öffnen“ zeigt die Karte im Standardbrowser. „Im Finder anzeigen“ im Aktionsmenü zeigt den Kartenordner; teile bei Bedarf den gesamten Kartenordner, da Bilder und Kartendaten dazugehören. Für den JSON-Export markierter Orte verwende die Browseransicht.
 
 ATLAS-VORSCHAU
 Dieser Kartenbereich integriert einen eigenständigen Stand des parallelen Realmcraft-Atlas-Projekts. Er liest gespeicherte Chunks und verwendet schematische Farben. Es ist keine Live-Karte und keine exakte Nachbildung der Spielgrafik. Unbekannte Blöcke und beschädigte Chunks werden gekennzeichnet. Die zuletzt erzeugte Karte wird je Sicherung, Bereich und Sprache wieder geöffnet. Erneutes Erzeugen legt einen neuen Kartenordner an. Nicht benötigte Karten kannst du im Finder entfernen; Savegames liegen separat.
+
+Routen, Messungen und die Weitergabe an einen Agenten beschreibt „Wegeplanung & Navigation · Beta“.
 
 3D · BETA
 Der 3D-Button öffnet die experimentelle räumliche Ansicht. Bei einem ausgewählten Ort kannst du „Hier in 3D · Beta“ verwenden. Auch diese Darstellung basiert nur auf den gespeicherten, verarbeiteten Chunks; unbekannte Blöcke oder fehlende Daten können abweichen.
@@ -338,14 +342,16 @@ Das Rechteck reserviert kein dauerhaftes Gebiet. Neue Kisten später erneut mark
 1. Back up your world in Savegames or import an existing backup. A connected Quest is not required for maps.
 2. Open Maps and choose a savegame by name, date and time.
 3. If tools are missing, click Install map tools. The app downloads its own Python runtime from Astral/GitHub and NumPy and Pillow from PyPI, verifies the Python download and tests the tools. Internet is required, but no administrator password or existing Python installation. The same button is available under Settings → Quest setup. Existing Python installations are unchanged.
-4. Start with Origin ±128 blocks. Choose ±512 or All saved chunks for a larger area. Large worlds need more time and free disk space.
+4. Start with Origin ±128 blocks. Larger choices are ±256, ±512, ±1024, ±2048 and All saved chunks. Large worlds need more time and free disk space.
 5. Click Generate map. The backup is checked for integrity before and after rendering. Maps are stored separately under Library/Application Support/RealmCraftLibrary/Maps.
-6. Click the compass to rotate 45°, or Shift-click to reverse. Right-click the compass to face north. Option/Alt + scroll rotates freely. With the map focused, Q/E rotate and R resets north.
+6. Click the compass to rotate 90°, or Shift-click to reverse. Right-click the compass to face north. Option/Alt + scroll rotates in 90° steps. The map remembers orientation and mirroring. With the map focused, Q/E rotate and R resets north.
 7. Drag to pan, scroll to zoom or search X/Z coordinates. Switch between terrain, height map, surface and individual Y levels. Nether appears only when saved data is available.
 8. Open in browser uses your default browser. Show in Finder in the actions menu reveals the map folder; share the complete map folder because its images and data are required. Use the browser view to export marked places as JSON.
 
 ATLAS PREVIEW
 This feature integrates an independent snapshot of the parallel Realmcraft Atlas project. It reads saved chunks and uses schematic colors. It is not a live map or an exact reproduction of game graphics. Unknown blocks and damaged chunks are identified. The last map is reopened for each savegame, area and language. Generating again creates a new map folder. Remove unneeded maps in Finder; savegames are stored separately.
+
+See Route planning & navigation · Beta for measurements, route candidates and agent handoff.
 
 3D · BETA
 The 3D button opens the experimental spatial view. For a selected place, use Here in 3D · Beta. This also uses only saved, processed chunks; unknown blocks or missing data can differ.
@@ -355,6 +361,49 @@ Open the chest-ownership area selector, drag a rectangle on the map and review t
 
 The rectangle is not a permanent claim area. Mark new chests again later. Ownership is a local annotation for Conversation and AI export, not a game-world change.
 
+"""),
+    .init(id: "navigation", icon: "point.topleft.down.curvedto.point.bottomright.up", deTitle: "Wegeplanung & Navigation · Beta", enTitle: "Route planning & navigation · Beta", de: """
+In Karten planst du anhand gespeicherter Oberflächen einen Routenvorschlag. Ein Agent kann die exportierten Hinweise vorlesen; der Companion verfolgt deine Position im Spiel nicht.
+
+ROUTE PLANEN
+1. Erzeuge die Karte einer Sicherung. Öffne Messen und setze Start A und Ziel B.
+2. Prüfe Entfernung und Oberflächenprofil. Die Messlinie ist noch kein begehbarer Weg.
+3. Öffne Navigation & KI-Export. Wähle Nur zu Fuß, Zu Fuß + Boot oder Zu Fuß + Boot + Minecart. Aktiviere bei Bedarf POIs in der Nähe · 250 Blöcke.
+4. Klicke Englische Navigation planen. Die Suche verwendet gespeicherte Oberflächen, Höhenwechsel und modellierte Fahrtzeiten. Fehlende Abschnitte werden nicht als sichere Verbindung ergänzt.
+5. Prüfe den Vorschlag im Spiel. Boote und Loren müssen verfügbar sein; Schienenanschlüsse, Antrieb, Türen, Tunnel und Durchgangshöhen sind nicht verifiziert. Zwischenziele und automatische Rundreise-Optimierung sind noch nicht vorhanden.
+
+WEITERGEBEN
+Navigation kopieren überträgt das vollständige Briefing in die Zwischenablage. Navigation als Markdown speichern erzeugt eine Datei. In iCloud speichern verwendet einen eigenen, gemerkten Navigationsordner; unter Einstellungen → Kartenexport oder im Karten-Aktionsmenü lässt er sich wählen. Jeder Export erhält eine neue Datei. Ein abgebrochener Ordnerdialog verwirft die Route nicht.
+
+Für KI-Export übernehmen hinterlegt den Vorschlag für diese Sicherung. Wähle anschließend denselben Spielstand unter KI-Export, aktiviere Englische Navigation beifügen · Beta und erzeuge den Kontext erneut. Die lokale Qwen-Auswahl ist optional und markiert nur vorhandene Referenzen; sie erfindet keine Route.
+
+MIT EINEM SPRACHAGENTEN
+Das englische Briefing bestätigt zuerst Ziel, Dimension, aktuelle X/Y/Z-Koordinaten und Blickrichtung. Gesprochene Abschnitte zielen auf etwa 75 Wegblöcke, normalerweise 50–100; kritische Bereiche werden kürzer zusammengefasst. Alle genauen Wendungen und Koordinaten bleiben als Referenz erhalten. Bestätige das Abschnittsende, bevor der Agent fortfährt. Der Endpunkt ist keine Erlaubnis für eine gerade Abkürzung durch das Gelände.
+
+POIs sind optionale Orientierungspunkte im horizontalen Umkreis von 250 Blöcken um einen Routenschritt, keine bestätigten Zwischenziele. Bei Hindernissen, abweichenden Koordinaten oder geändertem Ziel anhalten und neu planen. Laufzeit ist keine Positionsmessung.
+
+Siehe auch „Karten erstellen“, „KI-Export“ und „Skills verwalten“.
+""", en: """
+In Maps, plan a route candidate from saved surfaces. An agent can read the exported instructions; Companion does not track your position in the game.
+
+PLAN A ROUTE
+1. Generate the map for a backup. Open Measure and set start A and destination B.
+2. Inspect distance and surface profile. The measurement line is not yet a walkable route.
+3. Open Navigation & AI export. Choose Walking only, Walk + boat or Walk + boat + minecart. Optionally enable Nearby POIs · 250 blocks.
+4. Click Plan English navigation. The search uses saved surfaces, elevation changes and modeled travel time. Missing sections are not filled in as safe connections.
+5. Check the candidate in-game. Boats and minecarts must be available; rail connectivity, power, doors, tunnels and clearance are unverified. Intermediate waypoints and automatic round-trip optimization are not implemented.
+
+SHARE
+Copy navigation puts the complete briefing on the clipboard. Save navigation Markdown creates a file. Save to iCloud uses a separate remembered navigation folder; choose it under Settings → Map export or in the Maps actions menu. Every export creates a new file. Cancelling the folder picker does not discard the route.
+
+Use in AI export stores the candidate for this backup. Select the same savegame in AI export, enable Include English navigation · Beta and generate context again. Local Qwen cue selection is optional and highlights supplied references only; it does not invent a route.
+
+WITH A VOICE AGENT
+The English briefing first confirms destination, dimension, current X/Y/Z coordinates and facing. Spoken sections target about 75 route blocks, normally 50–100; critical areas are grouped into shorter sections. Exact turns and coordinates remain available as references. Confirm section arrival before the agent continues. A section endpoint is not permission to cut straight across terrain.
+
+POIs are optional orientation cues within 250 horizontal blocks of a route step, not verified intermediate destinations. Stop and replan when obstacles, coordinates or the destination differ. Elapsed time is not a position measurement.
+
+See also Create maps, AI export and Manage skills.
 """),
     .init(id: "places", icon: "mappin.and.ellipse", deTitle: "Orte finden & benennen", enTitle: "Find & name places", de: """
 1. Erzeuge im Bereich „Karten“ eine neue Karte. Die Suche bezieht sich auf den dafür gewählten Bereich; für die ganze gespeicherte Welt wähle „Alle gespeicherten Chunks“.
@@ -371,6 +420,9 @@ Ein Schild kann zugleich benachbarte Kisten als Player-Kisten kennzeichnen (30 B
 Eigene Ortsnamen bleiben in der App für dieselbe Welt gespeichert, auch nach dem Schließen, Sprachwechsel oder erneuten Erzeugen einer Karte. Im externen Browser werden sie separat im jeweiligen Browserspeicher abgelegt.
 
 Gebäude sind Vermutungen: Mindestens zwei Arten von Hinweisen innerhalb eines Rasterbereichs von 32 × 32 × 16 Blöcken ergeben einen Vorschlag. Ein Gebäudekomplex kann mehrere Vorschläge haben; Höhlen, Ruinen oder Lagerplätze können ebenfalls als Vorschlag erscheinen. Die App erkennt damit keine Hausgrenzen oder Besitzverhältnisse. Glas wird gruppiert, damit einzelne Scheiben die Karte nicht überladen. Kistenmarkierungen zeigen die Position; den Inhalt findest du im Bereich „Kisten“.
+
+SCHILDTEXTE
+Aktiviere Schilder in den Kartenebenen, um lesbare Beschriftungen direkt zu sehen. Suchfilter, Dimension und Spoiler-Einstellungen gelten weiterhin. Ein Klick öffnet die vollständige Inschrift und Koordinaten. Benachbarte, eindeutig zuordenbare Schildtexte können Kisten benennen; manuelle Namen bleiben vorrangig.
 """, en: """
 1. Generate a new map in Maps. Detection covers the selected area; choose All saved chunks to cover the stored world.
 2. Scroll the map sidebar to Interesting places.
@@ -386,6 +438,9 @@ A sign also identifies nearby chests as player-owned (30 blocks horizontally, at
 The app remembers custom names for the same world after closing, switching language or generating another map. An external browser stores names separately in its own browser storage.
 
 Buildings are suggestions: at least two indicator categories within a 32 × 32 × 16 block grid area produce a suggestion. Large complexes may have several suggestions; caves, ruins or storage areas may also qualify. This does not detect house boundaries or ownership. Glass is grouped to avoid clutter from individual panes. Chest markers show the location; use Chests to inspect contents.
+
+SIGN TEXT
+Enable Signs in the map layers to show readable labels immediately. Search, dimension and spoiler filters still apply. Click for the full inscription and coordinates. Unambiguous nearby sign text can name chests; manual names take precedence.
 """),
     .init(id: "biomes", icon: "leaf", deTitle: "Biome erkennen", enTitle: "Identify biomes", de: """
 Erzeuge eine neue Karte und bewege den Mauszeiger über die Welt. Links oben in der Karte erscheint der gespeicherte Biomname samt ID. Auch beim Anklicken eines Blocks und nach der Koordinatensuche wird das Biom angezeigt.
@@ -414,6 +469,8 @@ Entfernungen sind räumliche Luftlinien innerhalb derselben Dimension, keine Lau
 BESITZ UND SICHTBARKEIT
 Im Kistenmenü kannst du „Gehört mir“, „Bereits entdeckt“ und Ein-/Ausblenden setzen. Eine eigene Kiste kann einen Namen erhalten. Filter für Dimension, Kistengruppe, Sichtbarkeit und vermutete Dungeon-Kisten helfen beim Erkunden. Eine Vermutung ist kein gesicherter Nachweis der Herkunft.
 
+Kistennamen von Schildern: Ein lesbares, nicht leeres Schild direkt neben, über oder unter einer Kiste liefert automatisch ihren Namen. Es zählen nur die sechs unmittelbar angrenzenden Blockpositionen, keine diagonalen oder weiter entfernten Schilder. Leerzeilen werden zusammengefasst; widersprüchliche benachbarte Beschriftungen bleiben ohne automatische Zuordnung. Eigene Namen haben Vorrang, Koordinaten bleiben sichtbar. Nach Änderungen „Kisten einlesen“ bzw. die Karte neu erstellen. Mehrere Kisten am Lagerort behalten ihre individuellen Namen.
+
 Du kannst Besitz selbst markieren. Zusätzlich markiert „Kisten einlesen“ Behälter automatisch als eigene, wenn ein decodiertes Schild in derselben Dimension höchstens 30 Blöcke horizontal und 10 Höhenblöcke entfernt ist. Die Nähe zu einem Schild ist ein Hinweis, kein sicherer Besitznachweis. Prüfe die Markierungen und korrigiere sie bei Bedarf. Beim nächsten Einlesen kann die Schild-Regel eine entfernte Markierung erneut setzen. Eigene Kisten liefern Vorräte für Gespräch und KI-Export. Ausgeblendete Kisten sind nicht gelöscht; der vollständige KI-Export kann sie weiterhin enthalten.
 
 „Koordinaten kopieren“ hilft beim Wiederfinden in Karten. Das Aktionsmenü exportiert die eingelesene Übersicht als JSON. Lesefehler und unvollständige Bestände bleiben gekennzeichnet.
@@ -430,6 +487,8 @@ Distances are 3D straight lines within the same dimension, not walking routes. T
 
 OWNERSHIP AND VISIBILITY
 The chest menu offers Belongs to me, Already discovered and show/hide. An owned chest can have a name. Dimension, chest-group, visibility and suspected-dungeon filters help exploration. A suspicion is not proof of origin.
+
+Chest names from signs: A readable, non-empty sign directly beside, above or below a chest supplies its name. Only the six face-adjacent block positions count, excluding diagonal or more distant signs. Whitespace is collapsed; conflicting adjacent inscriptions receive no automatic name. Manual names take precedence and coordinates remain visible. Run Read chests or rebuild the map after changes. Chests at a shared storage location keep their individual names.
 
 You can mark ownership manually. Read chests also marks containers as owned when a decoded sign in the same dimension lies within 30 horizontal blocks and 10 vertical blocks. Sign proximity is a clue, not proof of ownership. Review and correct marks as needed; the sign rule may reapply a removed mark on the next scan. Owned chests supply stock data for Conversation and AI export. Hidden chests are not deleted and may still appear in a complete AI export.
 
@@ -542,39 +601,6 @@ Quest test → Prepare separate Quest test world creates a test copy with a new 
 
 Appearance in RealmCraft, successful loading and continued saving are not guaranteed. Test a small change, save and reload. Normal restore instead replaces the matching world ID; it is not a substitute for the separate beta test workflow.
 """),
-    .init(id: "skills", icon: "text.book.closed", deTitle: "Skills verwalten", enTitle: "Manage skills", de: """
-Öffne Skills in der Navigation unter KI-Werkzeuge. Die zentrale Bibliothek enthält wiederverwendbare Anweisungen für Weltassistenz, Spielstand-Arbeit, Hilfe und Companion-Entwicklung.
-
-BEARBEITEN UND VERSIONIEREN
-Mit „Neuer Skill“ legst du eigene Anweisungen an. „Bearbeiten / Umbenennen“ ändert Titel, Beschreibung, Anweisungen und eigene Ergänzungen. Jede Speicherung eines bestehenden Skills bewahrt den vorherigen Stand in der Versionshistorie. Dort kannst du einen Stand ansehen und als neue Version wiederherstellen. Archivieren blendet einen Skill aus der aktiven Auswahl aus; Löschen entfernt auch seine lokale Historie.
-
-IMPORT UND EXPORT
-Das obere Aktionsmenü (…) importiert Markdown oder ein Skill-Paket und exportiert die gesamte Bibliothek. Im Aktionsmenü eines Skills kannst du SKILL.md oder ein Paket mit Versionen exportieren und den Skill duplizieren. Pakete enthalten Skill-Ergänzungen und Historie, aber kein persönliches Profil. Bei gleichen IDs entstehen Importkopien; bestehende Skills bleiben erhalten. Markdown importiert die Textanweisung, keine Versionshistorie. Importierte Anweisungen werden nicht ausgeführt.
-
-SPRACHEN UND LOKALE ÜBERSETZUNG
-Mitgelieferte Skills enthalten Deutsch und Englisch; die Ansicht folgt der App-Sprache. Im Editor wechselst du zwischen den Fassungen. Das Exportmenü bietet Deutsch, Englisch oder beide Sprachen in einer Markdown-Datei; JSON-Pakete enthalten alle vorhandenen Fassungen und deren Historie.
-
-„Aus anderer Sprache mit lokalem Qwen übersetzen“ erstellt einen Entwurf aus der anderen Fassung. Starte dafür LM Studio mit Qwen3.5-4B und dem lokalen Server auf Port 1234. Bei langen Skills kann eine größere Kontextgröße nötig sein; maximal 18 KB Text werden angenommen. Der Entwurf ersetzt den sichtbaren Editorinhalt. Prüfe Bedeutung, Zahlen und Befehle vor dem Speichern. Abbrechen oder Modellfehler bewahren den bisherigen Text. Ohne lokalen Server bleibt manuelles Übersetzen möglich; es gibt keinen Cloud-Fallback.
-
-MIT AGENTEN VERWENDEN
-„Für KI-Export verwenden“ wählt den Skill im KI-Export aus. Alternativ Markdown kopieren oder SKILL.md an einen Agenten übergeben. Die automatische Erkennung hängt vom Agenten ab. Entwicklungsskills können ohne Weltexport verwendet werden. Persönliche Angaben werden im KI-Export separat und freiwillig beigefügt.
-""", en: """
-Open Skills under AI tools in the navigation. The central library contains reusable instructions for world assistance, savegame work, help maintenance and Companion development.
-
-EDIT AND VERSION
-New skill creates your own instructions. Edit / Rename changes the title, description, instructions and additions. Each save of an existing skill preserves its previous state in Version history. Inspect an earlier state and restore it as a new version. Archiving removes a skill from active selection; deleting also removes its local history.
-
-IMPORT AND EXPORT
-The top actions menu (…) imports Markdown or a skill package and exports the entire library. Each skill's actions menu exports SKILL.md or a package with versions and duplicates the skill. Packages include skill notes and history but exclude the personal profile. Matching IDs create import copies and preserve existing skills. Markdown imports instructions without history. Importing instructions does not execute them.
-
-LANGUAGES AND LOCAL TRANSLATION
-Bundled skills include German and English; the view follows the app language. Switch language versions in the editor. Export German, English or both in one Markdown document; JSON packages contain all available languages and their history.
-
-Translate from other language with local Qwen creates a draft from the other version. Start LM Studio with Qwen3.5-4B and its local server on port 1234. Long skills may need a larger context; inputs up to 18 KB are accepted. The result replaces the visible editor draft. Check meaning, numbers and commands before saving. Cancellation or a model error preserves the existing text. Manual translation remains available without a server; there is no cloud fallback.
-
-USE WITH AGENTS
-Use for AI export selects the skill in AI export. Alternatively, copy Markdown or pass SKILL.md to an agent. Automatic recognition depends on the agent. Development skills work without a world export. Personal context is a separate opt-in in AI export.
-"""),
     .init(id: "aiExport", icon: "doc.text.magnifyingglass", deTitle: "KI-Export", enTitle: "AI export", de: """
 Unter KI-Werkzeuge → KI-Export erzeugst du aus einer geprüften Sicherung einen lesbaren Weltkontext für einen externen Assistenten.
 
@@ -590,6 +616,12 @@ WEITERGEBEN
 „In iCloud speichern“ schreibt jeweils eine neue vollständige Markdown-Datei in den gewählten, gemerkten Ordner. macOS übernimmt die Synchronisierung. „Per AirDrop senden“ öffnet die native Freigabe. Prüfe Weltname, Koordinaten und Bestände, bevor du die Datei weitergibst.
 
 Der Companion sendet den Kontext nicht automatisch an einen KI-Dienst. Der Export ist ein Daten- und Wissensauszug, keine rückspielbare Savegame-Sicherung.
+
+OPTIONALE INHALTE
+Wähle bei Bedarf einen Skill und entscheide separat über persönlichen Kontext. Ausgewählte Videohinweise lassen sich einbeziehen oder als zweite Markdown-Datei speichern. Große kombinierte Videonotizen werden automatisch ausgelagert, nicht abgeschnitten. Die Bildschirmvorschau zeigt nur einen Anfang des vollständigen Dokuments. Nach geänderten Optionen Kontext erneut erzeugen.
+
+NAVIGATION
+Übernimm zuerst einen Routenvorschlag aus Karten und aktiviere Englische Navigation beifügen · Beta für dieselbe Sicherung. Der Export enthält das Agenten-Briefing, gesprochene Abschnitte, genaue Schritte und optional POIs. Siehe „Wegeplanung & Navigation · Beta“.
 """, en: """
 Under AI tools → AI export, generate readable world context from a verified backup for an external assistant.
 
@@ -605,6 +637,12 @@ SHARE
 Save to iCloud writes a new complete Markdown file to the selected, remembered folder each time. macOS handles synchronization. Send via AirDrop opens native sharing. Review world names, coordinates and stock before sharing.
 
 Companion does not automatically send context to an AI service. This is a data/knowledge extract, not a restorable savegame backup.
+
+OPTIONAL CONTENT
+Choose a skill if wanted and decide separately whether to include personal context. Selected video notes can be included or saved as a second Markdown file. Large combined video notes are moved to a separate file, not truncated. The on-screen preview shows only the beginning of the complete document. Regenerate context after changing options.
+
+NAVIGATION
+First hand off a candidate from Maps, then enable Include English navigation · Beta for the same backup. Export includes the agent briefing, spoken sections, detailed steps and optional POIs. See Route planning & navigation · Beta.
 """),
     .init(id: "conversation", icon: "bubble.left.and.bubble.right", deTitle: "Gespräch · Beta", enTitle: "Conversation · Beta", de: """
 Gespräch · Beta beantwortet Fragen zu den gespeicherten Daten der ausgewählten Welt sowie zu enthaltenen Rezept- und Anleitungshinweisen. Es ist keine Live-Verbindung zum Spiel und keine Navigation im Headset.
@@ -641,6 +679,39 @@ Basic lookup needs no additional language model. Apple Intelligence is optional 
 
 Material checks compare ingredients for one execution of included reference recipes with marked owned chests. Player inventory, intermediate products and workstations are excluded. Recipes are labeled as unverified Minecraft references. Recognition and answers can be wrong; check dates, data gaps and source notes.
 """),
+    .init(id: "skills", icon: "text.book.closed", deTitle: "Skills verwalten", enTitle: "Manage skills", de: """
+Öffne Skills in der Navigation unter KI-Werkzeuge. Die zentrale Bibliothek enthält wiederverwendbare Anweisungen für Weltassistenz, Spielstand-Arbeit, Hilfe und Companion-Entwicklung.
+
+BEARBEITEN UND VERSIONIEREN
+Mit „Neuer Skill“ legst du eigene Anweisungen an. „Bearbeiten / Umbenennen“ ändert Titel, Beschreibung, Anweisungen und eigene Ergänzungen. Jede Speicherung eines bestehenden Skills bewahrt den vorherigen Stand in der Versionshistorie. Dort kannst du einen Stand ansehen und als neue Version wiederherstellen. Archivieren blendet einen Skill aus der aktiven Auswahl aus; Löschen entfernt auch seine lokale Historie.
+
+IMPORT UND EXPORT
+Das obere Aktionsmenü (…) importiert Markdown oder ein Skill-Paket und exportiert die gesamte Bibliothek. Im Aktionsmenü eines Skills kannst du SKILL.md oder ein Paket mit Versionen exportieren und den Skill duplizieren. Pakete enthalten Skill-Ergänzungen und Historie, aber kein persönliches Profil. Bei gleichen IDs entstehen Importkopien; bestehende Skills bleiben erhalten. Markdown importiert die Textanweisung, keine Versionshistorie. Importierte Anweisungen werden nicht ausgeführt.
+
+SPRACHEN UND LOKALE ÜBERSETZUNG
+Mitgelieferte Skills enthalten Deutsch und Englisch; die Ansicht folgt der App-Sprache. Im Editor wechselst du zwischen den Fassungen. Das Exportmenü bietet Deutsch, Englisch oder beide Sprachen in einer Markdown-Datei; JSON-Pakete enthalten alle vorhandenen Fassungen und deren Historie.
+
+„Aus anderer Sprache mit lokalem Qwen übersetzen“ erstellt einen Entwurf aus der anderen Fassung. Starte dafür LM Studio mit Qwen3.5-4B und dem lokalen Server auf Port 1234. Bei langen Skills kann eine größere Kontextgröße nötig sein; maximal 18 KB Text werden angenommen. Der Entwurf ersetzt den sichtbaren Editorinhalt. Prüfe Bedeutung, Zahlen und Befehle vor dem Speichern. Abbrechen oder Modellfehler bewahren den bisherigen Text. Ohne lokalen Server bleibt manuelles Übersetzen möglich; es gibt keinen Cloud-Fallback.
+
+MIT AGENTEN VERWENDEN
+„Für KI-Export verwenden“ wählt den Skill im KI-Export aus. Alternativ Markdown kopieren oder SKILL.md an einen Agenten übergeben. Die automatische Erkennung hängt vom Agenten ab. Entwicklungsskills können ohne Weltexport verwendet werden. Persönliche Angaben werden im KI-Export separat und freiwillig beigefügt.
+""", en: """
+Open Skills under AI tools in the navigation. The central library contains reusable instructions for world assistance, savegame work, help maintenance and Companion development.
+
+EDIT AND VERSION
+New skill creates your own instructions. Edit / Rename changes the title, description, instructions and additions. Each save of an existing skill preserves its previous state in Version history. Inspect an earlier state and restore it as a new version. Archiving removes a skill from active selection; deleting also removes its local history.
+
+IMPORT AND EXPORT
+The top actions menu (…) imports Markdown or a skill package and exports the entire library. Each skill's actions menu exports SKILL.md or a package with versions and duplicates the skill. Packages include skill notes and history but exclude the personal profile. Matching IDs create import copies and preserve existing skills. Markdown imports instructions without history. Importing instructions does not execute them.
+
+LANGUAGES AND LOCAL TRANSLATION
+Bundled skills include German and English; the view follows the app language. Switch language versions in the editor. Export German, English or both in one Markdown document; JSON packages contain all available languages and their history.
+
+Translate from other language with local Qwen creates a draft from the other version. Start LM Studio with Qwen3.5-4B and its local server on port 1234. Long skills may need a larger context; inputs up to 18 KB are accepted. The result replaces the visible editor draft. Check meaning, numbers and commands before saving. Cancellation or a model error preserves the existing text. Manual translation remains available without a server; there is no cloud fallback.
+
+USE WITH AGENTS
+Use for AI export selects the skill in AI export. Alternatively, copy Markdown or pass SKILL.md to an agent. Automatic recognition depends on the agent. Development skills work without a world export. Personal context is a separate opt-in in AI export.
+"""),
     .init(id: "videos", icon: "play.rectangle", deTitle: "Videos & Tipps", enTitle: "Videos & tips", de: """
 Unter Wissen & Hilfe → Videos & Tipps findest du den lokalen Videokatalog mit deutschen und englischen Suchhilfen.
 
@@ -657,7 +728,10 @@ PCVR, Quest und andere Spielversionen können abweichen. Eine Videoauswertung is
 VORLESEN UND INTERNET
 Bei vorhandenen Zusammenfassungen kannst du die Vorlesesprache wählen und den Text oder einzelne Schritte mit einer Mac-Systemstimme anhören. „Stopp“ beendet die Ausgabe. Dies ist keine synchrone Übersetzung der Originaltonspur.
 
-Der Katalog ist lokal verfügbar. Onlinevideos werden erst durch deine Wiedergabe-/Linkaktion geöffnet. Es gibt keinen automatischen Video-Download oder laufenden Hintergrundimport.
+Der Katalog ist lokal verfügbar. Beim Anzeigen können offizielle YouTube-Vorschaubilder aus dem Internet geladen werden; dies startet keine Videowiedergabe. Onlinevideos werden erst durch deine Wiedergabe-/Linkaktion geöffnet. Es gibt keinen automatischen Video-Download oder laufenden Hintergrundimport.
+
+SORTIEREN UND EXPORTIEREN
+Sortiere nach Upload-Datum, Originaltitel, Kanal oder Dauer; Zurücksetzen stellt die neueste Veröffentlichung zuerst wieder her. „Video als Markdown exportieren“ gibt die vorhandenen Hinweise mit Quellen und Zeitmarken aus. „Dieses Video in den KI-Gesamtexport aufnehmen“ wählt den Beitrag für einen anschließend neu erzeugten KI-Export aus.
 """, en: """
 Knowledge & help → Videos & tips contains the local video catalog with German and English search aids.
 
@@ -674,7 +748,10 @@ PCVR, Quest and other game versions can differ. A video review is not an indepen
 READING AND INTERNET
 Available summaries or individual steps can be read with a Mac system voice in the chosen language. Stop ends speech. This is not a synchronized translation of the original audio track.
 
-The catalog is available locally. Online media opens only through your playback/link action. There is no automatic video downloader or ongoing background import.
+The catalog is available locally. Browsing can load official YouTube thumbnail images from the internet; this does not start video playback. Videos open only through your playback/link action. There is no automatic video downloader or ongoing background import.
+
+SORT AND EXPORT
+Sort by upload date, original title, channel or duration; Reset restores newest uploads first. Export video as Markdown saves the available notes with sources and timestamps. Include this video in the overall AI export selects it for the next generated AI context.
 """),
     .init(id: "builds", icon: "square.grid.3x3", deTitle: "Bauanleitungen & Blockpläne", enTitle: "Build guides & block plans", de: """
 Unter Wissen & Hilfe → Bauanleitungen findest du Offline-Testaufbauten, unter anderem für Lagerung, Farmen, Türen, Lore-Schaltungen und HQ-Verteidigung. Die angezeigte Sammlung bestimmt die verfügbaren Anleitungen; eine feste Zahl wird hier nicht vorausgesetzt.
@@ -692,6 +769,14 @@ STATUS DER PLÄNE
 Viele Pläne sind KI-generierte, noch nicht in RealmCraft VR geprüfte Übertragungen. Türen, Loren, Fallen und Farmen können je nach Spielmechanik abweichen. Beachte die Hinweise zu Mob-Verhalten, Spielerwegen und Tests mit leeren beziehungsweise besetzten Loren. Ein gezeichneter Plan ist kein Nachweis seiner Funktion.
 
 Die eigene Video-Sammlung findest du unter „Videos & Tipps“. Sie kennzeichnet Quellen, Zeitmarken und Auswertungsumfang getrennt von diesen Offline-Plänen.
+
+2D, 3D UND MATERIALIEN
+Materialien, Darstellung & Iconpacks, Audioguide, Gesamtpläne, Testdetails und Quellen lassen sich ein- und ausklappen. Unter Bauvorschau wechselst du zwischen 2D und 3D; beide folgen demselben Bauschritt. Drehen, Neigen, Zoom und Zurücksetzen steuern die zentrierte 3D-Kamera. Normales Seitenscrollen verändert sie nicht. Ein Höhenschnitt hilft beim Prüfen innerer Ebenen.
+
+Darstellung & Iconpacks bietet Symbole oder Block-Icons mit optionalen Grafikpaketen. Unbekannte Zuordnungen bleiben schematisch. Generische Vollblöcke verwenden eine Bruchstein-Referenz; geeignetes anderes Vollblockmaterial ist möglich, sofern der Plan nichts anderes verlangt. Frühe Teilmodelle sind ausdrücklich als unvollständige Schichtvorschau gekennzeichnet. Eine 3D-Darstellung simuliert keine Spielmechanik.
+
+AUDIOGUIDE
+Öffne Audioguide für einen Sprachagenten. Kopiere den Auftrag oder speichere ihn als Text und übergib ihn dem gewünschten Agenten. Materialliste, Schritte und Grenzen begleiten den Auftrag. Kein Agent wird automatisch gestartet.
 """, en: """
 Knowledge & help → Build guides contains offline test builds, including storage, farms, doors, minecart circuits and HQ defense. The loaded collection determines the available guides; no fixed count is assumed here.
 
@@ -708,6 +793,14 @@ PLAN STATUS
 Many plans are AI-generated adaptations not yet tested in RealmCraft VR. Doors, minecarts, traps and farms may differ with game mechanics. Follow notes about mob behavior, player bypasses and empty/occupied-cart tests. A diagram is not proof that a build works.
 
 The separate Videos & tips library labels sources, timestamps and review coverage independently from these offline plans.
+
+2D, 3D AND MATERIALS
+Materials, Display & icon packs, audio guide, complete plans, test details and sources can be expanded or collapsed. Build preview switches between 2D and 3D; both follow the same construction step. Rotate, tilt, zoom and reset controls operate the centered 3D camera. Normal page scrolling does not change it. A height cutaway helps inspect inner layers.
+
+Display & icon packs offers Symbols or Block icons using optional graphics packs. Unmapped items remain schematic. Generic full blocks use a cobblestone reference; other suitable full blocks are allowed unless the guide requires a particular material. Early partial models explicitly identify incomplete slice previews. A 3D rendering does not simulate game mechanics.
+
+AUDIO GUIDE
+Open Audio guide for a voice agent. Copy the prompt or save it as text and give it to your chosen agent. Materials, steps and limitations accompany the instructions. No agent is started automatically.
 """),
     .init(id: "mobs", icon: "pawprint", deTitle: "Mobs & Animals", enTitle: "Mobs & Animals", de: """
 Wissen & Hilfe → Mobs & Animals ist ein lokales Kreaturenregister, kein Scan deiner Welt.
@@ -1000,7 +1093,7 @@ struct HelpView: View {
                     Picker("Language / Sprache", selection: $language) { Text("Deutsch").tag("de"); Text("English").tag("en") }
                         .labelsHidden().frame(width: 140)
                 }
-                TextField(english ? "Search help" : "Hilfe durchsuchen", text: $search).textFieldStyle(.roundedBorder).frame(width: 260)
+                TextField(english ? "Search help" : "Hilfe durchsuchen", text: $search).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
             }
             HStack(spacing: 0) {
                 VStack {
@@ -1022,7 +1115,7 @@ struct HelpView: View {
                 Divider()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
-                        Label(english ? article.enTitle : article.deTitle, systemImage: article.icon).font(.title.bold())
+                        Label(english ? article.enTitle : article.deTitle, systemImage: article.icon).font(CompanionLayout.detailTitle)
                         HelpParagraphs(content: english ? article.en : article.de)
                         if article.id == "development" {
                             Button(action: exportSource) {

@@ -48,14 +48,15 @@ struct ConversationView: View {
                 Button { showConversationSettings = true } label: {
                     Label(en ? "Conversation settings" : "Gesprächseinstellungen", systemImage: "slider.horizontal.3")
                 }
-                Menu {
+            } menu: {
+                Group {
                     Button(en ? "My chests" : "Eigene Kisten") { showChests = true }
                     Button(en ? "Places & recipes" : "Orte & Rezepte") { showLibrary.toggle() }
                     Button(en ? "Name places in Maps" : "Orte in Karten benennen", action: openMaps)
                     if let openAIExport { Button(en ? "AI export" : "KI-Export", action: openAIExport) }
                     Divider()
                     Button(en ? "New conversation" : "Neues Gespräch") { reset() }.disabled(messages.isEmpty)
-                } label: { Label(en ? "More" : "Mehr", systemImage: "ellipsis") }
+                }
             }
             VStack(alignment: .leading, spacing: 8) {
                 Picker(en ? "World" : "Welt", selection: $model.selection) {
@@ -63,7 +64,7 @@ struct ConversationView: View {
                     ForEach(model.saves) { save in
                         Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id))
                     }
-                }.frame(maxWidth: 600).disabled(model.busy)
+                }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy)
                 Text((spokenEnglish ? "English" : "Deutsch") + " · " + (provider == "qwen" ? "Qwen3.5-4B" : provider == "apple" ? "Apple Intelligence" : (en ? "Basic lookup" : "Einfache Suche")) + " · " + (en ? "Saved data · answers may be incorrect" : "Gespeicherte Daten · Antworten können fehlerhaft sein"))
                     .font(.caption).foregroundStyle(.secondary)
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
@@ -279,7 +280,7 @@ struct ConversationView: View {
                         }
                     }.toggleStyle(.checkbox).padding(.vertical, 4)
                     if ownedIDs.contains(chest.id) {
-                        TextField(en ? "Chest name, e.g. Tool storage" : "Kistenname, z. B. Werkzeuglager", text: Binding(get: { chestLabels[chest.id] ?? "" }, set: { value in
+                        TextField(en ? "Chest name, e.g. Tool storage" : "Kistenname, z. B. Werkzeuglager", text: Binding(get: { chest.displayName(manual: chestLabels[chest.id]) ?? "" }, set: { value in
                             chestLabels[chest.id] = String(value.prefix(80))
                             if let world = model.selected?.annotationScope { UserDefaults.standard.set(chestLabels, forKey: "conversation.chestLabels." + world) }
                         })).textFieldStyle(.roundedBorder)
@@ -339,7 +340,7 @@ struct ConversationView: View {
         let ids = model.selected.map { UserDefaults.standard.stringArray(forKey: "conversation.ownedChests." + $0.annotationScope) ?? [] } ?? []
         let updatedIDs = Set(ids)
         if updatedIDs != ownedIDs { ownedIDs = updatedIDs }
-        let labels = model.selected.flatMap { UserDefaults.standard.dictionary(forKey: "conversation.chestLabels." + $0.world) as? [String: String] } ?? [:]
+        let labels = model.selected.flatMap { UserDefaults.standard.dictionary(forKey: "conversation.chestLabels." + $0.annotationScope) as? [String: String] } ?? [:]
         if labels != chestLabels { chestLabels = labels }
     }
     private func readSpawn() {

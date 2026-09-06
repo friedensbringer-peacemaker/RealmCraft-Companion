@@ -57,7 +57,7 @@
     ctx.fillStyle='#78e3c8';ctx.strokeStyle=active?'#ffffff':'#143d34';ctx.lineWidth=active?3:1;
     ctx.fillRect(p.x-r,p.y-r,r*2,r*1.4);ctx.strokeRect(p.x-r,p.y-r,r*2,r*1.4);
     ctx.beginPath();ctx.moveTo(p.x,p.y+r*.4);ctx.lineTo(p.x,p.y+r);ctx.stroke();
-    if(active){const title=this.title(s);ctx.font='600 12px -apple-system,sans-serif';ctx.textAlign='left';const w=ctx.measureText(title).width;
+    {const title=this.title(s);ctx.font='600 12px -apple-system,sans-serif';ctx.textAlign='left';const w=ctx.measureText(title).width;
      ctx.fillStyle='#112a2ef0';ctx.fillRect(p.x+12,p.y-14,w+14,26);ctx.fillStyle='#fff';ctx.fillText(title,p.x+19,p.y+3);}
    }
   }

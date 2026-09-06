@@ -61,6 +61,10 @@ struct VideoTip: Decodable, Identifiable {
             .components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
     }
 
+    var thumbnailURL: URL { URL(string: "https://i.ytimg.com/vi/\(videoID)/hqdefault.jpg")! }
+    var uploadDateSortKey: String {
+        published.range(of: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", options: .regularExpression) == nil ? "" : published
+    }
     var videoURL: URL { url(at: 0) }
     func url(at seconds: Int) -> URL {
         var parts = URLComponents(string: "https://www.youtube.com/watch")!
@@ -105,6 +109,8 @@ struct BuildText: Decodable {
     func value(_ english: Bool) -> String { english ? en : de }
 }
 struct BuildBlock: Decodable {
+    /// Explicit catalog identity for texture display; empty-cell markers have no texture.
+    var itemID: Int? = nil
     let name: BuildText
     let detail: BuildText
     let symbol: String
@@ -134,6 +140,10 @@ struct BuildInstructionStage: Decodable {
     let topNew: [String]
     let sideNew: [String]
 }
+enum BuildGuideTopic {
+    static let ids = ["basics", "processing", "farms", "transport", "security", "architecture", "interiors", "decoration", "treehouse", "underwater"]
+}
+
 struct BuildGuide: Decodable, Identifiable {
     let id: String
     let category: String
@@ -163,7 +173,7 @@ struct BuildCatalog: Decodable {
     func validate() throws {
         guard !guides.isEmpty, Set(guides.map(\.id)).count == guides.count else { throw CatalogError.invalid }
         for guide in guides {
-            guard ["basics", "processing", "farms", "transport"].contains(guide.category),
+            guard BuildGuideTopic.ids.contains(guide.category),
                   !guide.materials.isEmpty, !guide.steps.isEmpty, !guide.planes.isEmpty,
                   Set(guide.planes.map(\.id)).count == guide.planes.count,
                   !guide.sources.isEmpty, guide.sources.allSatisfy({ $0.url.scheme == "https" }) else { throw CatalogError.invalid }
@@ -246,5 +256,43 @@ extension BuildGuide {
         lines += [english ? "SUCCESS CHECK" : "ERFOLGSKONTROLLE", success.value(english), troubleshooting.value(english)]
         lines += sources.map { "\($0.title): \($0.url.absoluteString)" }
         return lines.joined(separator: "\n")
+    }
+}
+
+/// Upload dates in the catalog use ISO YYYY-MM-DD; ties remain deterministic.
+enum VideoSortOrder: String, CaseIterable {
+    case newest, oldest, title, channel, shortest, longest
+
+    func label(_ english: Bool) -> String {
+        switch self {
+        case .newest: return english ? "Newest first" : "Neueste zuerst"
+        case .oldest: return english ? "Oldest first" : "Älteste zuerst"
+        case .title: return english ? "Original title A–Z" : "Originaltitel A–Z"
+        case .channel: return english ? "Channel A–Z" : "Kanal A–Z"
+        case .shortest: return english ? "Shortest first" : "Kürzeste zuerst"
+        case .longest: return english ? "Longest first" : "Längste zuerst"
+        }
+    }
+
+    func sorted(_ videos: [VideoTip]) -> [VideoTip] {
+        videos.sorted { a, b in
+            switch self {
+            case .newest, .oldest:
+                if a.uploadDateSortKey.isEmpty != b.uploadDateSortKey.isEmpty { return !a.uploadDateSortKey.isEmpty }
+                if a.uploadDateSortKey != b.uploadDateSortKey {
+                    return self == .newest ? a.uploadDateSortKey > b.uploadDateSortKey : a.uploadDateSortKey < b.uploadDateSortKey
+                }
+            case .title:
+                let comparison = a.originalTitle.localizedStandardCompare(b.originalTitle)
+                if comparison != .orderedSame { return comparison == .orderedAscending }
+            case .channel:
+                let comparison = a.channel.localizedStandardCompare(b.channel)
+                if comparison != .orderedSame { return comparison == .orderedAscending }
+                if a.uploadDateSortKey != b.uploadDateSortKey { return a.uploadDateSortKey > b.uploadDateSortKey }
+            case .shortest, .longest:
+                if a.duration != b.duration { return self == .shortest ? a.duration < b.duration : a.duration > b.duration }
+            }
+            return a.videoID < b.videoID
+        }
     }
 }

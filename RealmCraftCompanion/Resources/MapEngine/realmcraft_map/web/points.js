@@ -36,7 +36,7 @@
    this.category='chest';this.$('poi-kind').value='chest';this.index=this.filtered().findIndex(p=>p.x===x&&p.y===y&&p.z===z);this.refresh();return true;
   }
   setDimension(d){this.dimension=d;this.index=-1;this.refresh();}
-  title(p){return this.names[p.id]||`${p.kind==='tag'?(tagNames[p.tagType]||'Tag'):labels[p.kind]} · ${p.x}, ${p.y}, ${p.z}`;}
+  title(p){return this.names[p.id]||(p.kind==='chest'&&this.data.dimensions[this.dimension]?.chests?.[`${p.x},${p.y},${p.z}`]?.signName)||`${p.kind==='tag'?(tagNames[p.tagType]||'Tag'):labels[p.kind]} · ${p.x}, ${p.y}, ${p.z}`;}
   step(delta){const points=this.filtered();if(!points.length)return;this.index=this.index<0?(delta>0?0:points.length-1):(this.index+delta+points.length)%points.length;this.visible=true;this.$('poi-visible').checked=true;this.refresh();this.callbacks.focus(points[this.index]);}
   refresh(){const points=this.filtered(),p=points[this.index];const notice=this.$('auto-tag-notice');if(notice){notice.hidden=!(this.visible&&points.some(p=>p.kind==='tag'));notice.textContent=en?'Automatic tags · Beta':'Automatische Tags · Beta';}this.$('poi-count').textContent=p?`${this.index+1} / ${points.length}`:`${points.length} ${en?'places':'Orte'}`;this.$('poi-prev').disabled=!points.length;this.$('poi-next').disabled=!points.length;this.$('poi-detail').hidden=!p;
    if(p){this.$('poi-name').textContent=this.title(p);this.$('poi-coords').textContent=`X ${p.x} · Y ${p.y} · Z ${p.z}`;this.$('poi-input').value=this.names[p.id]||'';this.$('poi-clues').textContent=p.clues?Object.entries(p.clues).map(([k,v])=>`${labels[k]}: ${v}`).join(' · '):`${labels[p.kind]}: ${p.count}`;}

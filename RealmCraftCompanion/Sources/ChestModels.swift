@@ -8,6 +8,12 @@ struct ChestRecord: Codable, Identifiable {
     let id: String; let dimension: String; let x: Int; let y: Int; let z: Int
     let file: String; let items: [ChestItem]; let readable: Bool; let error: String
     var nearbySign: String? = nil
+    var signName: String? = nil
+    var nameSign: String? = nil
+    func displayName(manual: String? = nil) -> String? {
+        if let manual = manual?.trimmingCharacters(in: .whitespacesAndNewlines), !manual.isEmpty { return manual }
+        return signName
+    }
     var coordinates: String { "X \(x) · Y \(y) · Z \(z)" }
 }
 struct ChestGroup: Identifiable {

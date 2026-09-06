@@ -54,16 +54,21 @@ struct AIContextExportView: View {
                     .buttonStyle(CompanionButtonStyle(prominent: true))
                     .disabled(!canGenerate)
             }
+            HStack {
+                    Picker(en ? "Savegame" : "Spielstand", selection: $model.selection) {
+                        Text(en ? "Select a savegame" : "Spielstand auswählen").tag(nil as String?)
+                        ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
+                    }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy || generating)
+                Spacer(minLength: 0)
+            }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
+            Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     Text(en ? "Your world as a document for GPT, Claude and other agents." : "Deine Welt als Dokument für GPT, Claude und andere Agenten.").font(.title2.bold())
                     Text(en ? "Choose a backup and generate a self-contained snapshot. Save Markdown to discuss it with an agent, or JSON for structured processing. Creation is local; you choose where to upload the file."
                          : "Wähle eine Sicherung und erzeuge ein eigenständig verständliches Abbild. Speichere Markdown für das Gespräch mit einem Agenten oder JSON zur strukturierten Verarbeitung. Die Erstellung erfolgt lokal; du entscheidest, wo du die Datei hochlädst.")
                         .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                    Picker(en ? "Savegame" : "Spielstand", selection: $model.selection) {
-                        Text(en ? "Select a savegame" : "Spielstand auswählen").tag(nil as String?)
-                        ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: 680).disabled(model.busy || generating)
+
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Toggle(en ? "Include an agent skill" : "Agenten-Skill beifügen", isOn: $includeSkill).toggleStyle(.checkbox)

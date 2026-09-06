@@ -16,7 +16,7 @@ from PIL import Image
 
 from .chunks import ChunkError, FILENAME, decode
 from .palette import NAMES, PALETTE
-from .chests import scan_data
+from .chests import scan_data, classify_sign_chests
 from .signs import scan_data as scan_signs
 from .points import points_for_columns, finalize
 from .tags import collect, suggest
@@ -195,6 +195,7 @@ def build(source, output, *, workers=16, radius=None, cache=None):
             rgba[:,:,:3] = np.clip((stops[lo]*(1-f)+stops[lo+1]*f)*shade[:,:,None], 0,255).astype(np.uint8)
             tile_pyramid(Image.fromarray(rgba), stage / 'tiles' / prefix / 'height')
             values = np.unique(ids[present])
+            classify_sign_chests(list(chests.values()), signs)
             manifest['dimensions'][prefix] = {'label': label, 'bounds':[xmin,zmin,xmax,zmax],
                 'chests':chests, 'signs':sorted(signs, key=lambda s:(s['x'],s['z'],s['y'])), 'biomes':biomes, 'points':finalize(points,prefix)+suggest(tag_cells,prefix,chests), 'chunks':chunks, 'count':len(chunks), 'grids':grids, 'regions':region_keys,
                 'heightRange':[int(heights[present].min()),int(heights[present].max())],

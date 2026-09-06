@@ -31,10 +31,39 @@ struct NavigationPack: Codable {
     }
     func selectingPOIs(_ include: Bool) -> Self { var p = self; p.includePOIs = include && includePOIs; if !p.includePOIs { p.pois = []; p.localHighlights = p.localHighlights?.filter { id in p.steps.contains { $0.id == id } } }; return p }
     static func safe(_ s: String) -> String { s.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "\r", with: " ").replacingOccurrences(of: "<", with: "&lt;").replacingOccurrences(of: ">", with: "&gt;").replacingOccurrences(of: "`", with: "'") }
+    static let assistantInstructions = "Use this navigation file to guide me in English, one route section at a time, normally covering 50-100 route blocks (aim for 75), or about 25 blocks in critical areas. Before starting, confirm the destination, dimension, my current X/Y/Z coordinates and facing direction. Give the direction (left, right, straight, up or down where supported), distance and target X/Y/Z coordinates for each step. Wait for my section arrival confirmation or updated coordinates before continuing. Never infer my position from elapsed time. Mention nearby POIs only when included in this file and requested, with their coordinates; describe their side relative to my confirmed facing direction. If I leave the route or encounter an obstacle, stop and ask for updated coordinates. Do not invent a detour, junction, ladder or landmark. Ask for a newly planned route if I choose a different destination. Do not read every detailed step aloud or request confirmation after each 2-5 blocks. Use the spoken sections below as confirmation checkpoints. Combine minor height changes and short zigzags into a concise terrain description, but announce necessary turns, junctions, climbing cues and transport changes with their coordinates before entering the section. Several nearby critical manoeuvres belong in one briefing; shorter sections are allowed at arrival or when essential. The section endpoint is not permission to cut across terrain: follow the detailed route, never infer a straight shortcut. If the manoeuvres cannot be followed from a concise briefing, ask whether detailed guidance is needed. Wait for confirmation at the end of the section, not after each detailed step."
+    struct SpokenSection: Codable {
+        let index: Int; let at: Position; let to: Position; let blocks: Int
+        let stepIDs: [String]; let criticalStepIDs: [String]
+        var text: String {
+            "\(index). \(blocks) route blocks: \(at.text) → \(to.text). Detailed references: \(stepIDs.first ?? "")–\(stepIDs.last ?? "")." + (criticalStepIDs.isEmpty ? "" : " Brief critical manoeuvres first: " + criticalStepIDs.joined(separator: ", ") + ".")
+        }
+    }
+    var spokenSections: [SpokenSection] {
+        var result: [SpokenSection] = [], group: [Step] = []; var blocks = 0
+        func critical(_ step: Step) -> Bool {
+            step.instruction.range(of: "junction|stairs|ladder|climb|Board |Dismount|Turn around", options: [.regularExpression, .caseInsensitive]) != nil
+        }
+        func flush() {
+            guard let first = group.first, let last = group.last else { return }
+            result.append(SpokenSection(index: result.count + 1, at: first.at, to: last.to, blocks: blocks, stepIDs: group.map(\.id), criticalStepIDs: group.filter(critical).map(\.id)))
+            group = []; blocks = 0
+        }
+        for step in steps where step.action != "arrive" {
+            if !group.isEmpty && (blocks + step.blocks > 100 || (blocks >= 25 && critical(step))) { flush() }
+            group.append(step); blocks += step.blocks
+            if blocks >= (group.contains(where: critical) ? 25 : 75) { flush() }
+        }
+        flush(); return result
+    }
+    var exportGuidance: [String] { guidance.map { $0.replacingOccurrences(of: "Ask for current coordinates and facing direction before each turn.", with: "Confirm current coordinates and facing direction at section checkpoints; recheck facing before a turn if it is uncertain.") } }
     var markdown: String {
         var lines = ["# English navigation · Beta", "", "Dimension: \(dimension). Map snapshot: \(Self.safe(generatedAt)).", "Candidate route: \(distance) blocks. No live position tracking.", ""]
-        lines += guidance.map { "- " + Self.safe($0) }
-        lines += ["", "## Turn-by-turn steps", ""]
+        lines += ["## Instructions for the navigation assistant", "", Self.assistantInstructions, "", "## Route guidance", ""]
+        lines += exportGuidance.map { "- " + Self.safe($0) }
+        lines += ["", "## Spoken sections · confirmation checkpoints", ""]
+        lines += spokenSections.map(\.text)
+        lines += ["", "## Detailed route reference · do not read step by step by default", ""]
         lines += steps.map { "\($0.index). [\($0.id)] At \($0.at.text), heading \($0.heading): \(Self.safe($0.instruction))" }
         if includePOIs { lines += ["", "## Optional nearby POIs · within 250 horizontal blocks of a route step", ""] + pois.map { "- [\($0.id)] \(Self.safe($0.name)): approximately \($0.distance) blocks \($0.side) at \($0.stepID); X \($0.x), Y \($0.y.map(String.init) ?? "unknown"), Z \($0.z). Source: \(Self.safe($0.source))." } }
         if let ids = localHighlights, !ids.isEmpty { lines += ["", "## Local Qwen highlights", "", "Qwen selected these supplied references as useful cues; coordinates and route facts are unchanged: " + ids.joined(separator: ", ")] }
@@ -42,7 +71,12 @@ struct NavigationPack: Codable {
     }
     func attach(to document: AIContextDocument) -> AIContextDocument {
         var payload = document.payload
-        if let data = try? JSONEncoder().encode(self), let object = try? JSONSerialization.jsonObject(with: data) { payload["navigation"] = object }
+        if let data = try? JSONEncoder().encode(self), var object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] {
+            object["guidance"] = exportGuidance
+            object["assistantInstructions"] = Self.assistantInstructions
+            if let sections = try? JSONEncoder().encode(spokenSections) { object["spokenSections"] = try? JSONSerialization.jsonObject(with: sections) }
+            payload["navigation"] = object
+        }
         return AIContextDocument(payload: payload, markdown: document.markdown + "\n\n" + markdown, videoMarkdown: document.videoMarkdown)
     }
     func validatedHighlights(_ ids: [String]) throws -> [String] {

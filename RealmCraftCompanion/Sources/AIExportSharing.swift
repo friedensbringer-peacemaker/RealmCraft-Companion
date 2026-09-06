@@ -53,14 +53,15 @@ final class AIExportSharing: NSObject, ObservableObject, NSSharingServiceDelegat
     @Published private(set) var sharing = false
     @Published private(set) var lastSaved: URL?
     private let defaults: UserDefaults
-    private let bookmarkKey = "aiExport.iCloudFolderBookmark"
+    private let bookmarkKey: String
     private var service: NSSharingService?
     private var staging: URL?
     // Retain the delegate and staged attachment even when navigating away from KI-Export.
     private var activeOperation: AIExportSharing?
     private var english = false
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = .standard, bookmarkKey: String = "aiExport.iCloudFolderBookmark") {
+        self.bookmarkKey = bookmarkKey
         self.defaults = defaults
         super.init()
         do { folder = try resolveFolder() }
@@ -86,7 +87,7 @@ final class AIExportSharing: NSObject, ObservableObject, NSSharingServiceDelegat
         panel.allowsMultipleSelection = false
         panel.canCreateDirectories = true
         panel.prompt = english ? "Use folder" : "Ordner verwenden"
-        panel.message = english ? "Choose a folder in iCloud Drive for your AI exports." : "Wähle einen Ordner in iCloud Drive für deine KI-Exporte."
+        panel.message = english ? "Choose a folder in iCloud Drive for your exports." : "Wähle einen Ordner in iCloud Drive für deine Exporte."
         panel.directoryURL = folder ?? (FileManager.default.fileExists(atPath: AIExportFiles.cloudDrive.path) ? AIExportFiles.cloudDrive : nil)
         guard panel.runModal() == .OK, let url = panel.url else { return }
         let access = url.startAccessingSecurityScopedResource()

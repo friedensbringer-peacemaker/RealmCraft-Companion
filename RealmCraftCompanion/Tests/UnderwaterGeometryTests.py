@@ -32,7 +32,9 @@ for (x,y,z),v in s.items():
  if v=='uw_ladder_back':assert s.get((x,y,z+1))=='uw_stone'
 assert s[(2,7,1)]=='uw_stone' and (2,8,1) not in s and (2,9,1) not in s
 print('Shaft: 8 supported ladders and two-block-clear upper landing')
-for g in d['guides'][-7:]:
+# Keep this regression tied to its original modules as the catalog grows.
+for guide_id in ['uw_test', 'uw_dome', 'uw_pyramid', 'uw_tunnel', 'uw_shaft', 'fast_walkway', 'fast_canal']:
+ g=gs[guide_id]
  counts=collections.Counter(vox(g).values())
  for k,count in counts.items():
   if k not in ['W','uw_ladder_back']:

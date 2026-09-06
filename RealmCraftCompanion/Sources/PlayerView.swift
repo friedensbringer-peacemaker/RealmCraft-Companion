@@ -89,13 +89,14 @@ struct PlayerView: View {
             CompanionPageHeader(title: english ? "Player" : "Spieler") {
                 Button(player.snapshot == nil ? (english ? "Read player" : "Spieler auslesen") : (english ? "Refresh" : "Aktualisieren")) { player.read(model, quest: player.quest, english: english) }
                     .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(unavailable).keyboardShortcut("r", modifiers: .command)
-                Button(english ? "Skin…" : "Skin …") { showSkinEditor = true }
-                Menu {
+            } menu: {
+                Group {
+                    Button(english ? "Skin…" : "Skin …") { showSkinEditor = true }
                     Button(english ? "Export JSON" : "JSON exportieren") { player.export(model) }.disabled(player.snapshot == nil)
                     Button(english ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }
                     Button(english ? "Check connection" : "Verbindung prüfen") { model.connect() }
-                } label: { Image(systemName: "ellipsis.circle") }.menuStyle(.borderlessButton).fixedSize().disabled(model.busy)
-                    .accessibilityLabel(english ? "Player actions" : "Spieler-Aktionen")
+                }
+                .disabled(model.busy)
             }
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
@@ -107,7 +108,7 @@ struct PlayerView: View {
                     } else {
                         Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
                             ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                        }.frame(maxWidth: 480)
+                        }.frame(maxWidth: CompanionLayout.sourceWidth)
                     }
                 }.disabled(model.busy || model.scanning)
                 Text(english ? "Reads the last saved state, not live gameplay. Save in RealmCraft before refreshing. No game files are changed." : "Liest den zuletzt gespeicherten Stand, keine Live-Spielwerte. Vor dem Aktualisieren in RealmCraft speichern. Spieldateien werden nicht verändert.")
@@ -116,7 +117,7 @@ struct PlayerView: View {
                     if model.busy { ProgressView().controlSize(.small); Text(tr(model.status)) }
                     else if let error = player.refreshError { Text(error).foregroundStyle(.orange) }
                     Spacer()
-                }.font(.caption).frame(height: 20, alignment: .leading)
+                }.font(.caption).frame(minHeight: 20, alignment: .leading).fixedSize(horizontal: false, vertical: true)
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             if let snapshot = player.snapshot {

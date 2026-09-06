@@ -73,13 +73,17 @@ struct ChestsView: View {
     @State private var sortOrder = ChestSortOrder.origin
     @State private var distanceReference: ChestRecord?
     private var english: Bool { language == "en" }
+    private func chestName(_ chest: ChestRecord) -> String? {
+        let labels = model.selected.flatMap { UserDefaults.standard.dictionary(forKey: "conversation.chestLabels." + $0.annotationScope) as? [String: String] } ?? [:]
+        return chest.displayName(manual: labels[chest.id])
+    }
     private func eligible(_ chest: ChestRecord) -> Bool {
         (!spoilerFree || visibility.isKnown(chest)) &&
         (chestCategory == "all" || visibility.owned.contains(chest.id) == (chestCategory == "player")) &&
         (visibilityFilter == "all" || visibility.isHidden(chest) == (visibilityFilter == "hidden"))
     }
     private func matches(_ chest: ChestRecord) -> Bool {
-        eligible(chest) && ChestMaterialShortcut.matches(chest, selected: quickMaterials, requireAll: requireAllMaterials) && (query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || chest.items.contains { chests.matches($0, query: query) })
+        eligible(chest) && ChestMaterialShortcut.matches(chest, selected: quickMaterials, requireAll: requireAllMaterials) && (query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || chestName(chest)?.localizedStandardContains(query.trimmingCharacters(in: .whitespacesAndNewlines)) == true || chest.items.contains { chests.matches($0, query: query) })
     }
     private func quantityMatches(_ item: ChestItem) -> Bool {
         if !quickMaterials.isEmpty { return ChestMaterialShortcut.highlights(item, selected: quickMaterials) }
@@ -115,7 +119,7 @@ struct ChestsView: View {
                 Button(english ? "Measure from selected chest" : "Ab ausgewählter Kiste messen") { useAsReference(chest) }
             }
         } label: { Image(systemName: "arrow.up.arrow.down") }
-        .fixedSize().help(sortOrder.title(english))
+        .companionOverflow().help(sortOrder.title(english))
         .accessibilityLabel((english ? "Sort: " : "Sortierung: ") + sortOrder.title(english))
     }
     private func sortingDetail(_ chest: ChestRecord) -> String {
@@ -146,10 +150,16 @@ struct ChestsView: View {
         saveVisibility()
     }
     private var filterCount: Int {
-        (dimension == "all" ? 0 : 1) + (visibilityFilter == "visible" ? 0 : 1) + (visibility.hideSuspected ? 1 : 0)
+        (dimension == "all" ? 0 : 1) + (visibilityFilter == "visible" ? 0 : 1) + (visibility.hideSuspected ? 1 : 0) + (chestCategory == "player" ? 0 : 1) + quickMaterials.count
     }
     private var filterSummary: String {
         var parts: [String] = []
+        parts.append(chestCategory == "player" ? (english ? "Player chests" : "Eigene Kisten") : chestCategory == "random" ? (english ? "Other chests" : "Andere Kisten") : (english ? "All chests" : "Alle Kisten"))
+        if !quickMaterials.isEmpty {
+            let materials = ChestMaterialShortcut.all.filter { quickMaterials.contains($0.id) }.map { english ? $0.en : $0.de }
+            let joiner = requireAllMaterials ? (english ? " AND " : " UND ") : (english ? " OR " : " ODER ")
+            parts.append(materials.joined(separator: joiner))
+        }
         if dimension != "all" { parts.append(dimension == "o" ? (english ? "Overworld" : "Oberwelt") : "Nether") }
         if visibilityFilter != "visible" { parts.append(visibilityFilter == "hidden" ? (english ? "Hidden chests" : "Ausgeblendete Kisten") : (english ? "Including hidden chests" : "Inklusive ausgeblendeter Kisten")) }
         if visibility.hideSuspected { parts.append(english ? "Dungeon estimate hidden" : "Dungeon-Schätzung ausgeblendet") }
@@ -215,15 +225,23 @@ struct ChestsView: View {
     private var filterButton: some View {
         Button { showFilters.toggle() } label: {
             Label(filterCount == 0 ? (english ? "Filters" : "Filter") : (english ? "Filters (\(filterCount))" : "Filter (\(filterCount))"), systemImage: "line.3.horizontal.decrease.circle")
-        }.fixedSize().popover(isPresented: $showFilters, arrowEdge: .bottom) {
+        }.buttonStyle(CompanionButtonStyle(width: CompanionLayout.primaryActionWidth))
+        .popover(isPresented: $showFilters, arrowEdge: .bottom) {
+            ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     Text(english ? "Filter chests" : "Kisten filtern").font(.headline)
                     Spacer()
                     Button(english ? "Reset" : "Zurücksetzen") {
                         dimension = "all"; visibilityFilter = "visible"; visibility.hideSuspected = false
+                        chestCategory = "player"; quickMaterials = []; requireAllMaterials = false
                     }.buttonStyle(.plain).foregroundStyle(theme.accent).disabled(filterCount == 0)
                 }
+                Text(english ? "Ownership" : "Besitz").font(.subheadline.bold())
+                categoryPicker
+                Text(english ? "Materials" : "Materialien").font(.subheadline.bold())
+                materialShortcuts
+                Divider()
                 Picker("Dimension", selection: $dimension) {
                     Text(english ? "All dimensions" : "Alle Dimensionen").tag("all")
                     Text(english ? "Overworld" : "Oberwelt").tag("o")
@@ -241,7 +259,8 @@ struct ChestsView: View {
                 if spoilerFree {
                     Label(english ? "Spoiler-light mode still limits results to known chests." : "Der spoilerarme Modus begrenzt Ergebnisse weiterhin auf bekannte Kisten.", systemImage: "eye.slash").font(.caption).foregroundStyle(.secondary)
                 }
-            }.padding(20).frame(width: 360)
+            }.padding(CompanionLayout.panelInset)
+            }.frame(width: 440, height: 560)
         }
     }
     private var indexInformation: some View {
@@ -282,38 +301,34 @@ struct ChestsView: View {
             CompanionPageHeader(title: english ? "Chests" : "Kisten") {
                     Button(english ? "Read chests" : "Kisten einlesen") { chests.scan(model, maps: maps, english: english) }.buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.busy || !maps.ready || model.selected == nil || maps.checking)
 
-                Menu {
+            } menu: {
+                Group {
                     Button(english ? "Export JSON" : "JSON exportieren") { chests.export(model) }
                     if let chest = current {
                         Button(english ? "Copy coordinates" : "Koordinaten kopieren") { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(chest.coordinates, forType: .string) }
                     }
-                } label: { Image(systemName: "ellipsis.circle") }.menuStyle(.borderlessButton).fixedSize().disabled(model.busy || chests.index == nil)
-                    .accessibilityLabel(english ? "Chest actions" : "Kisten-Aktionen")
+                }
+                .disabled(model.busy || chests.index == nil)
             }
             VStack(alignment: .leading, spacing: 12) {
-                HStack {
+                HStack(spacing: CompanionLayout.actionSpacing) {
                     Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
                         if model.saves.isEmpty { Text(english ? "No savegames" : "Keine Spielstände").tag(nil as String?) }
                         ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: 440).disabled(model.busy)
-                    Spacer(minLength: 12)
-                    if chests.index != nil {
-                        Text(english ? "\(locations.count) locations · \(locations.reduce(0) { $0 + $1.members.filter(matches).count }) chests" : "\(locations.count) Lagerorte · \(locations.reduce(0) { $0 + $1.members.filter(matches).count }) Kisten")
-                            .font(.callout).monospacedDigit().foregroundStyle(.secondary)
-                    }
-                    Button { showInfo.toggle() } label: { Image(systemName: "info.circle") }
-                        .buttonStyle(.plain).foregroundStyle(.secondary)
+                    }.frame(maxWidth: .infinity).disabled(model.busy)
+                    Button { showInfo.toggle() } label: {
+                        Image(systemName: "info.circle")
+                            .frame(width: CompanionLayout.actionHeight, height: CompanionLayout.actionHeight)
+                            .contentShape(Rectangle())
+                    }.buttonStyle(.plain).foregroundStyle(.secondary)
                         .accessibilityLabel(english ? "About the chest index" : "Informationen zum Kistenindex")
                         .popover(isPresented: $showInfo) { indexInformation }
                 }
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 12) { searchField; categoryPicker.frame(width: 270); filterButton; sortingMenu }
-                    VStack(alignment: .leading, spacing: 10) {
-                        searchField
-                        HStack(spacing: 12) { categoryPicker; filterButton; sortingMenu }
-                    }
+                HStack(spacing: CompanionLayout.actionSpacing) {
+                    searchField
+                    filterButton
+                    sortingMenu
                 }
-                materialShortcuts
                 if sortOrder != .origin {
                     HStack {
                         Text(sortOrder.title(english)).font(.caption.bold())
@@ -334,10 +349,15 @@ struct ChestsView: View {
                         if !filterSummary.isEmpty { Text(filterSummary) }
                     }.font(.caption).foregroundStyle(.secondary)
                 }
+                CompanionStatusLane {
                 if model.busy {
                     Text(tr(model.status)).font(.caption).foregroundStyle(.secondary)
                 } else if let index = chests.index, !index.errors.isEmpty {
                     Label(english ? "\(index.errors.count) scan issues — see index information" : "\(index.errors.count) Leseprobleme – siehe Index-Informationen", systemImage: "exclamationmark.triangle").font(.caption).foregroundStyle(.orange)
+                } else if chests.index != nil {
+                    Text(english ? "\(locations.count) locations · \(locations.reduce(0) { $0 + $1.members.filter(matches).count }) chests" : "\(locations.count) Lagerorte · \(locations.reduce(0) { $0 + $1.members.filter(matches).count }) Kisten")
+                        .monospacedDigit()
+                }
                 }
                 if !maps.ready {
                     HStack { Text(english ? "Map tools are required." : "Kartenwerkzeuge werden benötigt."); Button(english ? "Set up in Maps" : "In Karten einrichten", action: openMaps) }.font(.callout)
@@ -348,7 +368,7 @@ struct ChestsView: View {
                 HStack(spacing: 0) {
                     List(locations, selection: $selected) { group in
                         VStack(alignment: .leading, spacing: 6) {
-                            Label(english ? "Storage location" : "Lagerort", systemImage: "shippingbox.fill").font(.headline)
+                            Label(group.members.count == 1 ? (chestName(group.anchor) ?? (english ? "Storage location" : "Lagerort")) : (english ? "Storage location" : "Lagerort"), systemImage: "shippingbox.fill").font(.headline)
                             Text(group.anchor.coordinates).font(.callout).monospacedDigit()
                             Text(group.anchor.dimension == "o" ? (english ? "Overworld" : "Oberwelt") : "Nether").foregroundStyle(.secondary)
                             Text(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? (english ? "\(group.members.count) chests" : "\(group.members.count) Kisten") : (english ? "\(group.members.filter(matches).count) of \(group.members.count) chests matching" : "\(group.members.filter(matches).count) von \(group.members.count) Kisten passend")).font(.caption).foregroundStyle(theme.accent)
@@ -365,11 +385,12 @@ struct ChestsView: View {
                             VStack(alignment: .leading, spacing: 18) {
                                 HStack {
                                     Picker(english ? "Chest" : "Kiste", selection: $chestPosition) {
-                                        ForEach(Array(members.enumerated()), id: \.offset) { offset, member in Text("\(offset + 1) / \(members.count) · \(member.coordinates)").tag(offset) }
+                                        ForEach(Array(members.enumerated()), id: \.offset) { offset, member in Text("\(offset + 1) / \(members.count) · " + (chestName(member).map { $0 + " · " } ?? "") + member.coordinates).tag(offset) }
                                     }
                                 }.disabled(members.count < 2)
                                 HStack(alignment: .top) {
                                     VStack(alignment: .leading, spacing: 8) {
+                                        if let name = chestName(chest) { Text(name).font(.title2.bold()).textSelection(.enabled) }
                                         Text(chest.coordinates).font(.title2.bold()).textSelection(.enabled)
                                             .help(chest.file)
                                         HStack(spacing: 12) {
@@ -383,6 +404,9 @@ struct ChestsView: View {
                                     }
                                     Spacer(minLength: 8)
                                     chestActions(chest)
+                                }
+                                if let sign = chest.nameSign {
+                                    Label(english ? "Name from adjacent sign" : "Name vom direkt angrenzenden Schild", systemImage: "signpost.right").font(.caption).foregroundStyle(.secondary).help(sign)
                                 }
                                 if let sign = chest.nearbySign {
                                     Label(english ? "Nearby sign: ≤30 blocks horizontally, ≤10 vertically" : "Schild in der Nähe: ≤30 Blöcke horizontal, ≤10 Höhe", systemImage: "signpost.right")

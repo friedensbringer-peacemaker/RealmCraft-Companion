@@ -33,3 +33,14 @@ test('equivalent native privacy refreshes preserve open editing state',()=>{
  context.window.AtlasPrivacy.apply({suspected:false,hidden:[],visible:[],owned:['b','a'],enabled:false});assert.equal(events,0);
  context.window.AtlasPrivacy.apply({enabled:true,owned:['a','b']});assert.equal(events,1);
 });
+
+test('adjacent sign name is plain text and manual map name takes precedence',()=>{
+ const s=setup();
+ s.poi.data.dimensions.o.chests={'1,64,2':{signName:'Tools <img src=x>'}};
+ assert.equal(s.poi.title(s.points[0]),'Home store');
+ delete s.poi.names[s.points[0].id];
+ s.poi.selectChest(1,64,2);
+ assert.equal(s.element('poi-name').textContent,'Tools <img src=x>');
+ assert.equal(s.element('poi-coords').textContent,'X 1 · Y 64 · Z 2');
+ assert.match(s.poi.title(s.points[1]),/3, 64, 2/);
+});

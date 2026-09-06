@@ -32,8 +32,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleLocalizations</key><array><string>de</string><string>en</string></array>
 <key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>1.7.22</string>
-<key>CFBundleVersion</key><string>44</string>
+<key>CFBundleShortVersionString</key><string>1.7.30</string>
+<key>CFBundleVersion</key><string>52</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSDocumentsFolderUsageDescription</key><string>RealmCraft-Spielstände in deiner lokalen Library sichern und importieren.</string>
 <key>NSDownloadsFolderUsageDescription</key><string>Vorhandene RealmCraft-Backups zum Importieren finden.</string>

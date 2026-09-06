@@ -1,3 +1,69 @@
+## 1.7.30 — Help refresh and public release
+
+- Added underwater tunnel episode 3, a sand-search trip and a savanna ore trip with bilingual summaries, 11 timestamped entries and six Markdown exports. The catalog now has 157 reviewed contributions out of 197. Two material trips have limited visual-sample coverage without local transcripts; observed scenes are distinguished from metadata claims.
+- Refresh German and English in-app help for current Maps, Skills, AI export, video browsing and interactive build guides. Add a dedicated route-planning/navigation chapter in the Maps group and align the AI help order with the sidebar.
+- Correct map rotation to 90-degree steps; explain remembered orientation, sign labels, navigation clipboard/iCloud handoff and section-based spoken guidance without claiming live position tracking.
+- Document collapsible guide panels, synchronized 2D/3D steps, optional icons, partial legacy models, voice-agent prompts, video sorting and selective context exports.
+- Include source-package image assets, reference text and the line-count tool so the bundled source archive retains its build inputs.
+- Reconcile completed presentation work and remaining validation/porting tasks in the Backlog, and refresh the public project description and build instructions.
+
+## 1.7.29 — Show sign text with the Signs layer
+
+- Added underwater tunnel episodes 4–6 with bilingual summaries, 11 timestamped entries and six Markdown exports. The catalog now has 154 reviewed contributions out of 197. Episodes 4 and 6 have limited visual-sample coverage without local transcripts; episode 5 distinguishes enclosure, clearing and provisional lighting.
+- Added tunnel construction episodes 7–9 with bilingual summaries, 11 timestamped entries and six Markdown exports. The catalog now has 151 reviewed contributions out of 197. Episodes 7 and 9 have limited visual-sample coverage without local transcripts; the reported tunnel connection is attributed to the description.
+- Simplified build guides with collapsible materials, audio, display options, legends and test details. Page scrolling no longer changes the 3D camera. Doors use matching upper/lower artwork in both previews; slabs and stairs show occupied side shapes and scaled 3D surfaces, beds form one mattress with one pillow, and fence gates use posts and rails.
+- Added underground minecart construction episodes 10–12 covering final track sections, test rides, stair detailing and lowered lanterns. Includes bilingual summaries, 15 timestamped entries and six Markdown exports. The catalog now has 148 reviewed contributions out of 197; historical bugs and recording issues are explicitly qualified.
+- Display sign labels immediately when Signs is enabled, without selecting each marker. Keep search filtering, dimension and spoiler visibility rules; clicking still opens the full inscription and coordinates.
+
+## 1.7.28 — Copy and iCloud navigation export
+
+- Show generic solid build supports with the cobblestone texture (catalog ID 12), while explicitly allowing other suitable full blocks and retaining guide-specific material requirements.
+- Added two Nether TNT mining episodes and an underwater pod remodeling episode. Includes bilingual summaries, 15 timestamped steps and six Markdown exports. The catalog now has 139 reviewed contributions out of 197; subjective hardware claims, stock counts and unfinished lighting are explicitly qualified.
+- Added the first two pyramid construction episodes and a gunpowder/TNT mining episode. Includes bilingual summaries, 15 timestamped steps and six Markdown exports. The catalog now has 136 reviewed contributions out of 197; revised building dimensions, unfinished interiors and reported workarounds are explicitly qualified.
+- Constrained build-preview controls to centered orbit and bounded zoom with explicit rotate/tilt/zoom/reset buttons; framing adapts to viewport size and free panning is disabled. Added ten shared build-guide topics and reassigned all 91 guides by primary purpose.
+- Added three reviewed videos covering external HTML mapping, diamond mining and wolf/TNT housekeeping with stonecutter bulk crafting. Includes bilingual summaries, 15 timestamped steps and six Markdown exports. The catalog now has 133 reviewed contributions out of 197; external-app controls and old versus new ore discoveries are distinguished.
+- Added interactive 3D build previews with shared step controls, orbit/zoom, block picking, camera reset, optional pack textures and a height cutaway. Includes 72 complete, projection-checked construction sequences and 19 explicitly labeled legacy slice models; geometry remains schematic and does not simulate game mechanics.
+- Added three reviewed videos covering quartz/glowstone preparation, fishing-lake experiments and a shipwreck journey with black wolves. Includes bilingual summaries, 15 timestamped steps and six Markdown exports. The catalog now has 130 reviewed contributions out of 197; off-camera events, external mapping and inconclusive recording tests are identified.
+- Added a persistent Symbols / Block icons switch for build plans, step diagrams and legends. Uses the selected optional icon pack with explicit catalog IDs, retains placement symbols over textures, and falls back to schematic cells for unavailable or unmapped artwork.
+- Copy the complete navigation briefing directly to the clipboard or save it to a remembered iCloud folder from Maps. Configure a separate navigation export destination under Settings → Map export, also available in the Maps actions menu. Cancelled folder selection leaves the route intact; every cloud export gets a new file.
+
+## 1.7.27 — Longer spoken navigation sections
+
+- Added twelve architecture and interior guides: modern glass and timber facades, glazed gable roof, pergola, living room, dining room, kitchen, bedroom, library, entrance hall, dry bathroom decor and window planters. Includes precise material quantities, layered construction, exterior elevations and voice-agent exports; decorative furniture is distinguished from functional game blocks.
+- Group detailed route manoeuvres into spoken confirmation sections targeting 75 blocks (normally 50–100), or about 25 around critical cues. Preserve all exact turns, coordinates and transport transitions as references; never treat a section endpoint as a straight shortcut. Apply the same cadence to direct Markdown and AI Markdown/JSON exports, including previously saved routes.
+
+## 1.7.26 — Ready-to-use navigation instructions
+
+- Added sixteen separate practical build modules covering the twelve requested additions: storage and workshop rooms, tunnel bend and rise, panorama gallery, bridge junction, four treehouse furnishing modules, rest stop, outpost, mine stairs, animal shelters, moat observation corridor and architectural style samples. All include counted materials, complete layers, exterior views, modular connections and voice-agent handoffs.
+- Added ten independent build modules: underwater junction and living room, spiral stair tower, biosphere garden, boathouse, lighthouse, tree-village junction, mountain switchback, irrigated terraces and station hall. Includes counted materials, layered plans, exterior elevations, manual operating limits and bilingual voice-agent handoffs.
+- Added three reviewed videos covering the Nether portal corridor and two mining hub fencing phases, with bilingual summaries, 24 timestamped steps and six Markdown exports. The catalog now has 97 reviewed contributions out of 197; off-camera builds, unfinished connections and unverified mechanics are explicitly identified.
+- Include an English, step-by-step assistant briefing in direct navigation Markdown and general AI Markdown/JSON exports, including routes saved before this update. Confirm position and facing, wait for arrival, and stop on obstacles or deviations; optional POIs remain grounded in the supplied data.
+
+## 1.7.25 — A shared actions menu on every page
+
+- Added three reviewed RealmCraft videos covering the savanna rail loop, small tree/wheat farm and Nether railway, plus the requested external QuestCraft 6.0 comparison. Includes bilingual summaries, 32 timestamped steps and eight Markdown exports; 94 reviewed contributions out of 197. Incomplete builds and historical compatibility claims are explicitly identified.
+- Added three reviewed videos covering Nether magma gathering, Mine 3 construction and Mine 1 tunnel preparation, with bilingual summaries, 24 timestamped instructions and Markdown exports. The catalog now has 90 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Use readable face-adjacent sign text as individual chest names in Chests, maps and conversation stock answers; preserve manual names, keep coordinates visible and omit conflicting inscriptions. Refresh names when rescanning or rebuilding maps.
+- Always show the same trailing actions menu in every main-page header, including pages without contextual actions.
+- Include the running version, project GitHub link and the shared general settings submenu; preserve contextual actions and their individual availability.
+- Keep general menu entries available when page data has not been loaded, and consolidate mob appearance/report actions into the common menu.
+
+## 1.7.24 — Clearer chest controls and visible version
+
+- Add video sorting by upload date, original title, channel and duration. Default to newest uploads first; Reset restores this order.
+- Simplify the Chests toolbar to aligned source and search rows; group ownership and material options in the Filters popover, retain visible filter summaries, and align filter/sort controls with page actions.
+- Show the running app version below the Companion name in the persistent sidebar.
+
+## 1.7.23 — Consistent page layout
+
+- Added three reviewed videos covering tree/wheat farm expansion, turtle-area minecart access and mountain tunnel excavation, with bilingual summaries, 25 timestamped instructions and Markdown exports. The catalog now has 87 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Show official YouTube thumbnails, original titles, channel, upload date and duration in video browsing; include original titles and thumbnail links in Markdown exports. Thumbnails load as images without video playback.
+- Align all main-page headers, including Home and Editor, on the same fixed title baseline and content inset.
+- Give primary page actions a stable 180 × 32 pt slot and reserve the same overflow position; keep player appearance in the actions menu.
+- Align source selectors and reading columns, stabilize illustrated list widths, and normalize detail headings and panel spacing.
+- Keep compact loading status lanes in Chests and Statistics; let longer player and map messages wrap instead of clipping.
+- Place the AI-export save selection above its scrolling options and keep Home activity actions equally wide.
+
 ## 1.7.22 — Navigation export and mixed journeys · Beta
 
 - Added three reviewed videos covering ice spike railway completion, snowy route construction and dark oak sapling gathering, with bilingual summaries, 22 timestamped instructions and Markdown exports. The catalog now has 84 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.

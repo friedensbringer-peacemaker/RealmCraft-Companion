@@ -192,7 +192,7 @@ Map layers → Signs independently toggles saved sign markers. The Signs sidebar
 
 The read-only v9 decoder validates sign blocks, coordinates, record lengths, UTF-8 and the observed footer. Oak sign records (162, including wall blocks 172) are confirmed against eight real signs. Other wood families retain block-derived locations with text unavailable until their record formats are verified. Sources are never modified. The cache version includes sign extraction; map audit.json records unreadable sign records.
 
-Checks: Python test_signs.py covers multiline Unicode, empty/missing records, every record truncation, invalid lengths/UTF-8, duplicates, dimension isolation, cache reuse and source hashes. Node signs.test.cjs covers search, navigation, plain-text rendering, stacked markers, transformed selection, legacy maps and live privacy changes. Eight private save records match the earlier extraction; no personal save data is packaged.
+Checks: Python test_signs.py covers multiline Unicode, empty/missing records, every record truncation, invalid lengths/UTF-8, duplicates, dimension isolation, cache reuse and source hashes. Node signs.test.cjs covers search, navigation, plain-text rendering, stacked markers, transformed selection, legacy maps and live privacy changes. No personal save data is packaged.
 
 
 ### Expanded AI context (schema 2)

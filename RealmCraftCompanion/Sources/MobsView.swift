@@ -21,9 +21,9 @@ struct MobsView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: "Mobs & Animals") {
-                Menu {
-                    Toggle(english ? "Show mob images" : "Mob-Bilder einblenden", isOn: $showImages)
-                } label: { Label(english ? "Appearance" : "Darstellung", systemImage: "photo") }
+                EmptyView()
+            } menu: {
+                Toggle(english ? "Show mob images" : "Mob-Bilder einblenden", isOn: $showImages)
                 Button(english ? "Report data / bug" : "Daten / Bug melden") { report(context(for: current)) }
             }
             VStack(alignment: .leading, spacing: 10) {
@@ -73,7 +73,7 @@ struct MobsView: View {
                                 }
                             }.padding(.vertical, 7).tag(entry.id)
                         }
-                    }.listStyle(.sidebar).scrollContentBackground(.hidden).frame(width: showImages ? 326 : 260)
+                    }.listStyle(.sidebar).scrollContentBackground(.hidden).frame(width: CompanionLayout.illustratedSidebarWidth)
                     Divider()
                     if let entry = current {
                         ScrollView {
@@ -108,7 +108,7 @@ struct MobDetail: View {
                 Image(systemName: entry.kind == "animal" ? "pawprint.fill" : "sparkles")
                     .font(.system(size: 30)).foregroundStyle(.orange).frame(width: 60, height: 60).companionPanel()
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(entry.name.value(english)).font(.title.bold())
+                    Text(entry.name.value(english)).font(CompanionLayout.detailTitle)
                     Text(entry.name.value(!english)).foregroundStyle(.secondary)
                     Text(entry.kind == "animal" ? "Animal" : "Mob").font(.caption)
                 }

@@ -29,6 +29,8 @@ enum VideoKnowledgeExport {
                 "- " + t("Prüfstatus: ", "Review status: ") + tip.coverageLabel(en),
                 "- " + safe(tip.sourceScope?.value(en) ?? t("Versionsbezug offen", "Version context unknown")), "",
                 "### " + t("Kurzfassung", "Short summary"), "", safe(tip.summary.value(en)), ""]
+            lines += ["- " + t("Originaltitel: ", "Original title: ") + safe(tip.originalTitle)]
+            lines += ["- " + t("YouTube-Vorschaubild: ", "YouTube thumbnail: ") + tip.thumbnailURL.absoluteString, ""]
             if tip.isCurated {
                 lines += ["### " + t("Voraussetzungen", "Prerequisites"), "", safe(tip.prerequisites.value(en)), "",
                     "### " + t("Anleitung und Sprungmarken", "Instructions and timestamps"), ""]

@@ -28,10 +28,10 @@ struct StatisticsView: View {
                     ForEach(model.saves) { save in
                         Text(save.title + " · " + displayDate(save.date, language: language) + " · " + save.world).tag(Optional(save.id))
                     }
-                }.frame(maxWidth: 700).disabled(model.busy || model.scanning)
+                }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy || model.scanning)
                 Text(english ? "Reads a local backup with checksum verification. To see new activity, first create a new backup in Savegames." : "Liest eine lokale Sicherung mit Prüfsummenprüfung. Für neue Aktivitäten zuerst unter Savegames eine neue Sicherung erstellen.")
                     .font(.caption).foregroundStyle(.secondary)
-                if model.busy { HStack { ProgressView().controlSize(.small); Text(tr(model.status)).font(.caption) } }
+                CompanionStatusLane { if model.busy { ProgressView().controlSize(.small); Text(tr(model.status)) } }
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             ScrollView {
@@ -54,7 +54,7 @@ struct StatisticsView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                             Text(english ? "Beta refers to coverage: special tools and other game versions are not yet fully validated. This is not a count of mined blocks alone, and is not an estimate of missing history." : "Beta betrifft die Abdeckung: Sonderwerkzeuge und andere Spielversionen sind noch nicht vollständig geprüft. Dies ist keine reine Abbauzahl und keine Schätzung fehlender Spielhistorie.")
                                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                        }.padding(22).background(theme.surface).clipShape(RoundedRectangle(cornerRadius: theme.radius))
+                        }.padding(CompanionLayout.panelInset).background(theme.surface).clipShape(RoundedRectangle(cornerRadius: theme.radius))
                     } else if failure == nil {
                         VStack(alignment: .leading, spacing: 10) {
                             Label(english ? "Your world's activity" : "Die Aktivitäten deiner Welt", systemImage: "chart.bar.xaxis").font(.title2.bold())

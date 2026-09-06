@@ -21,6 +21,16 @@ struct AIContextDocument { let payload: [String: Any]; let markdown: String; var
         do { _ = try pack.validatedHighlights(["invented"]); fatalError("Invented reference accepted") } catch {}
         let document = pack.attach(to: AIContextDocument(payload: ["existing": true], markdown: "Base"))
         precondition(document.payload["existing"] as? Bool == true && document.payload["navigation"] != nil)
+        precondition(pack.markdown.contains(NavigationPack.assistantInstructions))
+        let exportedNavigation = document.payload["navigation"] as! [String: Any]
+        precondition(exportedNavigation["assistantInstructions"] as? String == NavigationPack.assistantInstructions)
+        precondition(document.markdown.contains(NavigationPack.assistantInstructions))
+        precondition(pack.spokenSections.count == 1)
+        precondition(pack.spokenSections[0].blocks == 14)
+        precondition(pack.spokenSections[0].stepIDs == ["step-1", "step-2"])
+        precondition(pack.spokenSections[0].to.x == 4)
+        precondition((exportedNavigation["spokenSections"] as? [[String: Any]])?.count == 1)
+        precondition(pack.markdown.contains("Spoken sections"))
         if CommandLine.arguments.contains("--live") {
             let answer = try await pack.highlightedLocally()
             precondition(!(answer.localHighlights ?? []).isEmpty)

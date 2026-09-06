@@ -11,7 +11,7 @@ AI contributor: **[Codex Astra](CONTRIBUTORS.md)**
 <p align="center">
   <a href="https://friedensbringer-peacemaker.github.io/RealmCraft-Companion/"><strong>▶ Try the website</strong></a> &nbsp; · &nbsp;
   <a href="https://github.com/friedensbringer-peacemaker/RealmCraft-Companion-Android/releases/latest"><strong>↓ Android / Quest APK</strong></a> &nbsp; · &nbsp;
-  <a href="#build-the-macos-companion"><strong>⌘ Build the macOS app</strong></a>
+  <a href="https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/releases/latest"><strong>⌘ Download the macOS app</strong></a>
 </p>
 
 An independent community toolkit for **RealmCraft VR on Meta Quest**. The macOS Companion is the main project and reference for features and design. Android/Quest and the website provide their own smaller, platform-specific experiences. Views use saved snapshots rather than live gameplay.
@@ -62,7 +62,13 @@ Use the map to compare route candidates, export inventory and storage as Markdow
 
 The shared demo is a separately reviewed download, not a collection of private saves. The website can also read supported ZIP files locally in the browser. See the [web documentation](RealmCraftWebDemo/README.md) and [Android instructions](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion-Android#downloadable-demo) for format and device limits.
 
-## Build the macOS Companion
+## Download or build the macOS Companion
+
+The current desktop release is **1.7.30**. [Download the universal macOS app and checksums](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/releases/tag/v1.7.30). It supports Apple Silicon and Intel on macOS 14+. This community build is ad-hoc signed and is not Apple-notarized.
+
+The release brings the latest native UI, interactive 2D/3D build plans, visible sign labels, navigation clipboard/iCloud export and longer spoken route sections, with refreshed German/English help. Screenshots below retain their original 1.7.26 capture labels.
+
+To build from source:
 
 Install Xcode Command Line Tools and Python 3 on macOS, then run:
 
@@ -71,7 +77,7 @@ cd RealmCraftCompanion
 ./build.sh
 ```
 
-The script targets macOS 14+ on Apple Silicon and Intel and creates `RealmCraft Companion.app` beside the project directory. The build is ad-hoc signed; this repository does not currently offer a notarized macOS release. Optional maps and local models have their own setup instructions in the [app guide](RealmCraftCompanion/README.md).
+The script targets macOS 14+ on Apple Silicon and Intel and creates `RealmCraft Companion.app` beside the project directory. The build is ad-hoc signed; the downloadable community release is not notarized. Optional maps and local models have their own setup instructions in the [app guide](RealmCraftCompanion/README.md).
 
 ## Find your way around the source
 

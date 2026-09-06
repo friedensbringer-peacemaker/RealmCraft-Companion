@@ -27,3 +27,36 @@ test('small island suggestion requires closed saved-water boundary',()=>{
 test('saved stairs remain traversable and are named in instructions',async()=>{
  const r=await nav.route({x:0,z:0},{x:2,z:0},(x,z)=>z===0&&x>=0&&x<=2?{id:5,y:64+x}:null,{5:'oak_stairs'});assert.ok(r.path);assert.ok(nav.cues(r.path).some(s=>s.instruction.includes('saved stairs')));
 });
+
+test('direct Markdown includes interactive guidance even for an older saved route',()=>{
+ const md=nav.markdown({guidance:[],dimension:'o',generatedAt:'synthetic',steps:[],pois:[]});
+ assert.ok(md.includes('one route section at a time'));
+ assert.ok(md.includes('Wait for my section arrival confirmation'));
+ assert.ok(md.includes('Never infer my position from elapsed time'));
+});
+
+test('spoken sections preserve every manoeuvre and target longer checkpoints',()=>{
+ const steps=Array.from({length:160},(_,i)=>({id:`step-${i+1}`,index:i+1,at:{x:i,y:65,z:0},to:{x:i+1,y:65,z:0},blocks:1,action:'walk',instruction:'Continue straight'}));
+ const sections=nav.spokenSections(steps);
+ assert.deepEqual(sections.map(s=>s.blocks),[75,75,10]);
+ assert.deepEqual(sections.flatMap(s=>s.stepIDs),steps.map(s=>s.id));
+ assert.deepEqual(sections.at(-1).to,steps.at(-1).to);
+ steps[30].instruction='Board your boat.';
+ const critical=nav.spokenSections(steps);
+ assert.equal(critical[0].blocks,30);assert.equal(critical[1].blocks,25);
+ assert.ok(critical[1].criticalStepIDs.includes('step-31'));
+ assert.equal(critical.reduce((n,s)=>n+s.blocks,0),160);
+});
+test('copy and cloud buttons export the current route and reset with selection',async()=>{
+ const vm=require('node:vm'),fs=require('node:fs');const elements=[],messages=[],events={};
+ class Element{constructor(tag){this.tag=tag;this.children=[];this.hidden=false;elements.push(this);}append(...v){this.children.push(...v);if(this.tag==='select'&&!this.value)this.value=v[0].value;}prepend(v){this.children.unshift(v);}setAttribute(){}insertBefore(v){this.children.push(v);}}
+ const context={document:{documentElement:{lang:'en'},createElement:tag=>new Element(tag)},setTimeout,clearTimeout,console,webkit:{messageHandlers:{atlasNavigationExport:{postMessage:m=>messages.push(m)}}},addEventListener:(name,fn)=>events[name]=fn};
+ vm.createContext(context);vm.runInContext(fs.readFileSync(require.resolve('../Resources/MapEngine/realmcraft_map/web/navigation.js'),'utf8'),context);
+ const measure={panel:new Element('section'),output:new Element('div'),points:[{x:0,z:0},{x:6,z:0}],dimension:'o',read:(x,z)=>z===0&&x>=0&&x<=6?{id:1,y:64}:null,clear(){},start(){},draw(){},changed(){}};
+ context.AtlasNavigation.install(measure,{title:'synthetic',generatedAt:'synthetic',registry:{1:'stone'},dimensions:{o:{}}},()=>[]);
+ const button=text=>elements.find(e=>e.tag==='button'&&e.textContent===text);
+ assert.ok(button('Copy navigation').hidden);await button('Plan English navigation').onclick();assert.equal(button('Copy navigation').hidden,false);
+ await button('Copy navigation').onclick();assert.equal(messages[0].action,'copy');assert.equal(messages[0].pack.world,'synthetic');
+ button('Save to iCloud…').onclick();assert.equal(messages[1].action,'cloud');assert.ok(messages[1].pack.steps.length);
+ measure.clear();assert.ok(button('Copy navigation').hidden);assert.ok(button('Save to iCloud…').hidden);
+});

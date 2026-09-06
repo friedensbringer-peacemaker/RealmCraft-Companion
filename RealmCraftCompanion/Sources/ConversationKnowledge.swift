@@ -263,7 +263,7 @@ struct CompanionStorageContext {
             guard quantity > 0 else { continue }
             total += quantity
             let dimension = chest.dimension == "o" ? (en ? "Overworld" : "Oberwelt") : "Nether"
-            lines.append((chestLabels[chest.id].map { $0 + ": " } ?? "") + "\(quantity) · \(chest.coordinates) · \(dimension)")
+            lines.append((chest.displayName(manual: chestLabels[chest.id]).map { $0 + ": " } ?? "") + "\(quantity) · \(chest.coordinates) · \(dimension)")
         }
         let headline = en ? "\(name): \(partial ? "at least " : "")\(total) found in your marked chests." : "\(name): \(partial ? "mindestens " : "")\(total) in deinen markierten Kisten gefunden."
         let issue = partial ? (en ? "\nIncomplete result: \(unreadable) unreadable owned chests, \(missing) marked chests absent from this index, \(index.errors.count) scan issue(s)." : "\nUnvollständiges Ergebnis: \(unreadable) eigene Kisten nicht lesbar, \(missing) markierte Kisten nicht im Index, \(index.errors.count) Probleme beim Einlesen.") : ""
@@ -353,7 +353,7 @@ extension CompanionStorageContext {
                 let found = chests.compactMap { chest -> String? in
                     let count = chest.items.filter { ids.contains($0.itemID) && $0.quantity > 0 }.reduce(Int64(0)) { $0 + Int64($1.quantity) }
                     guard count > 0 else { return nil }
-                    return (chestLabels[chest.id].map { $0 + ": " } ?? "") + "\(count) · \(chest.coordinates) · " + (chest.dimension == "o" ? (en ? "Overworld" : "Oberwelt") : "Nether")
+                    return (chest.displayName(manual: chestLabels[chest.id]).map { $0 + ": " } ?? "") + "\(count) · \(chest.coordinates) · " + (chest.dimension == "o" ? (en ? "Overworld" : "Oberwelt") : "Nether")
                 }
                 row += found.isEmpty ? "" : "\n" + found.joined(separator: "\n")
             }

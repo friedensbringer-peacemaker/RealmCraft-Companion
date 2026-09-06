@@ -2,6 +2,28 @@ import unittest
 from realmcraft_map.chests import classify_sign_chests
 
 class SignOwnershipTests(unittest.TestCase):
+    def test_names_require_readable_face_adjacent_signs(self):
+        def chest():
+            return {'id':'o:15,50,0','dimension':'o','x':15,'y':50,'z':0}
+        def sign(dx,dy,dz, text='\n Tools \n and supplies ', readable=True, dim='o'):
+            return {'id':f'{dim}:sign:{15+dx},{50+dy},{dz}', 'x':15+dx,'y':50+dy,'z':dz,'text':text,'readable':readable}
+        for offset in [(1,0,0),(-1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1)]:
+            c=chest(); a=sign(*offset)
+            classify_sign_chests([c],[a])
+            self.assertEqual(c['signName'],'Tools and supplies')
+            self.assertEqual(c['nameSign'],a['id'])
+            classify_sign_chests([c],[])
+            self.assertNotIn('signName',c)
+            self.assertNotIn('nameSign',c)
+        for a in [sign(1,1,0),sign(0,2,0),sign(0,0,0),sign(1,0,0,readable=False),sign(1,0,0,text='  \n'),sign(1,0,0,dim='n')]:
+            c=chest();classify_sign_chests([c],[a]);self.assertNotIn('signName',c)
+        a,b=sign(1,0,0),sign(-1,0,0,text='Other stock')
+        c=chest();classify_sign_chests([c],[a,b]);self.assertNotIn('signName',c)
+        b['text']=a['text']
+        classify_sign_chests([c],[a,b]);self.assertEqual(c['signName'],'Tools and supplies')
+        source=c['nameSign']
+        classify_sign_chests([c],[b,a]);self.assertEqual(c['nameSign'],source)
+
     def test_combined_chunk_reader_preserves_chests_and_reads_unlabeled_signs(self):
         import tempfile
         from pathlib import Path

@@ -15,7 +15,7 @@ chmod +x build.sh
 ./build.sh
 ```
 
-The build produces a universal app for Apple Silicon and Intel under `/private/tmp/realmcraft-distribution-build/RealmCraft Companion.app`. The app runs on macOS 14 or newer. Python and the developer tools are only needed to build it, not to run the app.
+The build produces a universal app for Apple Silicon and Intel beside the source project as `RealmCraft Companion.app` (or at `REALMCRAFT_APP_OUTPUT` when set). The app runs on macOS 14 or newer. Python and the developer tools are only needed to build it, not to run the app.
 
 The build generates the app icon and translations, bundles this source ZIP, and signs the app ad-hoc. Release signing with a Developer ID and Apple notarization must be performed separately by a distributor with the appropriate Apple account.
 

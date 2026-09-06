@@ -67,7 +67,7 @@ def scan_chunk(path):
     return result
 
 def classify_sign_chests(chests, signs):
-    """30-block horizontal radius, at most 10 blocks vertically, same dimension, across chunk boundaries. Text is irrelevant."""
+    """30-block horizontal radius, at most 10 blocks vertically, same dimension, across chunk boundaries. Ownership does not require text; names require one face-adjacent inscription."""
     from collections import defaultdict
     buckets = defaultdict(list)
     for sign in signs:
@@ -75,6 +75,9 @@ def classify_sign_chests(chests, signs):
         buckets[(dimension, sign['x']//30, sign['y']//10, sign['z']//30)].append(sign)
     for chest in chests:
         chest.pop('nearbySign', None)
+        chest.pop('signName', None)
+        chest.pop('nameSign', None)
+        adjacent_names = {}
         x, y, z = chest['x'], chest['y'], chest['z']
         nearest = None
         for dx in (-1, 0, 1):
@@ -85,10 +88,19 @@ def classify_sign_chests(chests, signs):
                         height = abs(y-sign['y'])
                         distance = horizontal + height**2
                         candidate = (distance, sign['id'])
+                        if distance == 1 and sign.get('readable'):
+                            name = ' '.join(sign.get('text', '').split())
+                            if name:
+                                adjacent_names.setdefault(name, []).append(sign['id'])
                         if horizontal <= 900 and height <= 10 and (nearest is None or candidate < nearest):
                             nearest = candidate
         if nearest is not None:
             chest['nearbySign'] = nearest[1]
+        # Conflicting inscriptions are ambiguous; never borrow a whole storage group's name.
+        if len(adjacent_names) == 1:
+            name, sources = next(iter(adjacent_names.items()))
+            chest['signName'] = name
+            chest['nameSign'] = min(sources)
     return chests
 
 

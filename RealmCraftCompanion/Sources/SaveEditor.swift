@@ -127,19 +127,23 @@ struct SaveEditorView: View {
         return result
     }
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(spacing: 0) {
             header
-            HStack {
-                Picker("Savegame", selection: $model.selection) {
-                    Text(en ? "Select savegame" : "Spielstand wählen").tag(nil as String?)
-                    ForEach(model.saves) { Text($0.title).tag(Optional($0.id)) }
+            Divider()
+            VStack(alignment: .leading, spacing: 16) {
+                Label(warning, systemImage: "exclamationmark.triangle.fill").font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                HStack {
+                    Picker("Savegame", selection: $model.selection) {
+                        Text(en ? "Select savegame" : "Spielstand wählen").tag(nil as String?)
+                        ForEach(model.saves) { Text($0.title).tag(Optional($0.id)) }
+                    }
+                    Button { loadPlayer() } label: { Image(systemName: "arrow.clockwise") }.help(en ? "Read inventory again" : "Inventar erneut einlesen").disabled(model.selected == nil)
                 }
-                Button { loadPlayer() } label: { Image(systemName: "arrow.clockwise") }.help(en ? "Read inventory again" : "Inventar erneut einlesen").disabled(model.selected == nil)
-            }
-            Picker("Editor", selection: $mode) { Text(en ? "Items" : "Gegenstände").tag("items"); Text(en ? "Player level" : "Spielerlevel").tag("level") }.pickerStyle(.segmented).frame(width: 290)
-            if mode == "items" { itemWorkspace } else { levelWorkspace }
-            footer
-        }.padding(24).disabled(model.busy)
+                Picker("Editor", selection: $mode) { Text(en ? "Items" : "Gegenstände").tag("items"); Text(en ? "Player level" : "Spielerlevel").tag("level") }.pickerStyle(.segmented).frame(width: 290)
+                if mode == "items" { itemWorkspace } else { levelWorkspace }
+                footer
+            }.padding(CompanionLayout.pageInset)
+        }.disabled(model.busy)
         .onAppear { maps.check(model); loadPlayer() }
         .onChange(of: model.selection) { _, _ in reset(); loadPlayer() }
         .onChange(of: model.busy) { _, busy in if !busy && !inventoryReady && playerError == nil && model.selected != nil { loadPlayer() } }
@@ -148,16 +152,12 @@ struct SaveEditorView: View {
         .sheet(item: $testPlan) { plan in EditorTestExportView(model: model, plan: plan, english: en).companionAppearance() }
     }
     private var header: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            HStack {
-                Text("Editor").font(.largeTitle.bold())
-                Text("BETA · PREVIEW").font(.caption.bold()).padding(.horizontal, 9).padding(.vertical, 5).background(.orange.opacity(0.18)).clipShape(Capsule())
-                Spacer()
-                Menu {
-                    Button(en ? "Prepare separate Quest test world…" : "Separate Quest-Testwelt vorbereiten …") { prepareTest() }.disabled(model.selected == nil || model.serial.isEmpty)
-                } label: { Label(en ? "Quest test" : "Quest-Test", systemImage: "arrow.up.doc") }.fixedSize()
+        CompanionPageHeader(title: "Editor · Beta") {
+            EmptyView()
+        } menu: {
+                Group {
+                Button(en ? "Prepare separate Quest test world…" : "Separate Quest-Testwelt vorbereiten …") { prepareTest() }.disabled(model.selected == nil || model.serial.isEmpty)
             }
-            Label(warning, systemImage: "exclamationmark.triangle.fill").font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
         }
     }
     private var itemWorkspace: some View {
@@ -169,7 +169,7 @@ struct SaveEditorView: View {
                 storageList
                 Text(en ? "↑ ↓ Select storage · ← Navigation" : "↑ ↓ Behälter wählen · ← Navigation")
                     .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-            }.frame(width: 180)
+            }.frame(width: CompanionTheme.sidebarWidth)
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {

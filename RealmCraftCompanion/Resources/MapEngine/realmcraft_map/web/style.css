@@ -101,3 +101,5 @@ button.compass{pointer-events:auto;min-width:44px;min-height:76px;padding:5px;bo
 .navigation-tools{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;display:grid;gap:8px}.navigation-tools button{border:1px solid var(--border);border-radius:5px;padding:8px!important;text-align:left}.navigation-tools select{width:100%;font-size:12px}.journey-segments{padding-left:22px}.journey-segments li{margin:9px 0}.journey-segments li div{font-size:11px;color:var(--muted)}#measure-panel h3{font-size:13px;margin:14px 0 8px}#measure-panel details{margin-bottom:10px}
 
 #measure-panel{width:380px}.navigation-tools{display:block}.navigation-tools>*:not(summary){margin-top:8px}.navigation-tools>button{display:block;width:100%}.navigation-tools>button[hidden]{display:none}.navigation-tools summary{font-weight:600}.navigation-tools:not([open])>:not(summary){display:none}
+
+.navigation-export-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.navigation-export-actions>button{min-width:0;white-space:normal}.navigation-export-actions>button[hidden]{display:none}

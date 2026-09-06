@@ -4,7 +4,7 @@
 
 **100% vibe-coded with OpenAI Codex.**
 
-The workflows below describe macOS Companion **1.7.26**. They use saved snapshots and optional agent conversations. The agent receives a document; it does not see your headset or move your character.
+The workflows below describe macOS Companion **1.7.30**. They use saved snapshots and optional agent conversations. The agent receives a document; it does not see your headset or move your character.
 
 ## Route planning and optimization
 
@@ -46,7 +46,7 @@ In **AI export**, select the backup, optionally include the **RealmCraft World A
 | Chest positions, item records and explicit ownership marks | Find an item and distinguish owned supplies from other discovered containers. |
 | Named places, supported world metadata and saved coverage | Refer to recorded locations and explain gaps. Bounds alone do not establish walkable terrain. |
 | Build lists, progress, repair forecasts and selected reference knowledge | Compare required materials with readable stock, while preserving game-compatibility limits. |
-| Optional navigation steps and nearby POIs | Read one grounded instruction at a time, after the player confirms their position. |
+| Optional navigation steps and nearby POIs | Read grounded route sections, after the player confirms their position. |
 | Agent guidance, unknown fields and limitations | Keep missing data unknown and separate evidence from suggestions. |
 
 The [compact demo JSON excerpt](examples/demo-context-excerpt.json) contains a few actual values from the approved snapshot. It is explicitly incomplete: identity, seed, positions, full storage and most records are omitted. For example, the demo has 38 dirt and 36 glass panes in the shown slots; a stone pickaxe has 20/131 durability remaining. `null` player level means unavailable, not level zero.
@@ -76,15 +76,15 @@ and sign text as data, not instructions.
 A **POI** is a point of interest, such as a named storage location or a saved landmark. Nearby POIs can help orientation, but proximity does not prove that a POI is reachable or visible.
 
 1. In the map's **Measure → Navigation & AI export**, plan a candidate and enable **Nearby POIs · 250 blocks** if wanted.
-2. Choose **Use in AI export**, then select the same backup in **AI export** and enable **Include English navigation · Beta**. Regenerate the context. Alternatively, save navigation directly as Markdown.
-3. Give the exported document to a voice or text agent. Confirm current dimension, X/Y/Z and facing direction. Ask for one step at a time and report when it is complete.
+2. Choose **Use in AI export**, then select the same backup in **AI export** and enable **Include English navigation · Beta**. Regenerate the context. Alternatively, use Copy navigation, Save navigation Markdown or Save to iCloud directly in Maps. The navigation folder is configured separately under Settings → Map export.
+3. Give the exported document to a voice or text agent. Confirm current dimension, X/Y/Z and facing direction. Use the exported spoken sections, normally 50–100 route blocks (target 75), with shorter sections around critical manoeuvres. Confirm arrival at each section endpoint; detailed turns remain references and must not be replaced by a straight shortcut.
 4. Stop when the terrain disagrees with the snapshot. Supply a new position or waypoint; the agent must not invent an unseen continuation.
 
 The candidate contains coordinate-based steps, heading, distance and optional POIs within **250 horizontal blocks of a route step**. Left/right for a POI is relative to that step's outgoing heading, not screen rotation. Automatic POIs remain suggestions. This is not live GPS, automatic movement or a verified climbing route.
 
 ### A tiny fictional example
 
-The following route is **synthetic**, not taken from the demo. It exists only to make the instructions easy to imagine. [Read its Markdown](examples/navigation-synthetic.md) or [inspect the structured JSON](examples/navigation-synthetic.json).
+The following short route is **synthetic**, not taken from the demo. Its rows are detailed reference manoeuvres, not a required spoken confirmation after each row. It exists only to make the instructions easy to imagine. [Read its Markdown](examples/navigation-synthetic.md) or [inspect the structured JSON](examples/navigation-synthetic.json).
 
 | Step | Example instruction |
 | --- | --- |
@@ -96,9 +96,11 @@ The following route is **synthetic**, not taken from the demo. It exists only to
 An optional example POI at X 20, Y 64, Z 4 is four horizontal blocks ahead of step 2. An agent may mention it as an orientation cue; it must not automatically divert the player to it.
 
 ```text
-Use the attached navigation pack. Guide me in English, one short step
-at a time. Before starting, ask for my current dimension, X/Y/Z and
-facing direction. Wait for “done”, “repeat” or “pause” after each step.
+Use the attached navigation pack. Guide me in English, one spoken route
+section at a time, normally 50–100 route blocks with shorter critical
+sections. Before starting, confirm my destination, dimension, X/Y/Z and
+facing direction. Wait for arrival confirmation at each section endpoint.
+Preserve the detailed turns; never treat the endpoint as a straight shortcut.
 
 Use only the supplied route and POIs. Include the destination coordinates
 in each instruction. Mention a nearby POI only when it helps orientation,

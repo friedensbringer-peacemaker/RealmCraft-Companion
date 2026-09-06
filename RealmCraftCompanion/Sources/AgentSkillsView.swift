@@ -24,17 +24,18 @@ struct AgentSkillsView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: en ? "Skill library" : "Skill-Bibliothek") {
-                TextField(en ? "Search skills" : "Skills suchen", text: $query).textFieldStyle(.roundedBorder).frame(width: 200)
+                TextField(en ? "Search skills" : "Skills suchen", text: $query).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
                 Button(en ? "New skill" : "Neuer Skill") {
                     isNew = true; editing = AgentSkill(title: "", summary: "", instructions: "")
                 }.buttonStyle(CompanionButtonStyle(prominent: true))
-                Menu {
+            } menu: {
+                Group {
                     Button(en ? "Personal context…" : "Persönliche Angaben …") { showProfile = true }
                     Button(en ? "Import skill package…" : "Skill-Paket importieren …", action: importPackage)
                     Button(en ? "Export entire library…" : "Gesamte Bibliothek exportieren …") { exportPackage(library.state.skills) }
                     Button(en ? "Import Markdown…" : "Markdown importieren …", action: importFile)
                     Button(en ? "Reload library" : "Bibliothek neu laden") { perform { try library.reload() } }
-                } label: { Image(systemName: "ellipsis.circle") }
+                }
             }
             Divider()
             if let error = library.error { Text(error).foregroundStyle(.red).textSelection(.enabled).padding(16) }
@@ -58,7 +59,7 @@ struct AgentSkillsView: View {
                 if let skill = current {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 20) {
-                            Text(skill.localized(en ? "en" : "de").title).font(.title.bold())
+                            Text(skill.localized(en ? "en" : "de").title).font(CompanionLayout.detailTitle)
                             Text(skill.localized(en ? "en" : "de").summary).foregroundStyle(.secondary)
                             HStack {
                                 Button(en ? "Edit / Rename" : "Bearbeiten / Umbenennen") { isNew = false; editing = skill }

@@ -31,6 +31,19 @@ import Foundation
         let resolved = try URL(resolvingBookmarkData: bookmark, options: [.withoutUI], relativeTo: nil, bookmarkDataIsStale: &stale)
         precondition(resolved.resolvingSymlinksInPath() == exports.resolvingSymlinksInPath())
         precondition(!AIExportFiles.isCloudFolder(exports))
+        let suite = "RealmCraft-ExportDestinations-" + UUID().uuidString
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(bookmark, forKey: "aiExport.iCloudFolderBookmark")
+        let aiSharing = AIExportSharing(defaults: defaults)
+        let mapSharing = AIExportSharing(defaults: defaults, bookmarkKey: "mapExport.iCloudFolderBookmark")
+        precondition(aiSharing.folder != nil && mapSharing.folder == nil)
+        defaults.set(bookmark, forKey: "mapExport.iCloudFolderBookmark")
+        let restored = AIExportSharing(defaults: defaults, bookmarkKey: "mapExport.iCloudFolderBookmark")
+        precondition(restored.folder != nil)
+        restored.forgetFolder()
+        precondition(defaults.data(forKey: "aiExport.iCloudFolderBookmark") != nil)
+        precondition(defaults.data(forKey: "mapExport.iCloudFolderBookmark") == nil)
         print("AI export sharing: full Unicode snapshot, distinct files, path safety, bookmark roundtrip passed")
     }
 }

@@ -29,7 +29,7 @@ struct ResourcesView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Links & Knowledge" : "Links & Wissen") {
-                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query).textFieldStyle(.roundedBorder).frame(width: 260)
+                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
             }
             HStack {
                 Picker(english ? "Section" : "Bereich", selection: $section) {

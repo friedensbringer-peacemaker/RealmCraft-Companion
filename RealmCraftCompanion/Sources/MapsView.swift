@@ -100,6 +100,7 @@ struct MapsView: View {
     let language: String
     var requestedRadius: String? = nil
     @State private var radius = "128"
+    @State private var showMapExport = false
     private var english: Bool { language == "en" }
     var body: some View {
         VStack(spacing: 0) {
@@ -107,17 +108,21 @@ struct MapsView: View {
                     Button(english ? "Generate map" : "Karte erzeugen") { if let save = model.selected { maps.generate(model, save: save, radius: radius, language: language) } }
                         .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.busy || !maps.ready || model.selected == nil || maps.checking)
 
-                Menu {
+            } menu: {
+                Group {
                     Button(english ? "Open in browser" : "Im Browser öffnen") { if let url = maps.mapURL { NSWorkspace.shared.open(url) } }
                     Button(english ? "Show in Finder" : "Im Finder anzeigen") { if let url = maps.mapURL { NSWorkspace.shared.activateFileViewerSelecting([url]) } }
-                } label: { Image(systemName: "ellipsis.circle") }.fixedSize().menuStyle(.borderlessButton).disabled(maps.mapURL == nil)
+                }
+                .disabled(maps.mapURL == nil)
+                Divider()
+                Button(english ? "Map export settings…" : "Kartenexport-Einstellungen …") { showMapExport = true }
             }
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
                         if model.saves.isEmpty { Text(english ? "No savegames" : "Keine Spielstände").tag(nil as String?) }
                         ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: 440)
+                    }.frame(maxWidth: CompanionLayout.sourceWidth)
                     Picker(english ? "Area" : "Bereich", selection: $radius) {
                         Text(english ? "Origin ±128 blocks" : "Ursprung ±128 Blöcke").tag("128")
                         Text(english ? "Origin ±256 blocks" : "Ursprung ±256 Blöcke").tag("256")
@@ -129,14 +134,15 @@ struct MapsView: View {
                     Spacer(minLength: 0)
 
                 }.disabled(model.busy)
-                Text(model.busy ? tr(model.status) : english ? "Maps are built locally from saved chunks, not live Quest data. Large worlds can take several minutes. Colors are schematic; unknown blocks may differ." : "Karten entstehen lokal aus gespeicherten Chunks, nicht aus Live-Daten der Quest. Große Welten können mehrere Minuten dauern. Farben sind schematisch; unbekannte Blöcke können abweichen.").font(.caption).foregroundStyle(.secondary).frame(height: 24, alignment: .leading)
+                Text(model.busy ? tr(model.status) : english ? "Maps are built locally from saved chunks, not live Quest data. Large worlds can take several minutes. Colors are schematic; unknown blocks may differ." : "Karten entstehen lokal aus gespeicherten Chunks, nicht aus Live-Daten der Quest. Große Welten können mehrere Minuten dauern. Farben sind schematisch; unbekannte Blöcke können abweichen.").font(.caption).foregroundStyle(.secondary).frame(minHeight: 32, alignment: .leading).fixedSize(horizontal: false, vertical: true)
                 if !maps.ready || maps.installing {
                     MapToolsSetup(model: model, maps: maps, english: english)
                 }
                 if !maps.notice.isEmpty { Text(maps.notice).font(.callout).foregroundStyle(.orange) }
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
+            .sheet(isPresented: $showMapExport) { MapExportSettings(english: english).companionAppearance() }
             Divider()
-            if let url = maps.mapURL { LocalMapWebView(url: url, world: model.selected?.world ?? "", scope: model.selected?.annotationScope ?? "").id(url) }
+            if let url = maps.mapURL { LocalMapWebView(url: url, world: model.selected?.world ?? "", scope: model.selected?.annotationScope ?? "", library: model.library.root, english: english).id(url) }
             else {
                 VStack(spacing: 14) {
                     Image(systemName: "map.fill").font(.system(size: 50)).foregroundStyle(theme.accent)
@@ -155,6 +161,8 @@ private struct LocalMapWebView: NSViewRepresentable {
     let url: URL
     let world: String
     let scope: String
+    let library: URL
+    let english: Bool
     @AppStorage("exploration.spoilerFree") private var spoilerFree = false
     private var privacyScript: String {
         let state = ChestVisibility.load(world: scope)
@@ -170,7 +178,7 @@ private struct LocalMapWebView: NSViewRepresentable {
         let args = String(data: data, encoding: .utf8)!
         return "(() => { const [css, skin, appearance] = " + args + "; let style = document.getElementById('companion-skin'); if (!style) { style = document.createElement('style'); style.id = 'companion-skin'; document.head.appendChild(style); } style.textContent = css; document.documentElement.dataset.companion = skin; document.documentElement.dataset.appearance = appearance; })();"
     }
-    func makeCoordinator() -> Coordinator { Coordinator(world: world, scope: scope) }
+    func makeCoordinator() -> Coordinator { Coordinator(world: world, scope: scope, library: library, english: english) }
     func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController.addUserScript(WKUserScript(source: privacyScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
@@ -180,6 +188,7 @@ private struct LocalMapWebView: NSViewRepresentable {
         configuration.userContentController.addUserScript(WKUserScript(source: "window.ATLAS_NATIVE_ORIENTATION=" + String(decoding: orientationData, as: UTF8.self) + ";", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         configuration.userContentController.add(context.coordinator, name: "atlasOrientation")
         configuration.userContentController.add(context.coordinator, name: "atlasNavigation")
+        configuration.userContentController.add(context.coordinator, name: "atlasNavigationExport")
         let markerData = try! JSONSerialization.data(withJSONObject: ["scope": scope, "markers": markerValue])
         configuration.userContentController.addUserScript(WKUserScript(source: "{const a=" + String(decoding: markerData, as: UTF8.self) + ";window.ATLAS_ANNOTATION_SCOPE=a.scope;window.ATLAS_NATIVE_MARKERS=a.markers;}", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         configuration.userContentController.add(context.coordinator, name: "atlasMarkers")
@@ -203,16 +212,42 @@ private struct LocalMapWebView: NSViewRepresentable {
         context.coordinator.styleScript = styleScript + privacyScript
         if !view.isLoading { view.evaluateJavaScript(styleScript + privacyScript, completionHandler: nil) }
     }
-    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
+    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigationExport"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
     final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate, WKDownloadDelegate {
         let world: String
         let scope: String
+        let library: URL
+        let english: Bool
         var styleScript = ""
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             webView.evaluateJavaScript(styleScript, completionHandler: nil)
         }
-        init(world: String, scope: String) { self.world = world; self.scope = scope }
+        init(world: String, scope: String, library: URL, english: Bool) { self.world = world; self.scope = scope; self.library = library; self.english = english }
         func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "atlasNavigationExport" {
+                guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true,
+                      let body = message.body as? [String: Any], let action = body["action"] as? String,
+                      let requestID = body["requestID"] as? String, requestID.count <= 80 else { return }
+                var result = english ? "Navigation export unavailable." : "Navigations-Export nicht verfügbar."
+                if !UserDefaults.standard.bool(forKey: "exploration.spoilerFree"),
+                   ["copy", "cloud"].contains(action), let raw = body["pack"], JSONSerialization.isValidJSONObject(raw),
+                   let data = try? JSONSerialization.data(withJSONObject: raw), data.count <= 8_000_000,
+                   let pack = try? JSONDecoder().decode(NavigationPack.self, from: data), pack.valid, pack.world == world {
+                    if action == "copy" {
+                        NSPasteboard.general.clearContents()
+                        let copied = NSPasteboard.general.setString(pack.markdown, forType: .string)
+                        result = copied ? (english ? "Navigation copied. Paste it into your AI chat." : "Navigation kopiert. In deinen KI-Chat einfügen.") : (english ? "Copy failed. Use Markdown export." : "Kopieren fehlgeschlagen. Bitte Markdown exportieren.")
+                    } else {
+                        let sharing = AIExportSharing(bookmarkKey: MapExportSettings.bookmarkKey)
+                        sharing.saveToCloud(markdown: pack.markdown, world: "Navigation-" + pack.world, library: library, english: english)
+                        result = !sharing.failure.isEmpty ? sharing.failure : !sharing.status.isEmpty ? sharing.status : (english ? "Export cancelled." : "Export abgebrochen.")
+                    }
+                }
+                if let data = try? JSONSerialization.data(withJSONObject: ["requestID": requestID, "message": result]) {
+                    message.webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('atlas-navigation-exported', {detail: " + String(decoding: data, as: UTF8.self) + "}));", completionHandler: nil)
+                }
+                return
+            }
             if message.name == "atlasNavigation" {
                 guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true else { return }
                 let accepted = NavigationPack.accept(message.body, world: world, scope: scope)

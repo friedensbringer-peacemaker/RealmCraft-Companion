@@ -55,7 +55,7 @@ struct CompanionHomeActivityView: View {
                     Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
                 }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
             }.buttonStyle(.plain).disabled(model.busy)
-            Button(action, action: run).frame(width: 115).disabled(disabled)
+            Button(action, action: run).buttonStyle(CompanionButtonStyle(width: 120)).disabled(disabled)
         }.padding(.vertical, 16)
     }
 }
