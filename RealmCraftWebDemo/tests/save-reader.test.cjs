@@ -19,3 +19,13 @@ test('ZIP import supports deflate, replaces content from the selected world and 
 test('ZIP traversal, duplicates, truncation and CRC failures are rejected',async()=>{for(const name of ['../world_data','/world_data','dir/../world_data','C:/world_data','a\\world_data'])assert.throws(()=>new R.Zip(zip([[name,metadata()]])));assert.throws(()=>new R.Zip(zip([['a',[1]],['a',[2]]])));const archive=zip([['world_data',metadata()]],false);assert.throws(()=>new R.Zip(archive.subarray(0,-1)));const changed=Buffer.from(archive);changed[40]^=1;const z=new R.Zip(changed);await assert.rejects(()=>z.read('world_data'),/Prüfsumme/);});
 test('CRC failure leaves the caller snapshot untouched and real imports retain unknown player state',async()=>{const old=C.initial(),before=structuredClone(old),raw=zip([['world_data',metadata()],['o.-64,16',chunk()]],false);raw[40]^=1;await assert.rejects(()=>new R.Zip(raw).load(''));assert.deepEqual(old,before);const loaded=await new R.Zip(zip([['world_data',metadata()],['o.-64,16',chunk()]],false)).load('');const state=C.fromImport(loaded,{items:{},blocks:{},colors:{}},{kind:'local',filename:'new.zip'});assert.equal(C.snapshot(state).playerStatus,'unknown');assert.equal(state.inventory.filter(Boolean).length,0);assert.equal(C.snapshot(state).source.kind,'local');});
 module.exports={metadata,item,player,chunk,chest,zip};
+test('sign records support verified wall-sign families and preserve multiline Unicode as plain data',()=>{
+ const base=chunk(),c=R.chunk(base,'o.-64,16');c.blocks[69*256+6*16+7]=173;
+ function sign(text,marker=162){const content=Buffer.from(text);return bytes([marker>>8,marker&255],be(28+content.length),[1],be(-58),be(69),be(23),[0,1],be(content.length),content,[0,15,0,0,0,0,0,15,0]);}
+ const record=sign('Example\nÄΩ <script>');let result=R.signs(bytes(base,record),c);assert.equal(result.length,1);assert.equal(result[0].blockID,173);assert.equal(result[0].text,'Example\nÄΩ <script>');assert.equal(result[0].readable,true);
+ result=R.signs(bytes(base,sign('')),c);assert.equal(result[0].readable,true);assert.equal(result[0].text,'');
+ for(let n=0;n<record.length;n++){result=R.signs(bytes(base,record.subarray(0,n)),c);assert.equal(result[0].readable,false);}
+ result=R.signs(bytes(base,record,record),c);assert.equal(result[0].readable,false);
+ const invalid=Buffer.from(record);invalid[25]=255;assert.equal(R.signs(bytes(base,invalid),c)[0].readable,false);
+ c.blocks[69*256+6*16+7]=174;assert.equal(R.signs(bytes(base,record),c)[0].readable,false);
+});

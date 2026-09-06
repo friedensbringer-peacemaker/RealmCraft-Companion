@@ -73,6 +73,31 @@ function chests(b,c){
  catch{record.error='Kisteninhalt nicht lesbar: unbekanntes oder beschädigtes Format.';}
  }return result;
 }
+
+// Block 173 (spruce wall sign) also uses record marker 00 a2 in the reviewed demo.
+function signs(b,c){
+ const ids=new Set([162,163,164,165,166,167,172,173,174,175,176,177,736,737,738,739]);
+ const records=new Map(),v=view(b),footer=[0,15,0,0,0,0,0,15,0];
+ for(let y=0;y<256;y++)for(let x=0;x<16;x++)for(let z=0;z<16;z++){
+  const blockID=c.blocks[y*256+x*16+z]&4095;if(!ids.has(blockID))continue;
+  const wx=c.x+x,wz=c.z+z,key=`${wx},${y},${wz}`;
+  records.set(key,{id:`${c.dimension}:sign:${key}`,kind:'sign',dimension:c.dimension,x:wx,y,z:wz,blockID,text:'',readable:false,error:'Beschriftung fehlt oder Format nicht unterstützt.'});
+ }
+ const seen=new Set();
+ for(let i=c.end;i+19<=b.length;i++){
+  if(!matches(b,i,[0,162]))continue;
+  const key=`${v.getInt32(i+7)},${v.getInt32(i+11)},${v.getInt32(i+15)}`,r=records.get(key);
+  if(!r||![162,172,173].includes(r.blockID))continue;
+  try{
+   need(!seen.has(key));seen.add(key);const size=v.getUint32(i+2),end=i+6+size;
+   need(b[i+6]===1&&size>=28&&end<=b.length&&i+25<=end);
+   const length=v.getUint32(i+21),textEnd=i+25+length;need(textEnd+footer.length===end&&matches(b,textEnd,footer));
+   r.text=utf8.decode(b.subarray(i+25,textEnd));r.readable=true;r.error='';
+  }catch{r.text='';r.readable=false;r.error='Beschriftung nicht lesbar: unbekannter oder doppelter Schilddatensatz.';}
+ }
+ return [...records.values()].sort((a,b)=>a.x-b.x||a.z-b.z||a.y-b.y);
+}
+
 const crcTable=Uint32Array.from({length:256},(_,i)=>{let n=i;for(let k=0;k<8;k++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
 function crc32(b){let crc=0xffffffff;for(const n of b)crc=crcTable[(crc^n)&255]^(crc>>>8);return (crc^0xffffffff)>>>0;}
 const LIMITS={archive:128*1024*1024,expanded:512*1024*1024,entries:40000,file:8*1024*1024,chunks:16000};
@@ -112,19 +137,20 @@ class Zip {
  need(result.length>0,'Keine unterstützte Welt gefunden. Die ZIP muss world_data und Chunkdateien enthalten.');return result;
  }
  async load(prefix,onProgress=()=>{}){
- const metadata=world(await this.read(prefix+'world_data')),result={metadata,dimensions:{},chests:[],player:null,errors:[]};
+ const metadata=world(await this.read(prefix+'world_data')),result={metadata,dimensions:{},chests:[],signs:[],player:null,errors:[]};
  const names=[...this.entries.keys()].filter(n=>n.startsWith(prefix)&&/^[on]\.-?\d+,-?\d+$/.test(n.slice(prefix.length)));need(names.length>0&&names.length<=LIMITS.chunks);
  for(let i=0;i<names.length;i++){
  const b=await this.read(names[i]); // Integrity failures reject the entire import; unsupported game layouts remain explicit partial data.
- try{const c=chunk(b,names[i].slice(prefix.length));result.chests.push(...chests(b,c));const d=result.dimensions[c.dimension]??={bounds:[c.x,c.z,c.x+16,c.z+16],chunks:[]};d.bounds=[Math.min(d.bounds[0],c.x),Math.min(d.bounds[1],c.z),Math.max(d.bounds[2],c.x+16),Math.max(d.bounds[3],c.z+16)];d.chunks.push({x:c.x,z:c.z,ids:c.ids,heights:c.heights});}
+ try{const c=chunk(b,names[i].slice(prefix.length));result.chests.push(...chests(b,c));result.signs.push(...signs(b,c));const d=result.dimensions[c.dimension]??={bounds:[c.x,c.z,c.x+16,c.z+16],chunks:[]};d.bounds=[Math.min(d.bounds[0],c.x),Math.min(d.bounds[1],c.z),Math.max(d.bounds[2],c.x+16),Math.max(d.bounds[3],c.z+16)];d.chunks.push({x:c.x,z:c.z,ids:c.ids,heights:c.heights});}
  catch{result.errors.push('Ein Chunk konnte nicht gelesen werden.');}
  if(i%25===0||i===names.length-1)onProgress(i+1,names.length);
  }
  need(Object.keys(result.dimensions).length,'Keine lesbaren Kartendaten.');
  if(this.entries.has(prefix+'player_data')){const bytes=await this.read(prefix+'player_data');try{result.player=player(bytes);}catch{result.errors.push('Spielerdaten nicht lesbar; Inventar und Level bleiben unbekannt.');}}
  else result.errors.push('player_data fehlt; Inventar und Level bleiben unbekannt.');
+ result.errors.push(...result.signs.filter(s=>!s.readable).map(s=>s.error));
  result.errors.push(...result.chests.filter(c=>!c.readable).map(c=>c.error));return result;
  }
 }
-const api={world,player,chunk,chests,chestSlots,crc32,Zip,LIMITS};root.SaveReader=api;if(typeof module!=='undefined')module.exports=api;
+const api={world,player,chunk,chests,signs,chestSlots,crc32,Zip,LIMITS};root.SaveReader=api;if(typeof module!=='undefined')module.exports=api;
 })(globalThis);

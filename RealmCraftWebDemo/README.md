@@ -3,7 +3,7 @@
 **100 % mit OpenAI Codex entwickelt / 100% vibe-coded with OpenAI Codex**  
 AI contributor: **Codex Astra**
 
-An independently runnable, static browser edition of selected Companion features. The interface is German. It opens directly on an interactive map and works without a backend, account, API key or installation.
+An independently runnable, static browser edition of selected Companion features. English is the default interface language; the header switch offers English and German and remembers the choice locally. It opens directly on an interactive map and works without a backend, account, API key or installation.
 
 ## Try it
 
@@ -40,6 +40,13 @@ The deployment workflow runs core and ZIP-reader regression tests and validates 
 
 ## Update log
 
+### 0.3.0 — 2026-09-06
+
+- Added English by default and a persistent English/German switch across navigation, controls, catalogs, imports and map details. Switching language preserves the in-memory world, inventory edits, annotations and checklists.
+- Added searchable points of interest with cyclic previous/next navigation for signs, chests and saved markers, scoped to the selected dimension.
+- Added a sign overlay and read-only sign inscriptions. Empty and unreadable inscriptions remain distinct; world names, marker labels and sign text are never translated as UI text or interpreted as HTML.
+- Verified the published demo contains two readable wall signs. Its block-173 records use the same bounded 00-a2 text serialization as the previously supported block-162/172 records. This is a narrow web-reader extension; other unverified sign variants retain locations with text unavailable.
+
 ### 0.2.0 — 2026-09-06
 
 - Added local ZIP opening and a checksum-verified shared public demo download.
@@ -56,7 +63,6 @@ The deployment workflow runs core and ZIP-reader regression tests and validates 
 
 ## Backlog
 
-- Add an English interface using the catalogs' existing English content.
 - Extend browser automation coverage and add persistent, importable demo annotations.
 
 ## ZIP help / ZIP-Hilfe
@@ -78,3 +84,9 @@ python3 tools/build.py --demo-zip /path/to/reviewed-demo.zip
 ```
 
 The `WorldCatalog.json` item names, block names and original schematic colors derive from the reviewed Companion catalog and map palette under the same license. Parser tests use fabricated data; the existing public demo ZIP is used only as a separate integration check.
+
+## Language and points of interest / Sprache und interessante Punkte
+
+**English:** Choose English or Deutsch in the header. English is used on first visit; only your language choice is stored in browser storage. Imported save data stays in the current session. Build guides, recipes and item names use the Companion's existing bilingual catalogs. Sign inscriptions and custom names stay in their original language. In Maps, use Points of interest to filter Signs, Chests or Saved markers. Search by inscription, label or coordinates, then use the arrow buttons to move between matches. Signs are shown at their saved positions regardless of surface height. Switch dimension to browse that dimension's points. The overlay checkbox controls the sign symbols; point navigation and details remain available independently.
+
+**Deutsch:** Oben English oder Deutsch wählen. Beim ersten Besuch startet die Seite auf Englisch; nur die Sprachauswahl wird im Browser gespeichert. Geladene Spielstände bleiben in der laufenden Sitzung. Bauanleitungen, Rezepte und Gegenstände verwenden die vorhandenen zweisprachigen Companion-Kataloge. Schildtexte und eigene Namen bleiben im Original. Unter Karten → Interessante Punkte nach Schildern, Kisten oder eigenen Markierungen filtern. Beschriftungen, Namen oder Koordinaten suchen und mit den Pfeilen durch die Treffer wechseln. Schilder erscheinen an ihren gespeicherten Positionen, auch unter der Oberfläche. Die Dimensionsauswahl begrenzt die Treffer. Die Schild-Ebene steuert die Symbole unabhängig von der Punktnavigation.

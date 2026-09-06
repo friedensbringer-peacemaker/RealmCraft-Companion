@@ -8,7 +8,7 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ['index.html', 'style.css', 'core.js', 'app.js',
          'data/BuildGuides.json', 'data/ConversationRecipes.json', 'data/WorldCatalog.json',
-         'save-reader.js', 'import-worker.js', 'import-ui.js', 'imported-map.js', 'demo-source.json']
+         'i18n.js', 'i18n-shell.js', 'points.js', 'save-reader.js', 'import-worker.js', 'import-ui.js', 'imported-map.js', 'demo-source.json']
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -20,7 +20,7 @@ def main():
     for g in guides['guides']:
         assert g['steps'] and len(g['instructionStages']) == len(g['steps'])
         for key in ('title', 'summary', 'footprint', 'evidence', 'success', 'troubleshooting'):
-            assert g[key]['de']
+            assert all(g[key][language] for language in ('de', 'en'))
         for stage in g['instructionStages']:
             for side in ('top', 'side'):
                 plane = stage[side]
@@ -33,7 +33,7 @@ def main():
         assert all(s['url'].startswith('https://') for s in g['sources'])
     for r in recipes:
         assert r['source']['url'].startswith('https://')
-        assert all(r[key]['de'] for key in ('title', 'materials', 'steps', 'evidence'))
+        assert all(r[key][language] for language in ('de', 'en') for key in ('title', 'materials', 'steps', 'evidence'))
     destination = ROOT/'dist'
     destination.mkdir(exist_ok=True)
     unexpected = {p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_file()} - set(FILES) - {'asset-manifest.json', 'demo.zip'}
