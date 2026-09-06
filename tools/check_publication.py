@@ -24,7 +24,22 @@ def inspect(path, data, mode='100644'):
     if set(p.parts) & DENIED_PARTS or p.name in DENIED_NAMES or re.fullmatch(r'[on]\.-?\d+,-?\d+', p.name):
         errors.append('private or generated data path')
     if len(data) >= 50*1024*1024: errors.append('oversized file requires separate review')
-    if p.suffix == '.png':
+    if path == 'docs/project-overview.svg':
+        # Only this reviewed, code-authored project illustration is allowed.
+        import xml.etree.ElementTree as ET
+        try:
+            text = data.decode('utf-8')
+            root = ET.fromstring(text)
+            allowed = {'svg', 'title', 'desc', 'defs', 'linearGradient', 'stop', 'g', 'rect', 'path', 'text', 'circle'}
+            for element in root.iter():
+                if element.tag.split('}')[-1] not in allowed: errors.append('unsupported SVG element')
+                for key, value in element.attrib.items():
+                    if key.lower().startswith('on') or key.split('}')[-1] in {'href', 'src'}: errors.append('active or external SVG content')
+                    if 'url(' in value and not re.fullmatch(r'url\(#[A-Za-z0-9_-]+\)', value): errors.append('external SVG reference')
+            for label, pattern in PATTERNS.items():
+                if pattern.search(text): errors.append(label)
+        except (UnicodeDecodeError, ET.ParseError): errors.append('invalid SVG')
+    elif p.suffix == '.png':
         if not {'MobImages', 'PlayerSkins'}.intersection(p.parts): errors.append('unapproved image location')
         if not data.startswith(b'\x89PNG\r\n\x1a\n'): return errors + ['invalid PNG']
         offset = 8

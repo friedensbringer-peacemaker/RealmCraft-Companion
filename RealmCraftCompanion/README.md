@@ -1,3 +1,7 @@
+**Project family:** [macOS Companion · main project](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion) · [Android / Quest · APK](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion-Android) · [Website · try the demo](https://friedensbringer-peacemaker.github.io/RealmCraft-Companion/)
+
+---
+
 ## Build guides · 1.4.1
 
 Bauanleitungen / Build guides contains twelve offline, bilingual test builds grouped by topic. Graph-paper plans show coordinates, block directions and selectable layers/sections. Click cells for placement details; materials, operation, tests and sources follow below. Local test notes persist per build. Game functionality remains unverified until tested in RealmCraft VR.

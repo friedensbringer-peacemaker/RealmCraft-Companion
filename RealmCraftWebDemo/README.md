@@ -1,3 +1,7 @@
+**Project family:** [macOS Companion · main project](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion) · [Android / Quest · APK](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion-Android) · [Website · try the demo](https://friedensbringer-peacemaker.github.io/RealmCraft-Companion/)
+
+---
+
 # RealmCraft Companion · Web Demo
 
 **100 % mit OpenAI Codex entwickelt / 100% vibe-coded with OpenAI Codex**  
@@ -7,7 +11,7 @@ An independently runnable, static browser edition of selected Companion features
 
 ## Try it
 
-Open the GitHub Pages link shown in this repository's About section. The deployment publishes only this project's assembled web files.
+**[Open the live browser demo](https://friedensbringer-peacemaker.github.io/RealmCraft-Companion/).** The deployment publishes only this project's assembled web files.
 
 - **World map:** pan, zoom, height colors, chunk grid, chest markers, coordinate lookup and named places. Keyboard controls: arrows, +/− and F. Coordinate lookup also provides a keyboard-accessible alternative to canvas picking.
 - **Chests and resources:** search names, materials or coordinates, mark ownership, filter owned chests, inspect stock totals and locate a chest on the map.
