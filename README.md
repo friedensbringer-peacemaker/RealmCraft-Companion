@@ -1,5 +1,7 @@
 # RealmCraft Companion
 
+**100% vibe-coded with OpenAI Codex · 100 % mit OpenAI Codex entwickelt.**
+
 A community macOS companion for RealmCraft VR on Meta Quest, built with SwiftUI. Manage local world backups, inspect saved worlds and plan builds with bilingual German/English tools.
 
 ## Project
@@ -25,7 +27,7 @@ The script builds for Apple Silicon and Intel and creates `RealmCraft Companion.
 
 See the [change log](RealmCraftCompanion/Resources/CHANGELOG.md), [backlog](RealmCraftCompanion/Resources/BACKLOG.md) and [community guide](RealmCraftCompanion/COMMUNITY.md). The initial Git commit is a publication snapshot; earlier development is documented in the change log, not reconstructed as Git history.
 
-This project was developed with OpenAI Codex. **Codex Astra** is credited as an AI contributor for implementation, tests and documentation; see [contributors](CONTRIBUTORS.md). Contributions should preserve bilingual UI text, explicit compatibility limits and the tested backup safeguards.
+This project was developed entirely with OpenAI Codex. **Codex Astra** is credited as an AI contributor for implementation, tests and documentation; see [contributors](CONTRIBUTORS.md). Contributions should preserve bilingual UI text, explicit compatibility limits and the tested backup safeguards.
 
 ## Privacy
 
