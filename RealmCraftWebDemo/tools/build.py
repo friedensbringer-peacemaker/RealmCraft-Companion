@@ -4,15 +4,17 @@ import argparse
 import hashlib
 import json
 import shutil
+from package_icons import package
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ['index.html', 'style.css', 'core.js', 'app.js',
+FILES = ['item-icons.js', 'ICON-LICENSE.md', 'icon-source.json', 'data/ItemIcons.json', 'index.html', 'style.css', 'core.js', 'app.js',
          'data/BuildGuides.json', 'data/ConversationRecipes.json', 'data/WorldCatalog.json',
-         'i18n.js', 'i18n-shell.js', 'points.js', 'save-reader.js', 'import-worker.js', 'import-ui.js', 'imported-map.js', 'demo-source.json']
+         'orientation.js', 'i18n.js', 'i18n-shell.js', 'points.js', 'save-reader.js', 'import-worker.js', 'import-ui.js', 'imported-map.js', 'demo-source.json']
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--demo-zip', type=Path)
+    parser.add_argument('--icon-zip', type=Path)
     args = parser.parse_args()
     guides = json.loads((ROOT/'data/BuildGuides.json').read_text())
     recipes = json.loads((ROOT/'data/ConversationRecipes.json').read_text())
@@ -36,7 +38,7 @@ def main():
         assert all(r[key][language] for language in ('de', 'en') for key in ('title', 'materials', 'steps', 'evidence'))
     destination = ROOT/'dist'
     destination.mkdir(exist_ok=True)
-    unexpected = {p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_file()} - set(FILES) - {'asset-manifest.json', 'demo.zip'}
+    unexpected = {p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_file()} - set(FILES) - {'asset-manifest.json', 'demo.zip', 'icons-data.js', 'icon-pack-credits.txt'}
     if unexpected:
         raise ValueError('Unexpected build output; use a new, clean output directory.')
     for name in FILES:
@@ -44,6 +46,7 @@ def main():
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT/name, target)
     manifest = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in FILES}
+    manifest.update(package(ROOT, destination, args.icon_zip))
     if args.demo_zip:
         expected = json.loads((ROOT/'demo-source.json').read_text())['sha256']
         data = args.demo_zip.read_bytes()
