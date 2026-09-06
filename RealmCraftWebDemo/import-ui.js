@@ -8,9 +8,10 @@ const dialogOriginals=[...dialog.querySelectorAll('h2,p.small,button')].map(node
 function refreshDialog(){for(const [node,text] of dialogOriginals)node.textContent=I18n.t(text);}
 function reverseUI(text){const entries=Object.entries(I18n.pairs).sort((a,b)=>b[1].length-a[1].length);const exact=entries.find(([,en])=>en===text);return exact?exact[0]:text;}
 let worker=null,sourceName='',sourceKind='local',abort=null;
-const status=message=>$('#import-status').textContent=I18n.t(message);
+const status=message=>{$('#import-status').textContent=I18n.t(message);if(awaitingDemo){demoLoadMessage=message;render();}};
 function cleanup(){worker?.terminate();worker=null;abort?.abort();abort=null;$('#zip-file').value='';}
-dialog.addEventListener('cancel',cleanup);$('#cancel-import').onclick=()=>{cleanup();dialog.close();};
+function cancel(){cleanup();if(awaitingDemo)status('Laden abgebrochen.');}
+dialog.addEventListener('cancel',cancel);$('#cancel-import').onclick=()=>{cancel();dialog.close();};
 function begin(){refreshDialog();cleanup();$('#import-worlds').replaceChildren();$('#confirm-import').hidden=true;$('#import-progress').hidden=true;status(I18n.t('ZIP wird geprüft …'));if(!dialog.open)dialog.showModal();}
 function inspect(file,kind){
  sourceName=file.name;sourceKind=kind;
@@ -19,6 +20,7 @@ function inspect(file,kind){
  worker.onmessage=async({data})=>{
   if(worker!==activeWorker)return;
   if(data.type==='worlds'){
+   if(kind==='demo'&&data.worlds.length===1){$('#import-progress').hidden=false;status('Welt wird eingelesen …');worker.postMessage({action:'load',prefix:data.worlds[0].prefix});return;}
    status(I18n.html`${data.worlds.length} Welt(en) gefunden. Bitte auswählen.`);const list=$('#import-worlds');
    data.worlds.forEach((w,i)=>{const label=document.createElement('label');label.className='world-choice';const input=document.createElement('input');input.type='radio';input.name='import-world';input.value=w.prefix;input.checked=i===0;const text=document.createElement('span');text.textContent=I18n.html`${w.name} · ${w.chunks} Chunks · ID ${w.worldID}`;label.append(input,text);list.append(label);});$('#confirm-import').hidden=false;
   }else if(data.type==='progress'){$('#import-progress').value=data.done/data.total*100;status(I18n.html`Karte und Kisten lesen: ${data.done} / ${data.total} Chunks`);}
@@ -27,7 +29,7 @@ function inspect(file,kind){
    try{
     status(I18n.t('Katalog und Ansichten vorbereiten …'));const catalog=await getData('WorldCatalog');if(!dialog.open||worker!==activeWorker)return;
     const next=C.fromImport(data.result,catalog,{kind:sourceKind,filename:sourceName});
-    state=next;undo=[];selectedSlot=0;transfer=null;mapFocus=null;window.ImportedMap?.reset();
+    state=next;awaitingDemo=false;undo=[];selectedSlot=0;transfer=null;mapFocus=null;window.ImportedMap?.reset();
     $('#source-name').textContent=next.source.name;$('#source-detail').textContent=I18n.html`${sourceKind==='demo'?I18n.t('Bereitgestellte Demo'):I18n.t('Lokale ZIP')} · ${Object.values(next.worldMap.dimensions).reduce((n,d)=>n+d.chunks.length,0)} Chunks · ${next.errors.length?I18n.html`${next.errors.length} Lesehinweis(e)`:I18n.t('eingelesen')}`;
     $('.demo-dot').textContent=sourceKind==='demo'?I18n.t('Geladene Demowelt'):I18n.t('Lokal geladener Spielstand');
     $('.page-footer').firstChild.textContent=I18n.t('Inoffizielles Community-Projekt · Keine Verbindung zu Tellurion Mobile · ZIP nur lokal im Browser gelesen · ');
@@ -51,15 +53,17 @@ $('#load-demo').onclick=async()=>{
   if(!dialog.open||signal.aborted)return;inspect(new File([bytes],config.asset,{type:'application/zip'}),'demo');
  }catch(error){if(error.name!=='AbortError')status(error.message);}
 };
-resetDialog.addEventListener('close',()=>{if(resetDialog.returnValue==='reset'){$('#source-name').textContent=I18n.t('Synthetische Beispieldaten');$('#source-detail').textContent=I18n.t('Keine ZIP geladen');$('.demo-dot').textContent=I18n.t('Synthetische Demowelt');window.ImportedMap?.reset();$('.page-footer').firstChild.textContent=I18n.t('Inoffizielles Community-Projekt · Keine Verbindung zu Tellurion Mobile · Synthetische Beispieldaten · ');}});
+resetDialog.addEventListener('close',()=>{if(resetDialog.returnValue==='reset'){$('#load-demo').click();}});
+$('#source-name').textContent='RealmCraft Companion Demo';$('#source-detail').textContent=I18n.t('Demo-ZIP wird geladen …');$('.demo-dot').textContent='RealmCraft Companion Demo';
+$('#load-demo').click();
 })();
 
 window.addEventListener('companion-language',()=>{
  $('#load-demo').textContent=I18n.t('Demo-ZIP laden');$('#open-zip').textContent=I18n.t('Eigene ZIP öffnen …');
  document.querySelector('.source-bar .eyebrow').textContent=I18n.t('DATENQUELLE');document.querySelector('.source-bar').setAttribute('aria-label',I18n.t('Datenquelle'));
- $('#source-name').textContent=state.source?state.source.name:I18n.t('Synthetische Beispieldaten');
- $('#source-detail').textContent=state.source?I18n.t(state.source.kind==='demo'?'Bereitgestellte Demo':'Lokale ZIP'):I18n.t('Keine ZIP geladen');
- document.querySelector('.demo-dot').textContent=I18n.t(state.source?state.source.kind==='demo'?'Geladene Demowelt':'Lokal geladener Spielstand':'Synthetische Demowelt');
+ $('#source-name').textContent=state.source?state.source.name:awaitingDemo?'RealmCraft Companion Demo':I18n.t('Synthetische Beispieldaten');
+ $('#source-detail').textContent=state.source?I18n.t(state.source.kind==='demo'?'Bereitgestellte Demo':'Lokale ZIP'):I18n.t(awaitingDemo?demoLoadMessage:'Keine ZIP geladen');
+ document.querySelector('.demo-dot').textContent=I18n.t(state.source?state.source.kind==='demo'?'Geladene Demowelt':'Lokal geladener Spielstand':awaitingDemo?'RealmCraft Companion Demo':'Synthetische Demowelt');
  $('#mobile-reset').textContent=I18n.t('Demo zurücksetzen');
  document.querySelector('.page-footer').firstChild.textContent=I18n.t('Inoffizielles Community-Projekt · Keine Verbindung zu Tellurion Mobile · ')+(state.source?I18n.t('ZIP nur lokal im Browser gelesen'):I18n.t('Synthetische Beispieldaten'))+' · ';
 });

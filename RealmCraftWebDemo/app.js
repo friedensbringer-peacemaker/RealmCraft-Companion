@@ -1,5 +1,6 @@
 'use strict';
 const C=DemoCore,$=s=>document.querySelector(s),main=$('#main');
+let awaitingDemo=true,demoLoadMessage='Demo-ZIP wird geladen …';
 let state=C.initial(),undo=[],catalog=null,recipes=null,guideId='lamp',step=0,selectedSlot=0,transfer=null,dispose=()=>{};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const titles={map:'Karten',chests:'Kisten & Ressourcen',inventory:'Inventar-Sandbox',guides:'Bauanleitungen',recipes:'Rezepte',export:'Kontext-Export'};
@@ -10,12 +11,12 @@ const card=(n,label)=>I18n.html`<div class="card"><span>${label}</span><strong>$
 const download=(name,content,type)=>{const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(I18n.t('Download erstellt.'));};
 const projectURL=location.hostname.endsWith('github.io')?I18n.html`https://github.com/${location.hostname.slice(0,-10)}/${location.pathname.split('/').filter(Boolean)[0]||'RealmCraft-Companion'}`:'https://github.com/search?q=RealmCraft-Companion&type=repositories';
 $('#project-link').href=projectURL;
-const resetDialog=$('#reset-dialog');$('#reset').onclick=()=>resetDialog.showModal();resetDialog.onclose=()=>{if(resetDialog.returnValue==='reset'){state=C.initial();undo=[];selectedSlot=0;transfer=null;render();toast(I18n.t('Demo zurückgesetzt.'));}};
+const resetDialog=$('#reset-dialog');$('#reset').onclick=()=>resetDialog.showModal();resetDialog.onclose=()=>{if(resetDialog.returnValue==='reset'){state=C.initial();awaitingDemo=true;demoLoadMessage='Demo-ZIP wird geladen …';undo=[];selectedSlot=0;transfer=null;render();toast(I18n.t('Demo zurückgesetzt.'));}};
 // The footer also exposes attribution and reset on small screens where the sidebar footer is hidden.
 $('.page-footer').innerHTML+=I18n.t(' · 100 % mit OpenAI Codex entwickelt / 100% vibe-coded with OpenAI Codex · KI-Contributor: Codex Astra · <a href="')+esc(projectURL)+I18n.t('">GitHub</a> · <button id="mobile-reset" class="subtle">Demo zurücksetzen</button>');
 $('#mobile-reset').onclick=()=>resetDialog.showModal();
 $('.page-footer').insertAdjacentHTML('beforeend',' · <a href="ICON-LICENSE.md" target="_blank" rel="noopener">Icons: Pixel Perfection Legacy (CC BY-SA / CC BY)</a>');
-function render(){dispose();dispose=()=>{};const view=route();$('#page-title').textContent=I18n.t(titles[view]);document.title=I18n.html`${I18n.t(titles[view])} · RealmCraft Companion Webdemo`;document.querySelectorAll('[data-view]').forEach(a=>{a.classList.toggle('active',a.dataset.view===view);if(a.dataset.view===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});({map:renderMap,chests:renderChests,inventory:renderInventory,guides:renderGuides,recipes:renderRecipes,export:renderExport})[view]();}
+function render(){dispose();dispose=()=>{};if(awaitingDemo){$('#page-title').textContent=I18n.t('Weltkarte');main.innerHTML=I18n.html`<section class="panel empty"><h2>RealmCraft Companion Demo</h2><p role="status">${esc(I18n.t(demoLoadMessage))}</p><p>Du kannst die Demo erneut laden oder eine eigene ZIP öffnen.</p></section>`;return;}const view=route();$('#page-title').textContent=I18n.t(titles[view]);document.title=I18n.html`${I18n.t(titles[view])} · RealmCraft Companion Webdemo`;document.querySelectorAll('[data-view]').forEach(a=>{a.classList.toggle('active',a.dataset.view===view);if(a.dataset.view===view)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});({map:renderMap,chests:renderChests,inventory:renderInventory,guides:renderGuides,recipes:renderRecipes,export:renderExport})[view]();}
 window.addEventListener('hashchange',render);
 let mapFocus=null;
 function renderMap(){

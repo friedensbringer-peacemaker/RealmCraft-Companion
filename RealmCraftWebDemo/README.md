@@ -3,7 +3,7 @@
 **100 % mit OpenAI Codex entwickelt / 100% vibe-coded with OpenAI Codex**  
 AI contributor: **Codex Astra**
 
-An independently runnable, static browser edition of selected Companion features. English is the default interface language; the header switch offers English and German and remembers the choice locally. It opens directly on an interactive map and works without a backend, account, API key or installation.
+An independently runnable, static browser edition of selected Companion features. English is the default interface language; the header switch offers English and German and remembers the choice locally. It automatically loads the reviewed demo ZIP and opens its interactive map and works without a backend, account, API key or installation.
 
 ## Try it
 
@@ -16,7 +16,7 @@ Open the GitHub Pages link shown in this repository's About section. The deploym
 - **Recipes:** searchable reference catalog and direct-ingredient material checks for a bed or crafting table. Counts include only explicitly owned demo chests; inventory and intermediate crafting are excluded.
 - **Context export:** download the current demo inventory, chests and places as Markdown or JSON. Nothing is sent to an AI service.
 
-The initial map, chests and inventory are **deterministically fabricated examples**. The **Demo-ZIP laden** button loads the previously reviewed public demo world, shared with the Android Companion. **Eigene ZIP öffnen …** reads a selected local savegame entirely in a Web Worker in the browser; it never uploads the file. Map terrain is schematic; it does not reproduce RealmCraft world generation. Ownership marks are user annotations, not inferred ownership. The map's surface height and a chest's saved example height may differ, as underground chests are also shown.
+The initial map, chests and inventory come from the **reviewed public demonstration ZIP**. Startup shows loading progress and automatically opens its single world. Failed or cancelled loads offer retry or local ZIP opening without switching to fabricated terrain. Reset demo reloads the reviewed ZIP. The **Demo-ZIP laden** button loads the previously reviewed public demo world, shared with the Android Companion. **Eigene ZIP öffnen …** reads a selected local savegame entirely in a Web Worker in the browser; it never uploads the file. Map terrain is schematic; it does not reproduce RealmCraft world generation. Ownership marks are user annotations, not inferred ownership. The map's surface height and a chest's saved example height may differ, as underground chests are also shown.
 
 Inventory, places and checklist changes last for the current page session. Language and map orientation are saved locally across reloads. Download a context before reloading if you want to keep a record. Resetting the demo requires confirmation. The web edition can read supported ZIP savegames, but cannot patch or restore them. Sandbox edits change only the in-memory view and context exports; they do not produce a playable savegame ZIP. Guide and recipe evidence limitations from the Companion remain visible; a web rendering does not prove in-game compatibility.
 
@@ -39,6 +39,12 @@ Open `http://localhost:8080`. A local HTTP server is needed for the catalog JSON
 The deployment workflow runs core and ZIP-reader regression tests and validates catalog topology before building. `tools/build.py` selects web files explicitly and writes a SHA-256 asset manifest. The pipeline downloads only the previously reviewed demo release asset, verifies the checksum pinned in `demo-source.json`, and packages it separately as `demo.zip` in the Pages artifact. Raw save files are not committed to Git. No files from the surrounding Companion workspace are served. Layout is responsive; no external fonts, textures, trackers, analytics or runtime dependencies are loaded.
 
 ## Update log
+
+### 0.4.1 — 2026-09-06
+
+- Load the reviewed demo ZIP automatically at startup and after resetting the demo.
+- Open the single published demo world without a selection step; local ZIP world selection stays explicit.
+- Show loading, cancellation and failure states without displaying the synthetic archipelago.
 
 ### 0.4.0 — 2026-09-06
 
