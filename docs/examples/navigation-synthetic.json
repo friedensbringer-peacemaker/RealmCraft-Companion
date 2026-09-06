@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "world": "1234567890",
+  "generatedAt": "2026-09-06T00:00:00Z",
+  "dimension": "o",
+  "steps": [
+    {
+      "id": "step-1",
+      "index": 1,
+      "at": {
+        "x": 0,
+        "y": 64,
+        "z": 0
+      },
+      "to": {
+        "x": 20,
+        "y": 64,
+        "z": 0
+      },
+      "heading": "east",
+      "headingIndex": 1,
+      "mode": "walk",
+      "action": "walk",
+      "blocks": 20,
+      "instruction": "Start facing east, then walk for 20 blocks to X 20, Y 64, Z 0."
+    },
+    {
+      "id": "step-2",
+      "index": 2,
+      "at": {
+        "x": 20,
+        "y": 64,
+        "z": 0
+      },
+      "to": {
+        "x": 20,
+        "y": 64,
+        "z": 12
+      },
+      "heading": "south",
+      "headingIndex": 2,
+      "mode": "walk",
+      "action": "walk",
+      "blocks": 12,
+      "instruction": "Facing east, Turn right, then walk for 12 blocks to X 20, Y 64, Z 12."
+    },
+    {
+      "id": "step-3",
+      "index": 3,
+      "at": {
+        "x": 20,
+        "y": 64,
+        "z": 12
+      },
+      "to": {
+        "x": 28,
+        "y": 64,
+        "z": 12
+      },
+      "heading": "east",
+      "headingIndex": 1,
+      "mode": "walk",
+      "action": "walk",
+      "blocks": 8,
+      "instruction": "Facing south, Turn left, then walk for 8 blocks to X 28, Y 64, Z 12."
+    },
+    {
+      "id": "step-4",
+      "index": 4,
+      "at": {
+        "x": 28,
+        "y": 64,
+        "z": 12,
+        "mode": "walk"
+      },
+      "to": {
+        "x": 28,
+        "y": 64,
+        "z": 12,
+        "mode": "walk"
+      },
+      "heading": "east",
+      "headingIndex": 1,
+      "mode": "walk",
+      "action": "arrive",
+      "blocks": 0,
+      "instruction": "Arrive at X 28, Y 64, Z 12."
+    }
+  ],
+  "pois": [
+    {
+      "id": "poi-2",
+      "name": "Example lookout",
+      "x": 30,
+      "y": 70,
+      "z": 12,
+      "source": "Synthetic teaching example",
+      "stepID": "step-4",
+      "distance": 2,
+      "side": "ahead"
+    },
+    {
+      "id": "poi-1",
+      "name": "Example supply chest",
+      "x": 20,
+      "y": 64,
+      "z": 4,
+      "source": "Synthetic teaching example",
+      "stepID": "step-2",
+      "distance": 4,
+      "side": "ahead"
+    }
+  ],
+  "includePOIs": true,
+  "radius": 250,
+  "distance": 40,
+  "transportProfile": "walk",
+  "guidance": [
+    "Synthetic teaching example; not a route in the demo world and not evidence of walkable terrain.",
+    "No live player tracking. Ask for current coordinates and facing before giving the next step.",
+    "Nearby POIs are optional hints, not verified reachable stops."
+  ]
+}

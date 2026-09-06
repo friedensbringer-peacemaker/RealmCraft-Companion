@@ -1,0 +1,69 @@
+{
+  "exampleType": "abridged approved demo export; not a complete Companion export",
+  "sourceAppVersion": "1.7.26",
+  "omitted": "Save identity, timestamps, seed, positions, other inventory slots, full chest records and reference catalogs are intentionally omitted. Use a full fresh export for actual planning.",
+  "player": {
+    "level": null,
+    "inventory": [
+      {
+        "additionalData": false,
+        "durabilityMaximumReference": null,
+        "durabilityRemaining": null,
+        "enchantments": [],
+        "itemID": 9,
+        "nameDE": "Erde",
+        "nameEN": "Dirt",
+        "quantity": 38,
+        "slot": 1
+      },
+      {
+        "additionalData": false,
+        "durabilityMaximumReference": null,
+        "durabilityRemaining": null,
+        "enchantments": [],
+        "itemID": 251,
+        "nameDE": "Glas Scheibe",
+        "nameEN": "Glass Pane",
+        "quantity": 36,
+        "slot": 3
+      },
+      {
+        "additionalData": true,
+        "durabilityMaximumReference": 131,
+        "durabilityRemaining": 118,
+        "enchantments": [],
+        "itemID": 3007,
+        "nameDE": "Stein Axt",
+        "nameEN": "Stone Axe",
+        "quantity": 1,
+        "slot": 5
+      },
+      {
+        "additionalData": true,
+        "durabilityMaximumReference": 131,
+        "durabilityRemaining": 63,
+        "enchantments": [],
+        "itemID": 3019,
+        "nameDE": "Stein Schaufel",
+        "nameEN": "Stone Shovel",
+        "quantity": 1,
+        "slot": 7
+      },
+      {
+        "additionalData": true,
+        "durabilityMaximumReference": 131,
+        "durabilityRemaining": 20,
+        "enchantments": [],
+        "itemID": 3001,
+        "nameDE": "Stein Spitzhacke",
+        "nameEN": "Stone Pickaxe",
+        "quantity": 1,
+        "slot": 8
+      }
+    ]
+  },
+  "storageOverview": {
+    "discoveredChests": 30,
+    "ownershipRule": "Only explicitly marked owned chests count as owned stock; all discovered chests are not necessarily yours."
+  }
+}

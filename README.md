@@ -29,6 +29,20 @@ An independent community toolkit for **RealmCraft VR on Meta Quest**. The macOS 
 
 > **Choose the right version:** macOS provides the broadest toolset. The Android app works with separate snapshots and does not edit or restore RealmCraft game files. Browser inventory edits are a sandbox; they do not create a playable edited savegame. The three editions do not have full feature parity.
 
+## See the Companion in action
+
+Real captures of **macOS Companion 1.7.26**, using the approved **RealmCraft Companion Demo** snapshot saved on 6 September 2026. The overview includes the demo house; maps and 3D show saved terrain. Click an image for its full size.
+
+| Demo world and library | 3D renderer · Beta |
+| --- | --- |
+| [![Companion overview with the demo house](docs/screenshots/01-companion-overview.png)](docs/screenshots/01-companion-overview.png) | [![3D preview of the demo landscape and house](docs/screenshots/06-demo-3d.png)](docs/screenshots/06-demo-3d.png) |
+| **Saved world map** | **Chest contents** |
+| [![Full saved demo map](docs/screenshots/02-demo-map.png)](docs/screenshots/02-demo-map.png) | [![Items in a demo chest](docs/screenshots/04-demo-chests.png)](docs/screenshots/04-demo-chests.png) |
+
+**[All seven screenshots and captions →](docs/GALLERY.md)** · **[Route planning, AI export and turn-by-turn examples →](docs/AGENT-AND-NAVIGATION-EXAMPLES.md)**
+
+Use the map to compare route candidates, export inventory and storage as Markdown or JSON, and pass optional navigation steps with nearby POIs to an agent. Navigation uses saved surface data and requires in-game checks; it does not track your live position.
+
 ## What can I do with it?
 
 | Your question | In the macOS Companion |
@@ -77,7 +91,7 @@ Earlier development is documented in the change log; it is not reconstructed as 
 
 Publish project files, generic documentation and synthetic tests only. Personal saves, private exports, device identifiers and personal paths must not be attached to issues, commits or releases. The explicitly approved demonstration world is a separate, reviewed exception. Browser-local ZIP opening does not upload a savegame.
 
-The graphic above is a schematic project illustration. App screenshots remain pending; it does not depict a private or live world.
+The header graphic is a schematic project illustration. The screenshot gallery uses only the approved demo snapshot in a separate local library with device access disabled. No personal context is included.
 
 ## License and credits
 

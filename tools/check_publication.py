@@ -1,5 +1,6 @@
 """Inspect Git-selected files before publication; never print matched private content."""
 import argparse
+import hashlib
 from pathlib import PurePosixPath
 import re
 import struct
@@ -15,6 +16,17 @@ PATTERNS = {
     'private key': re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
     'credential': re.compile(r'gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-proj-[A-Za-z0-9_-]{20,}'),
     'personal email': re.compile(r'[A-Za-z0-9._%+-]+@(?:gmail|icloud|gmx|hotmail|outlook|yahoo)\.[A-Za-z]+', re.I),
+}
+
+# Explicitly reviewed demo-only captures. Replacements require a fresh visual review.
+REVIEWED_SCREENSHOTS = {
+    "docs/screenshots/01-companion-overview.png": "be073787d8714e3c893428dfe6fe9865d2b300f763a90d39a98fbc4860b4fa3e",
+    "docs/screenshots/02-demo-map.png": "80524ecad52eeb1fa1ab269ad4337e87827295fd0a15d13ae887eb77f7848aa4",
+    "docs/screenshots/03-player-inventory.png": "8aa9c9b581051b5780abaffa595db753c1ebc178141e1d442cf3b8c7fda517f2",
+    "docs/screenshots/04-demo-chests.png": "54ee3e50e649f87d88908ffba8025a02fcd3b500d8f11aa9537ced680ff346e7",
+    "docs/screenshots/05-build-guides.png": "9e89070e7fba0f680e50ae9b5701fc745fdb8a7eb714facd87ed2b679c55f47a",
+    "docs/screenshots/06-demo-3d.png": "7d23b7c8099b116debe1671bb2d287fbea48fa45c99d7e2daadad4e2545ca773",
+    "docs/screenshots/07-ai-export.png": "96b31a780b7549fb7e57724630d10b50846836d4003c7afadea5561c31a46fbd"
 }
 
 def inspect(path, data, mode='100644'):
@@ -40,7 +52,9 @@ def inspect(path, data, mode='100644'):
                 if pattern.search(text): errors.append(label)
         except (UnicodeDecodeError, ET.ParseError): errors.append('invalid SVG')
     elif p.suffix == '.png':
-        if not {'MobImages', 'PlayerSkins'}.intersection(p.parts): errors.append('unapproved image location')
+        if path in REVIEWED_SCREENSHOTS:
+            if hashlib.sha256(data).hexdigest() != REVIEWED_SCREENSHOTS[path]: errors.append('screenshot changed; fresh review required')
+        elif not {'MobImages', 'PlayerSkins'}.intersection(p.parts): errors.append('unapproved image location')
         if not data.startswith(b'\x89PNG\r\n\x1a\n'): return errors + ['invalid PNG']
         offset = 8
         try:
