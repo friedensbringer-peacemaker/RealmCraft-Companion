@@ -12,6 +12,7 @@ struct SetupSettingsView: View {
     @State private var showADBDetails = false
     @State private var copyLibrary = true
     @State private var imports: [URL] = []
+    @State private var showManualTransfer = false
     @State private var importSelection: String?
     var body: some View {
         VStack(spacing: 0) {
@@ -23,6 +24,7 @@ struct SetupSettingsView: View {
                 }
                 Spacer()
                 Button { openWindow(id: "help") } label: { Image(systemName: "questionmark.circle") }.help("Hilfe / Help")
+                Button(language == "en" ? "Without ADB…" : "Ohne ADB …") { showManualTransfer = true }
                 Button("Fertig") { UserDefaults.standard.set(true, forKey: "setupSeen"); dismiss() }.keyboardShortcut(.defaultAction)
             }.padding(24)
             Divider()
@@ -117,6 +119,7 @@ struct SetupSettingsView: View {
                 HStack { ProgressView().controlSize(.small); Text(tr(model.status)); Spacer() }.padding(18)
             }
         }.frame(width: 780, height: 660).disabled(model.busy)
+        .sheet(isPresented: $showManualTransfer) { VStack(spacing: 0) { HStack { Spacer(); Button(language == "en" ? "Done" : "Fertig") { showManualTransfer = false } }.padding(14); ManualTransferGuideView(model: model) }.frame(width: 780, height: 680).companionAppearance() }
         .environment(\.locale, Locale(identifier: language))
         .onAppear {
             showADBDetails = model.setup.adbVersion == "Nicht installiert"
@@ -178,6 +181,7 @@ struct SetupView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.companionTheme) private var theme
     @State private var settings = false
+    @State private var manualTransfer = false
     @State private var acceptTerms = false
     private var english: Bool { language == "en" }
     private var step: Int { min(7, max(0, savedStep)) }
@@ -188,7 +192,12 @@ struct SetupView: View {
         ? ["Welcome", "Prepare your Mac", "Prepare your Meta account", "Enable developer mode", "Connect and allow access", "Check the game", "Choose your storage", "Ready for your first backup"]
         : ["Willkommen", "Mac vorbereiten", "Meta-Konto vorbereiten", "Entwicklermodus aktivieren", "Verbinden und Zugriff erlauben", "Spiel prüfen", "Speicher wählen", "Bereit für dein erstes Backup"] }
     var body: some View {
-        if settings {
+        if manualTransfer {
+            VStack(spacing: 0) {
+                HStack { Button(t("Back to setup guide", "Zurück zur Einrichtung")) { manualTransfer = false }; Spacer() }.padding(14)
+                ManualTransferGuideView(model: model)
+            }.frame(width: 780, height: 680)
+        } else if settings {
             VStack(spacing: 0) {
                 HStack { Button(t("Back to step-by-step guide", "Zurück zur Schritt-für-Schritt-Anleitung")) { settings = false }; Spacer() }.padding(14)
                 SetupSettingsView(model: model, maps: maps)
@@ -206,6 +215,8 @@ struct SetupView: View {
                     VStack(alignment: .leading, spacing: 18) {
                         Text(titles[step]).font(.title.bold())
                         page
+                        Divider()
+                        Button(t("Alternative: transfer without ADB…", "Alternative: ohne ADB übertragen …")) { manualTransfer = true }.disabled(model.busy)
                     }.frame(maxWidth: .infinity, alignment: .leading).padding(24)
                 }.id(step)
                 Divider()
@@ -285,5 +296,95 @@ struct SetupView: View {
             Label(ready ? title : t("Still to check", "Noch zu prüfen"), systemImage: ready ? "checkmark.circle.fill" : "circle.dashed").font(.headline).foregroundStyle(ready ? theme.accent : .orange)
             Text(detail).font(.callout).textSelection(.enabled)
         }.padding(16).frame(maxWidth: .infinity, alignment: .leading).background(theme.accent.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+struct ManualTransferGuideView: View {
+    @ObservedObject var model: Model
+    @AppStorage("appLanguage") private var language = "en"
+    @Environment(\.companionTheme) private var theme
+    @State private var route = "usb"
+    @State private var notice = ""
+    private var english: Bool { language == "en" }
+    private func t(_ en: String, _ de: String) -> String { english ? en : de }
+    private var relativePath: String { "Android/data/\(model.library.package)/files/local" }
+    private var inbox: URL { FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/RealmCraftLibrary/ManualTransfers") }
+    private var instructions: String {
+        guard let url = Bundle.main.url(forResource: "TRANSFER-\(route)-\(language)", withExtension: "md"),
+              let text = try? String(contentsOf: url, encoding: .utf8) else { return t("Instructions unavailable. Please use ADB setup.", "Anleitung nicht verfügbar. Bitte die ADB-Einrichtung nutzen.") }
+        return text
+    }
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text(t("Transfer without ADB", "Übertragung ohne ADB")).font(.title.bold())
+                Label(t("ADB recommended", "ADB empfohlen"), systemImage: "checkmark.shield.fill").font(.headline).foregroundStyle(theme.accent)
+                Text(t("Companion's integrated ADB transfer is tested and uses SHA-256 verification. The alternatives below are external, untested workflows. We provide no assurance of their accuracy, completeness, compatibility or successful transfer, and no guarantee against data loss. Use at your own risk.", "Der integrierte ADB-Transfer des Companion ist getestet und verwendet SHA-256-Prüfungen. Die folgenden Alternativen sind externe, ungetestete Abläufe. Für Richtigkeit, Vollständigkeit, Kompatibilität oder erfolgreiche Übertragung wird keine Gewähr übernommen; es gibt keine Garantie gegen Datenverlust. Nutzung auf eigenes Risiko.")).font(.callout)
+                Picker(t("Transfer route", "Übertragungsweg"), selection: $route) {
+                    Text("USB / MTP").tag("usb")
+                    Text(t("From the Quest", "Direkt von der Quest")).tag("quest")
+                    Text("Mac → Quest").tag("restore")
+                }.pickerStyle(.segmented).labelsHidden()
+                Text(instructions).font(.body).lineSpacing(5).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(t("Quest path · relative to internal storage", "Quest-Pfad · ab dem internen Speicher")).font(.headline)
+                        Text(relativePath).font(.callout.monospaced()).textSelection(.enabled)
+                        HStack {
+                            Button(t("Copy Quest path", "Quest-Pfad kopieren")) { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(relativePath, forType: .string); notice = t("Quest path copied.", "Quest-Pfad kopiert.") }
+                            Button(t("Locate mounted Quest folder…", "Eingebundenen Quest-Ordner wählen …")) { chooseMountedFolder() }
+                        }
+                        Text(t("This is a path on the headset, not a Mac file path. Finder cannot open a raw MTP device directly. If a third-party app mounts it in Finder, select its internal-storage folder above. In OpenMTP, navigate inside OpenMTP instead.", "Das ist ein Pfad auf der Brille, kein Mac-Dateipfad. Finder kann ein reines MTP-Gerät nicht direkt öffnen. Bindet eine Drittanbieter-App es in Finder ein, wähle oben dessen internen Speicherordner. In OpenMTP navigierst du stattdessen innerhalb von OpenMTP.")).font(.caption).foregroundStyle(.secondary)
+                    }.padding(10)
+                }
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(t("On this Mac", "Auf diesem Mac")).font(.headline)
+                        Text(inbox.path).font(.caption.monospaced()).textSelection(.enabled)
+                        HStack {
+                            Button(t("Open receiving folder", "Empfangsordner öffnen")) { openInbox() }
+                            Button(t("Import copied world / ZIP…", "Kopierte Welt / ZIP importieren …")) { model.importPanel() }
+                        }
+                        if let save = model.selected {
+                            Text(t("Selected backup: ", "Gewähltes Backup: ") + save.title + " · " + save.world).font(.caption)
+                            Button(t("Export this backup as ZIP…", "Dieses Backup als ZIP exportieren …")) { model.exportPanel(save) }
+                        } else { Text(t("Select a backup in Savegames to export it as ZIP.", "Wähle unter Savegames ein Backup, um es als ZIP zu exportieren.")).font(.caption) }
+                        Text(t("Import checks the local copy and records checksums from that point onward. It cannot prove that a manual transfer included every original Quest file. Keep the original copy; never edit the library's internal backup files directly.", "Der Import prüft die lokale Kopie und hält ab diesem Zeitpunkt Prüfsummen fest. Er kann nicht beweisen, dass ein manueller Transfer alle ursprünglichen Quest-Dateien enthält. Bewahre die Originalkopie auf und bearbeite niemals interne Backup-Dateien der Library direkt.")).font(.caption).foregroundStyle(.secondary)
+                    }.padding(10)
+                }
+                Text(t("Third-party examples · check availability, pricing and permissions yourself", "Drittanbieter-Beispiele · Verfügbarkeit, Preise und Berechtigungen selbst prüfen")).font(.headline)
+                HStack {
+                    Link("OpenMTP", destination: URL(string: "https://openmtp.ganeshrvel.com/")!)
+                    Link("MacDroid · MTP", destination: URL(string: "https://www.macdroid.app/")!)
+                    Link("QuestFiles · Meta Store", destination: URL(string: "https://www.meta.com/experiences/questfiles-vr-file-manager/1162974433570137/")!)
+                }
+                Text(t("These links are examples, not endorsements. A vendor's file-transfer feature does not establish access to RealmCraft saves in Android/data. Other headsets and OS versions may differ. No app is installed or network transfer started by Companion here.", "Diese Links sind Beispiele, keine Empfehlung. Eine beworbene Dateiübertragung belegt keinen Zugriff auf RealmCraft-Spielstände in Android/data. Andere Brillen und Betriebssystemversionen können abweichen. Companion installiert hier keine App und startet keine Netzwerkübertragung.")).font(.caption).foregroundStyle(.secondary)
+                if !notice.isEmpty { Text(notice).font(.callout).textSelection(.enabled) }
+            }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        }.disabled(model.busy)
+        .alert(t("Action incomplete", "Aktion nicht abgeschlossen"), isPresented: Binding(get: { model.error != nil }, set: { if !$0 { model.error = nil } })) {
+            Button("OK") { model.error = nil }
+        } message: { Text(tr(model.error ?? "")) }
+    }
+    private func openInbox() {
+        do {
+            try FileManager.default.createDirectory(at: inbox, withIntermediateDirectories: true)
+            if !NSWorkspace.shared.open(inbox) { notice = t("Finder could not open the receiving folder.", "Finder konnte den Empfangsordner nicht öffnen.") }
+        } catch { notice = error.localizedDescription }
+    }
+    private func chooseMountedFolder() {
+        let panel = NSOpenPanel(); panel.canChooseFiles = false; panel.canChooseDirectories = true
+        panel.title = t("Select the mounted Quest's internal storage or local folder", "Internen Speicher oder local-Ordner der eingebundenen Quest wählen")
+        panel.message = t("Only folders already visible to Finder can be selected. OpenMTP uses its own file browser.", "Nur bereits in Finder sichtbare Ordner können gewählt werden. OpenMTP verwendet einen eigenen Dateibrowser.")
+        guard panel.runModal() == .OK, let selected = panel.url else { return }
+        let candidates = [selected.appendingPathComponent(relativePath), selected.appendingPathComponent("files/local"), selected]
+        guard let found = candidates.first(where: { url in
+            var directory: ObjCBool = false
+            return url.lastPathComponent == "local" && FileManager.default.fileExists(atPath: url.path, isDirectory: &directory) && directory.boolValue
+        }) else {
+            notice = t("No accessible local folder found at the expected path. Browse the Quest in the transfer app. If Android/data is hidden or denied, stop and use ADB; do not bypass access controls.", "Kein zugänglicher local-Ordner am erwarteten Pfad gefunden. Öffne die Quest in der Transfer-App. Ist Android/data verborgen oder gesperrt, brich ab und nutze ADB; umgehe keine Zugriffssperren."); return
+        }
+        if NSWorkspace.shared.open(found) { notice = t("Opened folder: ", "Geöffneter Ordner: ") + found.path }
+        else { notice = t("Finder could not open this folder. Use the transfer app's own file browser.", "Finder konnte diesen Ordner nicht öffnen. Nutze den Dateibrowser der Transfer-App.") }
     }
 }

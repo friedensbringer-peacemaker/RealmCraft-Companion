@@ -93,3 +93,11 @@ button.compass{pointer-events:auto;min-width:44px;min-height:76px;padding:5px;bo
 #quick-controls .search-focus{font-size:11px;margin:6px 0 0;gap:6px}#quick-controls .search-focus span{font-size:11px;color:var(--muted)}#quick-controls .search-focus input{width:14px;height:14px}
 
 #quick-controls .search-focus{justify-content:flex-start}#quick-controls .search-focus span{margin-left:0}
+
+#measure-toggle{padding:7px 10px;border:1px solid var(--border);border-radius:6px;white-space:nowrap;color:inherit}#measure-toggle[aria-expanded="true"]{background:#dceeb9;color:#203827}
+#measure-panel{position:absolute;right:76px;top:12px;z-index:8;width:340px;max-width:calc(100% - 100px);max-height:calc(100% - 80px);overflow:auto;padding:14px;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:9px;box-shadow:0 4px 16px #0003;font-size:12px;line-height:1.45}
+#measure-panel[hidden]{display:none}#measure-panel p{margin:7px 0}#measure-panel .measure-actions{display:flex;gap:8px;align-items:center}#measure-panel .measure-actions strong{flex:1}#measure-panel button{padding:5px;color:inherit}#measure-panel details{border-top:1px solid var(--border);margin-top:10px;padding-top:10px}#measure-panel label{display:flex;align-items:center;justify-content:space-between;margin-top:8px}#measure-panel input{width:75px;padding:5px;margin:0}#measure-panel summary{cursor:pointer}
+
+.navigation-tools{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;display:grid;gap:8px}.navigation-tools button{border:1px solid var(--border);border-radius:5px;padding:8px!important;text-align:left}.navigation-tools select{width:100%;font-size:12px}.journey-segments{padding-left:22px}.journey-segments li{margin:9px 0}.journey-segments li div{font-size:11px;color:var(--muted)}#measure-panel h3{font-size:13px;margin:14px 0 8px}#measure-panel details{margin-bottom:10px}
+
+#measure-panel{width:380px}.navigation-tools{display:block}.navigation-tools>*:not(summary){margin-top:8px}.navigation-tools>button{display:block;width:100%}.navigation-tools>button[hidden]{display:none}.navigation-tools summary{font-weight:600}.navigation-tools:not([open])>:not(summary){display:none}

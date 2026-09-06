@@ -2,20 +2,21 @@ import SwiftUI
 
 // Add a feature here, then provide its view in CompanionView. Storage and ADB remain shared.
 enum CompanionFeature: String, CaseIterable, Identifiable {
-    case editor, home, saves, maps, chests, resources, builds, videos, guide, player, conversation, mobs, aiExport, statistics
-    static let worldFeatures: [Self] = [.saves, .maps, .chests, .player, .statistics, .editor]
-    static let aiFeatures: [Self] = [.aiExport, .conversation]
+    case editor, home, saves, maps, chests, resources, builds, videos, guide, player, conversation, mobs, aiExport, statistics, skills
+    static let worldFeatures: [Self] = [.saves, .player, .maps, .chests, .statistics, .editor]
+    static let aiFeatures: [Self] = [.aiExport, .conversation, .skills]
     static let knowledgeFeatures: [Self] = [.videos, .builds, .mobs, .resources, .guide]
     static var navigationOrder: [Self] { [.home] + worldFeatures + aiFeatures + knowledgeFeatures }
     var id: String { rawValue }
     var icon: String {
-        switch self { case .videos: return "play.rectangle"; case .statistics: return "chart.bar.xaxis"; case .editor: return "slider.horizontal.3"; case .aiExport: return "doc.text.magnifyingglass"; case .mobs: return "pawprint"; case .conversation: return "bubble.left.and.bubble.right"; case .player: return "person.crop.rectangle"; case .home: return "square.grid.2x2"; case .saves: return "archivebox"; case .maps: return "map"; case .chests: return "shippingbox"; case .resources: return "globe"; case .builds: return "square.grid.3x3"; case .guide: return "questionmark.circle" }
+        switch self { case .skills: return "text.book.closed"; case .videos: return "play.rectangle"; case .statistics: return "chart.bar.xaxis"; case .editor: return "slider.horizontal.3"; case .aiExport: return "doc.text.magnifyingglass"; case .mobs: return "pawprint"; case .conversation: return "bubble.left.and.bubble.right"; case .player: return "person.crop.rectangle"; case .home: return "square.grid.2x2"; case .saves: return "archivebox"; case .maps: return "map"; case .chests: return "shippingbox"; case .resources: return "globe"; case .builds: return "square.grid.3x3"; case .guide: return "questionmark.circle" }
     }
     func title(_ english: Bool) -> String {
-        switch self { case .videos: return english ? "Videos & tips" : "Videos & Tipps"; case .statistics: return english ? "Statistics · Beta" : "Statistiken · Beta"; case .editor: return "Editor · Beta / Preview"; case .aiExport: return english ? "AI export" : "KI-Export"; case .mobs: return "Mobs & Animals"; case .conversation: return english ? "Conversation · Beta" : "Gespräch · Beta"; case .player: return english ? "Player" : "Spieler"; case .home: return english ? "Home" : "Start"; case .saves: return "Savegames"; case .maps: return english ? "Maps" : "Karten"; case .chests: return english ? "Chests" : "Kisten"; case .resources: return english ? "Links & Knowledge" : "Links & Wissen"; case .builds: return english ? "Build guides" : "Bauanleitungen"; case .guide: return english ? "Help" : "Hilfe" }
+        switch self { case .skills: return "Skills"; case .videos: return english ? "Videos & tips" : "Videos & Tipps"; case .statistics: return english ? "Statistics · Beta" : "Statistiken · Beta"; case .editor: return "Editor · Beta"; case .aiExport: return english ? "AI export" : "KI-Export"; case .mobs: return "Mobs & Animals"; case .conversation: return english ? "Conversation · Beta" : "Gespräch · Beta"; case .player: return english ? "Player" : "Spieler"; case .home: return english ? "Home" : "Start"; case .saves: return "Savegames"; case .maps: return english ? "Maps" : "Karten"; case .chests: return english ? "Chests" : "Kisten"; case .resources: return english ? "Links & Knowledge" : "Links & Wissen"; case .builds: return english ? "Build guides" : "Bauanleitungen"; case .guide: return english ? "Help" : "Hilfe" }
     }
     func detail(_ english: Bool) -> String {
         switch self {
+        case .skills: return english ? "Manage reusable instructions and personal context for agents." : "Wiederverwendbare Anweisungen und eigene Angaben für Agenten verwalten."
         case .videos: return english ? "Search video topics and jump to timestamped tips." : "Videothemen durchsuchen und direkt zu passenden Tipps springen."
         case .statistics: return english ? "Read the saved build/dig counter from a backup." : "Gespeicherten Bau-/Abbauzähler einer Sicherung auslesen."
         case .editor: return english ? "Patch savegames · Beta / Preview" : "Spielstände bearbeiten · Beta / Preview"
@@ -43,6 +44,10 @@ struct CompanionView: View {
     @ObservedObject var model: Model
     @ObservedObject private var lifecycle = CompanionLifecycle.shared
     @State private var feedback: FeedbackRequest?
+    @State private var openLatestExport = false
+    @State private var exportRequest: UUID?
+    @State private var requestedMapRadius: String?
+    @AppStorage("agentSkill.selectedID") private var selectedSkillID = "realmcraft-world-context"
     @State private var showItemIcons = false
     @State private var showSpoilers = false
     @AppStorage("homeIntroductionExpanded") private var introductionExpanded = false
@@ -113,20 +118,21 @@ struct CompanionView: View {
                     } label: { Label(english ? "Settings" : "Einstellungen", systemImage: "gearshape") }
                         .menuStyle(.borderlessButton).fixedSize().disabled(model.busy)
                 }.padding(18)
-            }.frame(width: 188).background(theme.surface)
+            }.frame(width: 212).background(theme.surface)
             Divider()
             Group {
                 switch feature {
                 case .editor: SaveEditorView(model: model, maps: maps, chests: chests, language: language, keyboardFocus: $keyboardFocus)
                 case .home: home
                 case .saves: MainView(model: model, onMap: { selected = CompanionFeature.maps.rawValue })
-                case .maps: MapsView(model: model, maps: maps, language: language)
+                case .maps: MapsView(model: model, maps: maps, language: language, requestedRadius: requestedMapRadius)
                 case .chests: ChestsView(model: model, maps: maps, chests: chests, language: language, openMaps: { selected = CompanionFeature.maps.rawValue })
-                case .statistics: StatisticsView(model: model, language: language)
+                case .statistics: StatisticsView(model: model, maps: maps, chests: chests, openMaps: { selected = CompanionFeature.maps.rawValue }, language: language)
                 case .player: PlayerView(model: model, player: player, names: chests, language: language)
                 case .conversation: ConversationView(model: model, maps: maps, chests: chests, language: language, openMaps: { selected = CompanionFeature.maps.rawValue }, openAIExport: { selected = CompanionFeature.aiExport.rawValue })
                 case .mobs: MobsView(language: language, report: openFeedback)
-                case .aiExport: AIContextExportView(model: model, maps: maps, chests: chests, language: language)
+                case .aiExport: AIContextExportView(model: model, maps: maps, chests: chests, language: language, generateRequest: $exportRequest, openLatest: $openLatestExport, openSkills: { selected = CompanionFeature.skills.rawValue })
+                case .skills: AgentSkillsView(language: language, saveLibrary: model.library.root) { id in selectedSkillID = id; selected = CompanionFeature.aiExport.rawValue }
                 case .resources: ResourcesView(language: language)
                 case .builds: OfflineBuildGuidesView(language: language)
                 case .videos: VideoTipsView(language: language)
@@ -167,6 +173,20 @@ struct CompanionView: View {
                     Text(english ? "Overview" : "Übersicht").font(.system(size: 30, weight: .bold))
                     Text(english ? "Your worlds, safely kept on this Mac." : "Deine Welten, sicher auf diesem Mac.").font(.title3).foregroundStyle(.secondary)
                 }
+                CompanionHomeActivityView(model: model, maps: maps, language: language, open: { destination, saveID in
+                    if let saveID, model.saves.contains(where: { $0.id == saveID }) { model.selection = saveID }
+                    if destination == .aiExport { openLatestExport = true }
+                    if destination == .maps { requestedMapRadius = CompanionActivity.shared.latest("map", root: model.library.root)?.radius }
+                    selected = destination.rawValue
+                }, generateMap: {
+                    if model.selected == nil { model.selection = model.saves.first?.id }
+                    requestedMapRadius = "128"
+                    if let save = model.selected, maps.ready { maps.generate(model, save: save, radius: "128", language: language) }
+                    selected = CompanionFeature.maps.rawValue
+                }, generateExport: {
+                    if model.selected == nil { model.selection = model.saves.first?.id }
+                    openLatestExport = false; exportRequest = UUID(); selected = CompanionFeature.aiExport.rawValue
+                })
                 homeIntroduction
                 if let save = model.saves.first,
                    let image = NSImage(contentsOf: model.library.worldFolder(save).appendingPathComponent("screenshot.jpg")) {
@@ -213,8 +233,8 @@ struct CompanionView: View {
             Text(english ? "A quick guide to your Companion" : "Dein Companion, kurz erklärt")
                 .font(.headline)
             Text(english
-                ? "Start in Savegames: back up a world from your Quest or import an existing backup. Then explore its map, find items in chests and inspect your player’s equipment. These views show saved data, not live gameplay."
-                : "Starte unter Savegames: Sichere eine Welt von deiner Quest oder importiere eine vorhandene Sicherung. Danach kannst du die Karte erkunden, Gegenstände in Kisten finden und deine Spielerausrüstung ansehen. Die Ansichten zeigen gespeicherte Daten, keine Live-Spielwerte.")
+                ? "Start in Savegames: back up a world from your device or import an existing backup. Then inspect your player’s inventory and equipment, explore the map and find items in chests. These views show saved data, not live gameplay."
+                : "Starte unter Savegames: Sichere eine Welt von deinem Gerät oder importiere eine vorhandene Sicherung. Danach kannst du das Inventar und die Ausrüstung deines Spielers ansehen, die Karte erkunden und Gegenstände in Kisten finden. Die Ansichten zeigen gespeicherte Daten, keine Live-Spielwerte.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             DisclosureGroup(isExpanded: $introductionExpanded) {
                 VStack(alignment: .leading, spacing: 14) {
@@ -271,7 +291,7 @@ struct CompanionNavigationCommands: Commands {
                 let index = CompanionFeature.allCases.firstIndex(of: item)!
                 Button(item.title(language == "en")) {
                     selected = item.rawValue
-                }.keyboardShortcut(index < 10 ? KeyEquivalent(Character(String((index + 1) % 10))) : (item == .statistics ? "s" : "e"), modifiers: index < 10 ? .command : [.command, .shift]).disabled(model.busy)
+                }.keyboardShortcut(index < 10 ? KeyEquivalent(Character(String((index + 1) % 10))) : (item == .statistics ? "s" : item == .skills ? "k" : "e"), modifiers: index < 10 ? .command : [.command, .shift]).disabled(model.busy)
             }
             Divider()
             Button(language == "en" ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }.disabled(model.busy)

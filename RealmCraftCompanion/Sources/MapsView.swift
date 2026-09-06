@@ -38,7 +38,10 @@ import WebKit
     }
     func restoreLast(_ save: Savegame?, radius: String, language: String) {
         mapURL = nil; builtFor = ""; notice = ""
-        guard let save, let stored = UserDefaults.standard.string(forKey: "map.\(save.id).\(radius).\(language)") else { return }
+        guard let save else { return }
+        let alternateLanguage = language == "en" ? "de" : "en"
+        guard let stored = UserDefaults.standard.string(forKey: "map.\(save.id).\(radius).\(language)")
+            ?? UserDefaults.standard.string(forKey: "map.\(save.id).\(radius).\(alternateLanguage)") else { return }
         let url = URL(fileURLWithPath: stored).resolvingSymlinksInPath()
         guard url.path.hasPrefix(support.resolvingSymlinksInPath().path + "/"), FileManager.default.fileExists(atPath: url.path), FileManager.default.fileExists(atPath: url.deletingLastPathComponent().appendingPathComponent("biomes.js").path) else { return }
         // Refresh only the viewer assets; cached world data and map tiles stay intact.
@@ -63,6 +66,7 @@ import WebKit
     func generate(_ model: Model, save: Savegame, radius: String, language: String) {
         guard ready else { return }
         let english = language == "en", backend = model.library, interpreter = python
+        let activityRoot = backend.root
         let output = support.appendingPathComponent(save.id).appendingPathComponent(UUID().uuidString)
         let cache = support.appendingPathComponent("cache")
         guard let engine = Bundle.main.resourceURL?.appendingPathComponent("MapEngine") else { return }
@@ -81,6 +85,7 @@ import WebKit
             UserDefaults.standard.set(index.path, forKey: "map.\(save.id).\(radius).\(language)")
             DispatchQueue.main.async {
                 self.mapURL = index; self.builtFor = save.title
+                CompanionActivity.shared.record(CompanionActivityRecord(date: Date(), saveID: save.id, title: save.title, path: index.path, radius: radius, language: language), kind: "map", root: activityRoot)
                 self.notice = result.code == 2 ? (english ? "Some chunks could not be read. This map has gaps; see audit.json in the map folder." : "Einige Chunks konnten nicht gelesen werden. Die Karte hat Lücken; Details stehen in audit.json im Kartenordner.") : ""
             }
             return english ? "Map generated. Your savegame is unchanged." : "Karte erzeugt. Dein Spielstand ist unverändert."
@@ -93,6 +98,7 @@ struct MapsView: View {
     @ObservedObject var model: Model
     @ObservedObject var maps: MapController
     let language: String
+    var requestedRadius: String? = nil
     @State private var radius = "128"
     private var english: Bool { language == "en" }
     var body: some View {
@@ -139,7 +145,7 @@ struct MapsView: View {
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .onAppear { maps.check(model); maps.restoreLast(model.selected, radius: radius, language: language) }
+        .onAppear { if let requestedRadius { radius = requestedRadius }; maps.check(model); maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: model.selection) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: radius) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: language) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
@@ -173,6 +179,7 @@ private struct LocalMapWebView: NSViewRepresentable {
         let orientationData = try! JSONSerialization.data(withJSONObject: orientation)
         configuration.userContentController.addUserScript(WKUserScript(source: "window.ATLAS_NATIVE_ORIENTATION=" + String(decoding: orientationData, as: UTF8.self) + ";", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         configuration.userContentController.add(context.coordinator, name: "atlasOrientation")
+        configuration.userContentController.add(context.coordinator, name: "atlasNavigation")
         let markerData = try! JSONSerialization.data(withJSONObject: ["scope": scope, "markers": markerValue])
         configuration.userContentController.addUserScript(WKUserScript(source: "{const a=" + String(decoding: markerData, as: UTF8.self) + ";window.ATLAS_ANNOTATION_SCOPE=a.scope;window.ATLAS_NATIVE_MARKERS=a.markers;}", injectionTime: .atDocumentStart, forMainFrameOnly: true))
         configuration.userContentController.add(context.coordinator, name: "atlasMarkers")
@@ -196,7 +203,7 @@ private struct LocalMapWebView: NSViewRepresentable {
         context.coordinator.styleScript = styleScript + privacyScript
         if !view.isLoading { view.evaluateJavaScript(styleScript + privacyScript, completionHandler: nil) }
     }
-    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
+    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
     final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate, WKDownloadDelegate {
         let world: String
         let scope: String
@@ -206,6 +213,12 @@ private struct LocalMapWebView: NSViewRepresentable {
         }
         init(world: String, scope: String) { self.world = world; self.scope = scope }
         func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "atlasNavigation" {
+                guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true else { return }
+                let accepted = NavigationPack.accept(message.body, world: world, scope: scope)
+                message.webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('atlas-navigation-saved', {detail: " + String(accepted) + "}));", completionHandler: nil)
+                return
+            }
             if message.name == "atlasOrientation" {
                 guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true,
                       let body = message.body as? [String: Any], body["world"] as? String == world,

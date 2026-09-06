@@ -4,6 +4,30 @@ Beim ersten Start öffnet Companion automatisch eine Anleitung mit acht Schritte
 
 Diese Anleitung wurde am Beispiel der Meta Quest integriert. Menüs, Freigaben, Kontovoraussetzungen und Speicherorte können bei anderen Brillen oder Softwareversionen abweichen. Die Kompatibilität mit anderen Brillen ist nicht garantiert. Folge bei Abweichungen den aktuellen Anweisungen des Herstellers.
 
+ZEITBEISPIELE · MACBOOK AIR M3
+
+Referenz ist das für die Entwicklung verwendete MacBook Air mit Apple M3, 8 CPU-Kernen und 16 GB RAM. Karten werden mit 8 parallelen Workern aus lokalen Sicherungen berechnet; der Companion verwendet einen Chunk-Cache. Diese Beispiele sind keine Leistungszusage für deinen Mac. Stand: September 2026.
+
+USB-IMPORT · QUEST → MAC
+Für eine beispielhafte Welt mit 250 MiB kannst du grob 2–10 Minuten als Zeitreserve für „Vom Gerät sichern“ einplanen. Das ist eine Planungsschätzung, kein auf diesem Kabel gemessener Gesamt-Benchmark; größere Welten oder sehr viele kleine Dateien können deutlich länger dauern.
+
+Rechenbeispiel: Bei angenommenen effektiven 5–20 MiB/s dauert das reine Kopieren von 250 MiB etwa 13–50 Sekunden. Hinzu kommen Dateilisten, SHA-256-Prüfungen auf Quest und Mac sowie die Aufnahme in die Library. Die USB-Nennrate ist deshalb kein Maß für die Gesamtdauer. Kabel, Hub, Quest-Speicher, Dateianzahl und laufende Programme beeinflussen das Ergebnis. Die aktuelle Kabelgeschwindigkeit wurde für dieses Beispiel nicht gemessen. Warte auf „Gesichert und geprüft“.
+
+KARTE SMALL · URSPRUNG ±128 BLÖCKE
+Gespeicherte Laufprotokolle auf dem Referenz-Mac zeigen für die reine Kartenberechnung gerundet etwa 1–15 Sekunden. „Small“ meint hier die Auswahl „Ursprung ±128 Blöcke“, nicht einen Umkreis um die aktuelle Spielerposition.
+
+KARTE FULL · ALLE GESPEICHERTEN CHUNKS
+Bei kleinen gespeicherten Welten lag die reine Berechnung im Sekundenbereich; bei größeren vollständigen Karten zeigten die vorhandenen Läufe etwa 1½–11 Minuten. „Full“ bedeutet alle bereits gespeicherten Chunks, nicht die gesamte theoretisch erzeugbare Welt. Die Datenmenge kann sich zwischen Welten um ein Vielfaches unterscheiden.
+
+ZWISCHENGRÖSSEN
+Für „Ursprung ±512 Blöcke“ wurden etwa 14–20 Sekunden, für ±1024 etwa 33 Sekunden und für ±2048 etwa 73 Sekunden reine Berechnungszeit beobachtet. Das sind einzelne Beispiele mit unterschiedlicher Abdeckung und nicht festem Cache-Zustand, keine allgemeine Skalierungstabelle.
+
+WAS IN DEN RENDERZEITEN FEHLT
+Die Werte stammen aus dem Feld elapsedSeconds vorhandener Kartenprotokolle. Die Integritätsprüfungen der vollständigen Sicherung vor und nach dem Rendern, abschließende Ausgabeschritte und das Öffnen der Ansicht kommen hinzu. Auch eine kleine Karte kann deshalb merklich länger benötigen als ihre reine Renderzeit.
+
+CACHE, ERSTER LAUF UND ERNEUTES ÖFFNEN
+Bereits verarbeitete Chunks können erneutes Rendern beschleunigen. Die alten Protokolle unterscheiden jedoch nicht zuverlässig zwischen kaltem und warmem Cache; die Zahlen sind keine getrennten Erstlauf-/Cache-Benchmarks. Eine vorhandene Karte zu öffnen startet keine vollständige Neuberechnung. Ausgelagerte Cloud-Dateien, wenig freier Speicher und gleichzeitige rechenintensive Aufgaben können jeden Vorgang verlängern. Downloads zur erstmaligen Installation von Python, NumPy und Pillow sind in den Zeiten nicht enthalten.
+
 EINRICHTUNG SCHRITT FÜR SCHRITT
 
 Du brauchst einen Mac mit macOS 14 oder neuer, deine eingerichtete Quest, ein USB-Datenkabel und dein Smartphone mit der Meta-Horizon-App. Internet brauchst du für Meta-Konto und ADB-Download. Die eigentlichen Sicherungen bleiben lokal.
@@ -72,3 +96,8 @@ KARTEN UND KISTENSUCHE EINRICHTEN (OPTIONAL)
 Die App installiert Python, NumPy und Pillow in einem eigenen Ordner für deinen Benutzer und prüft anschließend ihre Funktion. Dafür brauchst du Internet, aber kein Administratorpasswort, Homebrew, Xcode oder vorinstalliertes Python. Der Python-Download kommt von Astral/GitHub, die Pakete von PyPI. Vorhandene Python-Installationen werden nicht verändert.
 
 Bei einem Fehler kannst du die Installation erneut starten; eine bisherige Installation bleibt erhalten. Für normale Backups und die Spieleransicht sind diese Kartenwerkzeuge nicht nötig.
+
+
+TRANSFER OHNE ADB · UNGETESTETE ALTERNATIVEN
+
+Öffne Einstellungen → Quest einrichten → Alternative: ohne ADB übertragen. Dort gibt es einen Empfangsordner-Button, eine Auswahl für eingebundene Quest-Ordner, Pfadkopie, lokalen Import und ZIP-Export. Ein reines MTP-Gerät hat keinen normalen Finder-Pfad. ADB bleibt der empfohlene, getestete Weg mit SHA-256-Prüfung. Für Richtigkeit, Vollständigkeit, Kompatibilität und Erfolg externer Apps wird keine Gewähr übernommen; Nutzung auf eigenes Risiko. Andere Brillen können abweichen.

@@ -6,7 +6,7 @@ BUILD_DIR="${REALMCRAFT_BUILD_DIR:-$PWD/.build}"
 BUILD_CACHE="${TMPDIR:-/tmp}/realmcraft-swift-module-cache"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$BUILD_DIR" "$BUILD_CACHE"
 for ARCH in arm64 x86_64; do
-    xcrun swiftc -swift-version 5 -target "$ARCH-apple-macos14.0" -O -whole-module-optimization -module-cache-path "$BUILD_CACHE" Sources/EditorTestExportView.swift Sources/SavegameOrganization.swift Sources/SaveEditorStorage.swift Sources/SaveEditor.swift Sources/AppInfo.swift Sources/CompanionLifecycle.swift Sources/StatisticsModels.swift Sources/StatisticsView.swift Sources/AIContextExport.swift Sources/AIContextSupplement.swift Sources/AIContextExportView.swift Sources/AIExportSharing.swift Sources/Library.swift Sources/Setup.swift Sources/SetupView.swift Sources/HelpView.swift Sources/Localization.swift Sources/WindowFramePersistence.swift Sources/CompanionStyle.swift Sources/ItemIcons.swift Sources/CompanionView.swift Sources/MobModels.swift Sources/MobsView.swift Sources/FeedbackModels.swift Sources/FeedbackView.swift Sources/ResourcesView.swift Sources/BuildGuideModels.swift Sources/BuildGuidesView.swift Sources/MapTools.swift Sources/MapsView.swift Sources/MapLocalization.swift Sources/ChestModels.swift Sources/ChestOwnership.swift Sources/ChestsView.swift Sources/EnchantmentNames.swift Sources/PlayerStorage.swift Sources/PlayerModels.swift Sources/DurabilityCatalog.swift Sources/RepairForecast.swift Sources/PlayerAvatar.swift Sources/PlayerSkin.swift Sources/PlayerSkinScene.swift Sources/PlayerSkinView.swift Sources/PlayerView.swift Sources/ConversationKnowledge.swift Sources/ConversationLocalModel.swift Sources/ConversationAudio.swift Sources/ConversationView.swift Sources/main.swift -o "$BUILD_DIR/RealmCraftLibrary-$ARCH" -framework SceneKit -framework SwiftUI -framework AppKit -framework CryptoKit -framework WebKit -framework AVFoundation -framework Speech
+    xcrun swiftc -swift-version 5 -target "$ARCH-apple-macos14.0" -O -whole-module-optimization -module-cache-path "$BUILD_CACHE" Sources/*.swift -o "$BUILD_DIR/RealmCraftLibrary-$ARCH" -framework SceneKit -framework SwiftUI -framework AppKit -framework CryptoKit -framework WebKit -framework AVFoundation -framework Speech
 done
 python3 make_localizations.py
 cp -R Resources/. "$APP/Contents/Resources/"
@@ -32,8 +32,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <key>CFBundleLocalizations</key><array><string>de</string><string>en</string></array>
 <key>CFBundleIconFile</key><string>AppIcon</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>1.7.16</string>
-<key>CFBundleVersion</key><string>38</string>
+<key>CFBundleShortVersionString</key><string>1.7.22</string>
+<key>CFBundleVersion</key><string>44</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSDocumentsFolderUsageDescription</key><string>RealmCraft-Spielstände in deiner lokalen Library sichern und importieren.</string>
 <key>NSDownloadsFolderUsageDescription</key><string>Vorhandene RealmCraft-Backups zum Importieren finden.</string>

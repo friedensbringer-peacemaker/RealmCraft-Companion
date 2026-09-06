@@ -39,6 +39,30 @@ On first launch, Companion opens an eight-step guide automatically. It separates
 
 This guide was integrated using Meta Quest as the example. Menus, permissions, account requirements and save locations can differ on other headsets or software versions. Other-headset compatibility is not guaranteed. Follow the manufacturer’s current instructions when they differ.
 
+TIMING EXAMPLES · MACBOOK AIR M3
+
+The reference machine is the development MacBook Air with Apple M3, 8 CPU cores and 16 GB RAM. Maps use 8 parallel workers, local backups and the Companion chunk cache. These examples are not a performance guarantee for your Mac. Reference date: September 2026.
+
+USB IMPORT · QUEST → MAC
+For an illustrative 250 MiB world, allow roughly 2–10 minutes as a planning allowance for Backup from device. This is an estimate, not a measured end-to-end benchmark of this cable; larger worlds or very many small files can take substantially longer.
+
+Calculation example: assuming effective throughput of 5–20 MiB/s, copying 250 MiB alone takes about 13–50 seconds. File listings, SHA-256 checks on the Quest and Mac, and library ingestion add time. The nominal USB rate therefore does not describe the total duration. Cable, hub, Quest storage, file count and concurrent applications affect the result. The current cable speed was not measured for this example. Wait for Backed up and verified.
+
+SMALL MAP · ORIGIN ±128 BLOCKS
+Saved run records on the reference Mac show approximately 1–15 seconds for map computation alone, rounded. Small means the Origin ±128 blocks selection, not an area around the current player position.
+
+FULL MAP · ALL SAVED CHUNKS
+Small saved worlds took seconds to compute; existing runs for larger complete maps took approximately 1½–11 minutes. Full covers all already saved chunks, not the entire theoretically generatable world. Data volume can differ by orders of magnitude between worlds.
+
+INTERMEDIATE AREAS
+Observed computation times were about 14–20 seconds for Origin ±512 blocks, 33 seconds for ±1024 and 73 seconds for ±2048. These are individual examples with differing coverage and uncontrolled cache state, not a general scaling table.
+
+WHAT RENDER TIMES EXCLUDE
+These values come from elapsedSeconds in existing map records. Integrity checks of the complete backup before and after rendering, final output steps and opening the viewer add time. Even a small map can therefore take noticeably longer than its computation time alone.
+
+CACHE, FIRST RUN AND REOPENING
+Previously processed chunks can speed up regeneration. However, the old records do not reliably distinguish cold from warm caches; these are not separate first-run/cache benchmarks. Opening an existing map does not start full regeneration. Cloud files awaiting download, low free disk space and concurrent compute-heavy tasks can extend any operation. First-time downloads of Python, NumPy and Pillow are excluded.
+
 STEP-BY-STEP SETUP
 
 You need a Mac running macOS 14 or later, an already set up Quest, a USB data cable and your phone with the Meta Horizon app. Internet is needed for Meta account setup and downloading ADB. Backups themselves stay local.
@@ -107,3 +131,10 @@ Open Settings → Quest setup. In Choose your storage or All settings, click Ins
 The app installs Python, NumPy and Pillow in a private folder for your user and tests them afterwards. Internet is required, but no administrator password, Homebrew, Xcode or preinstalled Python. Python is downloaded from Astral/GitHub; packages come from PyPI. Existing Python installations are unchanged.
 
 If installation fails, you can retry; a previous installation is preserved. Normal backups and the Player view do not need these map tools.
+
+
+TRANSFER WITHOUT ADB · UNTESTED ALTERNATIVES
+
+Open Settings → Quest setup → Alternative: transfer without ADB. The page provides a local receiving-folder button, a mounted Quest-folder selector, path copying, local import and ZIP export. A raw MTP device has no normal Finder path. ADB remains the recommended, tested route with SHA-256 verification. No assurance of accuracy, completeness, compatibility or success is provided for external apps; use at your own risk. Other headsets may differ.
+
+Do not claim a third-party app can access Android/data unless the user has verified it. Recommend ADB when access is blocked. Never confuse local import checksums with verification of a manual transfer.

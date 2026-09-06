@@ -33,10 +33,12 @@
   const transport=new AtlasTransport.Overlay(data,layers,requestDraw);
   const poi=new AtlasPoints(data,{changed:requestDraw,focus:p=>{showBiome(p.x,p.z);view={...view,x:p.x+.5,z:p.z+.5,zoom:Math.max(view.zoom,4)};selected=null;$('selection').hidden=true;requestDraw();}});
   const signs=new AtlasSigns(data,{changed:requestDraw,focus:s=>{showBiome(s.x,s.z);view={...view,x:s.x+.5,z:s.z+.5,zoom:Math.max(view.zoom,8)};selected=null;$('selection').hidden=true;requestDraw();}});
-  const ownership=new AtlasOwnership(data,{changed:requestDraw,activated:()=>{selected=null;$("selection").hidden=true;pointers.clear();lastPinch=null;press=null;canvas.classList.remove("dragging");canvas.focus();}});
+  const ownership=new AtlasOwnership(data,{changed:requestDraw,activated:()=>{measure.clear();selected=null;$("selection").hidden=true;pointers.clear();lastPinch=null;press=null;canvas.classList.remove("dragging");canvas.focus();}});
   const voxel=new AtlasVoxelViewer(data,layers);
   let showOwnPlaces=true;
   AtlasQuickControls.install(visible=>{showOwnPlaces=visible;requestDraw();},visible=>{poi.showLabels=visible;requestDraw();},visible=>{signs.focusOnly=visible;requestDraw();});
+  const measure=new AtlasMeasure.Measure(data,{changed:requestDraw,activated:()=>{ownership.cancel();selected=null;$('selection').hidden=true;canvas.focus();}});
+  AtlasNavigation.install(measure,data,()=>markers);
   $('open-3d').onclick=()=>voxel.open({x:view.x,z:view.z,dimension});
   $('point-3d').textContent=english?'Explore here in 3D · Beta':'Hier in 3D · Beta';
   $('point-3d').onclick=()=>{if(selected)voxel.open({...selected});};
@@ -92,6 +94,7 @@
       ctx.fillStyle='#112a2eea';ctx.fillRect(p.x-w/2-7,p.y-32,w+14,21);ctx.fillStyle='#ffc96b';ctx.textAlign='center';ctx.fillText(text,p.x,p.y-17);
     }
     if(!searchFocused)ownership.draw(ctx,screen,width,height);
+    measure.draw(ctx,screen);
     if(!searchFocused && selected && selected.dimension===dimension){const p=screen(selected.x+.5,selected.z+.5),size=Math.max(8,view.zoom);ctx.save();ctx.translate(p.x,p.y);ctx.scale(view.flipX?-1:1,view.flipZ?-1:1);ctx.rotate(view.angle);ctx.strokeStyle='#fff4b0';ctx.lineWidth=2;ctx.strokeRect(-size/2,-size/2,size,size);ctx.restore();}
     $('compass-arrow').style.transform=`scale(${view.flipX?-1:1},${view.flipZ?-1:1}) rotate(${view.angle}rad)`;$('rotation-angle').textContent=`${Math.round(view.angle*180/Math.PI)%360}°`;$('rotation-slider').value=Math.round(view.angle*180/Math.PI)%360;
     const wanted=100/view.zoom, power=10**Math.floor(Math.log10(wanted));
@@ -101,7 +104,7 @@
   function fit(){view=fitView(data.dimensions[dimension].bounds,view,width,height);requestDraw();}
   function rotate(angle){view.angle=((Math.round(angle/(Math.PI/2))%4)+4)%4*(Math.PI/2);requestDraw();}
   function resize(){const oldWidth=width;width=area.clientWidth;height=area.clientHeight;const ratio=window.devicePixelRatio||1;canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);if(!oldWidth)fit();else requestDraw();}
-  function changeDimension(value){voxel.close();ownership.setDimension(value);dimension=value;$('biome-readout').textContent=english?'Saved biome · point at the map':'Gespeichertes Biom · auf Karte zeigen';const d=data.dimensions[dimension];$('dimension').value=dimension;$('map-label').textContent=d.label+(dimension==='n'?' · Y ≤ 90':'');$('slice-note').hidden=dimension!=='n';$('chunk-count').textContent=format(d.count);$('block-count').textContent=(d.count*256/1e6).toLocaleString('de-AT',{maximumFractionDigits:2})+' Mio.';$('selection').hidden=true;selected=null;
+  function changeDimension(value){measure.clear();voxel.close();ownership.setDimension(value);dimension=value;$('biome-readout').textContent=english?'Saved biome · point at the map':'Gespeichertes Biom · auf Karte zeigen';const d=data.dimensions[dimension];$('dimension').value=dimension;$('map-label').textContent=d.label+(dimension==='n'?' · Y ≤ 90':'');$('slice-note').hidden=dimension!=='n';$('chunk-count').textContent=format(d.count);$('block-count').textContent=(d.count*256/1e6).toLocaleString('de-AT',{maximumFractionDigits:2})+' Mio.';$('selection').hidden=true;selected=null;
     updateLevelLabels();
     $('coverage-note').textContent=(data.scope==='complete'?'Gespeicherte Welt':'Kartenausschnitt')+' · schematische Blockfarben';
     const issues=[];if(data.errors.length)issues.push(`${data.errors.length} Dateien konnten nicht gelesen werden; diese Bereiche fehlen.`);if(d.unknownIds.length)issues.push(`${d.unknownIds.length} unbekannte Blocktypen sind magenta markiert.`);$('error-note').textContent=issues.join(' ');$('error-note').hidden=!issues.length;renderMarkers();poi.setDimension(dimension);signs.setDimension(dimension);fit();}
@@ -109,7 +112,7 @@
     const cacheKey=dimension+':'+chunkKey;let bytes=decoded.get(cacheKey);if(!bytes){bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));decoded.set(cacheKey,bytes);if(decoded.size>100)decoded.delete(decoded.keys().next().value);}
     const index=(z-cz)*16+x-cx;return {id:bytes[index*2]|bytes[index*2+1]<<8,y:bytes[512+index]};
   }
-  function pick(px,py){if(signs.pick(px,py,screen)){selected=null;$('selection').hidden=true;requestDraw();return;}if(!signs.isolate()&&poi.pick(px,py,screen)){$('selection').hidden=true;return;}if(window.AtlasPrivacy?.enabled)return;const pos=worldAt(px,py,view,width,height),x=Math.floor(pos.x),z=Math.floor(pos.z),block=blockAt(x,z);if(!block){$('search-message').textContent='An dieser Stelle ist kein Chunk in der Karte gespeichert.';return;}
+  function pick(px,py){if(measure.pick(worldAt(px,py,view,width,height),dimension))return;if(signs.pick(px,py,screen)){selected=null;$('selection').hidden=true;requestDraw();return;}if(!signs.isolate()&&poi.pick(px,py,screen)){$('selection').hidden=true;return;}if(window.AtlasPrivacy?.enabled)return;const pos=worldAt(px,py,view,width,height),x=Math.floor(pos.x),z=Math.floor(pos.z),block=blockAt(x,z);if(!block){$('search-message').textContent='An dieser Stelle ist kein Chunk in der Karte gespeichert.';return;}
     if(block.loading){$('search-message').textContent='Dieser Bereich lädt noch. Bitte kurz warten und erneut klicken.';return;}
     poi.selectChest(x,block.y,z);
     selected={x,z,dimension,...block};$('selected-name').textContent=nameFor(block.id);$('selected-biome').textContent=AtlasBiomes.label(data,dimension,x,z,english);showBiome(x,z);$('selected-coords').textContent=`X ${x}   Y ${block.y}   Z ${z}`;$('marker-name').value='';$('selection').hidden=false;$('search-message').textContent='';requestDraw();}
@@ -165,7 +168,7 @@
     else{view=panBy(p.x-prev.x,p.y-prev.y,view);if(press&&Math.hypot(p.x-press.x,p.y-press.y)>4)moved=true;}requestDraw();};
   canvas.onpointerup=e=>{const p=point(e);if(ownership.active){ownership.end(e.pointerId,worldAt(p.x,p.y,view,width,height));return;}if(pointers.has(e.pointerId)&&!moved&&pointers.size===1)pick(p.x,p.y);pointers.delete(e.pointerId);lastPinch=null;if(!pointers.size){canvas.classList.remove('dragging');press=null;}};
   canvas.onpointercancel=e=>{ownership.abort(e.pointerId);pointers.delete(e.pointerId);lastPinch=null;moved=true;canvas.classList.remove('dragging');};
-  const mapKey=e=>{if(e.key==='Escape'&&ownership.active){ownership.cancel();e.preventDefault();return;}if(ownership.drag)return;const step=80;switch(e.key){case'ArrowLeft':view=panBy(step,0,view);break;case'ArrowRight':view=panBy(-step,0,view);break;case'ArrowUp':view=panBy(0,step,view);break;case'ArrowDown':view=panBy(0,-step,view);break;case'+':case'=':view.zoom=clamp(view.zoom*1.5,.015625,32);break;case'-':view.zoom=clamp(view.zoom/1.5,.015625,32);break;case'f':case'F':fit();break;case'q':case'Q':rotate(view.angle-Math.PI/2);break;case'e':case'E':rotate(view.angle+Math.PI/2);break;case'r':case'R':$('mirror-reset').click();break;case'PageUp':setLevel(yLevel+(e.shiftKey?10:e.altKey?5:1));break;case'PageDown':setLevel(yLevel-(e.shiftKey?10:e.altKey?5:1));break;case'Escape':$('close-selection').click();break;default:return;}e.preventDefault();requestDraw();};
+  const mapKey=e=>{if(e.key==='Escape'&&!measure.panel.hidden){measure.clear();e.preventDefault();return;}if(e.key==='Escape'&&ownership.active){ownership.cancel();e.preventDefault();return;}if(ownership.drag)return;const step=80;switch(e.key){case'ArrowLeft':view=panBy(step,0,view);break;case'ArrowRight':view=panBy(-step,0,view);break;case'ArrowUp':view=panBy(0,step,view);break;case'ArrowDown':view=panBy(0,-step,view);break;case'+':case'=':view.zoom=clamp(view.zoom*1.5,.015625,32);break;case'-':view.zoom=clamp(view.zoom/1.5,.015625,32);break;case'f':case'F':fit();break;case'q':case'Q':rotate(view.angle-Math.PI/2);break;case'e':case'E':rotate(view.angle+Math.PI/2);break;case'r':case'R':$('mirror-reset').click();break;case'PageUp':setLevel(yLevel+(e.shiftKey?10:e.altKey?5:1));break;case'PageDown':setLevel(yLevel-(e.shiftKey?10:e.altKey?5:1));break;case'Escape':$('close-selection').click();break;default:return;}e.preventDefault();requestDraw();};
   canvas.onkeydown=mapKey;
   document.addEventListener('keydown',e=>{
     if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;

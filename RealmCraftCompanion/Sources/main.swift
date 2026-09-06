@@ -207,9 +207,24 @@ import UniformTypeIdentifiers
             return "Cloud-Backup-ZIP exportiert: \(target.lastPathComponent)"
         }
     }
-    func compactLibrary() {
+    func compactLibrary(backupFirst: Bool = false) {
+        var backupURL: URL?
+        if backupFirst {
+            let panel = NSSavePanel()
+            panel.allowedContentTypes = [.zip]
+            let formatter = DateFormatter(); formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+            panel.nameFieldStringValue = "RealmCraft-Library-Before-Optimize-\(formatter.string(from: Date())).zip"
+            if let path = UserDefaults.standard.string(forKey: "cloudBackupFolder") {
+                panel.directoryURL = URL(fileURLWithPath: path, isDirectory: true)
+            }
+            guard panel.runModal() == .OK, let url = panel.url else { return }
+            backupURL = url
+        }
         work("Speicher optimieren …") {
-            try self.library.compactLibrary()
+            if let backupURL {
+                try self.library.exportLibraryArchive(to: backupURL)
+            }
+            return try self.library.compactLibrary()
         }
     }
 }
@@ -225,6 +240,7 @@ struct MainView: View {
     @State private var editTitle = ""
     @State private var renaming = false
     @State private var confirmingStop = false
+    @State private var confirmingOptimize = false
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: "Savegames") {
@@ -253,7 +269,7 @@ struct MainView: View {
                             .disabled(model.scanning || model.serial.isEmpty || model.setup.package.isEmpty)
                     }
                     Button(language == "en" ? "Refresh library" : "Bibliothek aktualisieren") { model.reload() }
-                    Button(language == "en" ? "Optimize storage" : "Speicher optimieren") { model.compactLibrary() }
+                    Button(language == "en" ? "Optimize storage…" : "Speicher optimieren …") { confirmingOptimize = true }
                     Button(language == "en" ? "Export library backup ZIP…" : "Library-Backup-ZIP exportieren …") { model.exportLibraryPanel() }
                     Button(language == "en" ? "Set cloud backup folder…" : "Cloud-Backup-Ordner festlegen …") { model.chooseCloudBackupFolder() }
                     Button(language == "en" ? "Back up library to cloud folder" : "Library in Cloud-Ordner sichern") { model.exportLibraryToCloudFolder() }
@@ -308,7 +324,14 @@ struct MainView: View {
             }
         }
         .disabled(model.busy)
-        .onChange(of: model.serial) { _, _ in restoreCandidate = nil; confirmingStop = false }
+        .onChange(of: model.serial) { _, _ in restoreCandidate = nil; confirmingStop = false; confirmingOptimize = false }
+        .alert(language == "en" ? "Optimize savegame storage?" : "Savegame-Speicher optimieren?", isPresented: $confirmingOptimize) {
+            Button(language == "en" ? "Cancel" : "Abbrechen", role: .cancel) {}
+            Button(language == "en" ? "Create backup & optimize…" : "Backup erstellen & optimieren …") { model.compactLibrary(backupFirst: true) }
+            Button(language == "en" ? "Optimize without backup" : "Ohne Backup optimieren", role: .destructive) { model.compactLibrary() }
+        } message: {
+            Text(language == "en" ? "The library will be verified and identical savegame files will be replaced with shared storage links. Existing backups should stay readable, but creating a ZIP first gives you an independent restore point." : "Die Library wird geprüft und identische Savegame-Dateien werden durch gemeinsame Speicherlinks ersetzt. Bestehende Backups sollten lesbar bleiben; ein ZIP vorher gibt dir aber einen unabhängigen Rückfallstand.")
+        }
         .alert(language == "en" ? "Really delete this savegame?" : "Dieses Savegame wirklich löschen?", isPresented: Binding(get: { deletion != nil }, set: { if !$0 { deletion = nil } })) {
             Button(language == "en" ? "Cancel" : "Abbrechen", role: .cancel) { deletion = nil }
             Button(language == "en" ? "Move to Trash" : "In den Papierkorb", role: .destructive) {
@@ -397,7 +420,7 @@ struct MainView: View {
                             }
                             VStack(alignment: .leading, spacing: 10) {
                                 Label("Mit SHA-256-Prüfsummen gespeichert", systemImage: "checkmark.shield.fill").foregroundStyle(theme.accent)
-                                Label(language == "en" ? "Identical files are stored only once when storage is optimized." : "Identische Dateien werden bei optimiertem Speicher nur einmal abgelegt.", systemImage: "square.stack.3d.up.fill").foregroundStyle(theme.accent)
+                                SavegameStatusView(model: model, save: save)
                                 Text("Letzte Dateiänderung: \(displayDate(save.gameDate))")
                                     .foregroundStyle(.secondary)
                                 Text("Herkunft: \(tr(save.source))").foregroundStyle(.secondary)

@@ -1,3 +1,61 @@
+## 1.7.22 — Navigation export and mixed journeys · Beta
+
+- Added three reviewed videos covering ice spike railway completion, snowy route construction and dark oak sapling gathering, with bilingual summaries, 22 timestamped instructions and Markdown exports. The catalog now has 84 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed videos covering Nether exploration, an unsuccessful TNT mining experiment and coral/sea-pickle gathering, with bilingual summaries, 19 timestamped instructions and Markdown exports. The catalog now has 81 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed videos covering continued geode mining, Mine 2 ore cleanup and ore consolidation with furnace operation, with bilingual summaries, 21 timestamped instructions and Markdown exports. The catalog now has 78 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed videos covering amethyst exploration, a woodland mansion tour and manual ore-processing setup, with bilingual summaries, 23 timestamped instructions and Markdown exports. The catalog now has 75 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Add candidate surface-route planning with English turns, height steps, coordinates and walking/boat/minecart transfer cues. No live position tracking; ladder routes and transport mechanics require further validation.
+- Include route packets in AI-export Markdown and JSON, scoped to the selected backup. Optional nearby POIs use a 250-block radius and heading-relative offsets; small-island suggestions require a saved-water boundary.
+- Let local Qwen through LM Studio select useful supplied step/POI references; validate every returned ID and preserve all original coordinates and route steps. No remote inference service is used.
+- Replace repeated unavailable travel-time rows with mixed journey sections, transfer points and known-section subtotals. Missing coverage remains explicit; estimates and infrastructure assumptions are labelled.
+
+# 1.7.21 · 2026-09-06
+
+- Move Skills to the third position under AI tools, after AI export and Conversation; keep navigation menus and the Home section guide in the same order.
+- Added three reviewed videos covering ice fishing and camp fencing, Nether portal relocation and completing the Mine 1 track, with bilingual summaries, 22 timestamped instructions and Markdown exports. The catalog now has 72 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed videos covering turtle breeding and breathing equipment, a minecart interchange and powered mine access, with bilingual summaries, 24 timestamped instructions and Markdown exports. The catalog now has 69 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed videos covering item dropping, the first Survival shelter and a third-party update overview, with bilingual summaries, 20 timestamped instructions and Markdown exports. The catalog now has 66 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Show item graphics in chest-stock statistics using the existing Item icons setting and selected graphics pack. Text-only mode and unmapped items retain their text labels.
+
+# 1.7.20 · 2026-09-06
+
+- Added three reviewed official update videos covering Architect and difficulty settings, XP and leads, lava and pandas, with bilingual summaries, 22 timestamped instructions and Markdown exports. The catalog now has 63 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed official update videos covering fishing and revised triggers, redstone and transport, swinging and riding, with bilingual summaries, 26 timestamped instructions and Markdown exports. The catalog now has 60 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added Beta chest-stock statistics with side-by-side quantities and chest counts for all chests and presumed player-owned chests. Reuses verified chest scans and existing ownership assignments; respects spoiler-light mode.
+- Added bilingual name/ID search, dimension and theme filters, player-stock filtering, quantity/name/ID sorting, and thematic grouping for resources, wood, stone, food, equipment and other items. Reports unreadable records and partial scans separately from zero stock.
+
+# 1.7.19 · 2026-09-06
+
+- Added three reviewed official update videos covering villagers and world sharing, shields and wolves, hand feeding and new structures, with bilingual summaries, 28 timestamped instructions and Markdown exports. The catalog now has 57 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added bilingual setup-help timing examples for the reference M3 MacBook Air (16 GB, 8 map workers), distinguishing observed map computation times from estimated USB import allowances, verification overhead and cache effects.
+
+- Added three reviewed official video tutorials covering Architect mode, food, movement and avatar-height recentering, with bilingual summaries, 21 timestamped instructions and Markdown exports. The catalog now has 54 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Added three reviewed official video tutorials covering crafting basics, tool selection and anvil repairs, with bilingual summaries, 23 timestamped instructions and Markdown exports. The catalog now has 51 reviewed contributions out of 196; historical availability claims remain explicitly version-limited.
+- Clarified dome and pyramid side views: staged exterior elevations show the nearest glass and metal surfaces; explicitly labeled central cross-sections remain available with complete layer plans. Physical layouts and material quantities are unchanged.
+- Added seven modular underwater and transport guides: sealing test, glass dome, glass pyramid, panoramic tunnel, manual ladder shaft, direct walkway and boat canal. Includes counted materials, complete layer grids and voice-agent exports. Automatic elevators and speed bonuses remain unverified.
+- Added per-save storage inspection: actual optimization coverage, shared-file counts, linked snapshots and editor provenance. Complete hard-linked snapshots do not require another savegame.
+- Added matching-manifest detection for library ZIPs in the configured cloud folder, Finder reveal, refresh and explicit unknown online/upload status. Includes English/German help and regression tests.
+
+# 1.7.18 · 2026-09-06
+
+
+- Added clearly labeled short video summaries and per-video Markdown exports with authored instructions, review limitations and timestamp links. Full original transcripts and audio are not included.
+- Added persistent video selection for AI exports. Video notes stay inline below 100 KB combined size or move into a linked second Markdown file automatically; users can also force separate files. JSON retains all selected notes.
+- Local saving, iCloud and AirDrop preserve both files. Reopened AI exports retain the video supplement. Added selection, content parity, split-file, path protection and rollback tests.
+- Added a confirmation dialog before storage optimization starts. Users can cancel, optimize without an extra archive, or create an independent ZIP backup first.
+- The pre-optimization ZIP uses the same verified full-library export path and defaults to the remembered cloud-backup folder when available.
+- Add German and English skill versions, language-specific and bilingual Markdown exports, and optional local Qwen translation drafts through LM Studio. Translation is reviewed before saving; all languages are preserved in version history and JSON packages.
+- Expand the central Skills library with persistent version history, previews and restoration as a new version.
+- Import and export individual skills or the entire collection with history in a versioned JSON package; matching IDs import as copies. Retain Markdown exchange, editing/renaming, duplication and archiving.
+- Add sanitized savegame and help-maintenance skills plus Companion development instructions. Existing libraries receive missing bundled skills without replacing edits or re-adding deleted defaults.
+- Document the complete workflow in German and English help. Packages exclude the separate personal profile and include skill-specific notes.
+
+# 1.7.17 · 2026-09-06
+
+- Added bilingual manual-transfer guidance for USB/MTP, conditional headset-side export, and manual restoration, accessible from setup and Help.
+- Added a local receiving folder, copyable Quest path, a picker for an already mounted Quest folder, local import and verified ZIP export actions. No automatic third-party transfer or installation is performed.
+- ADB remains the recommended tested path. Third-party workflows explicitly carry no correctness, compatibility or success guarantee; local import checksums are not represented as verification against the original Quest files.
+
 # 1.7.16 · 2026-09-06
 
 - Added bilingual voice-agent handoffs for every build guide: copy or save self-contained instructions, materials and coordinate grids, with small spoken actions, explicit confirmation, orientation and resumable checkpoints.

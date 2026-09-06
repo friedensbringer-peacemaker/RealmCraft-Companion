@@ -7,8 +7,23 @@ struct AIContextExportView: View {
     @ObservedObject var maps: MapController
     @ObservedObject var chests: ChestController
     let language: String
+    @Binding var generateRequest: UUID?
+    @Binding var openLatest: Bool
+    var openSkills: () -> Void = {}
+    @ObservedObject private var skills = AgentSkillLibrary.shared
+    @AppStorage("agentSkill.selectedID") private var selectedSkillID = "realmcraft-world-context"
+    @AppStorage("agentSkill.includeInExport") private var includeSkill = true
+    @AppStorage("agentSkill.includeProfile") private var includeProfile = false
+    @State private var documentDate: Date?
     @StateObject private var sharing = AIExportSharing()
+    @State private var includeNavigation = false
+    @State private var includeNavigationPOIs = true
+    @State private var navigationPack: NavigationPack?
     @State private var includeChests = true
+    @AppStorage(VideoKnowledgeExport.selectionKey) private var videoSelection = ""
+    @AppStorage("videoExport.include") private var includeVideos = true
+    @AppStorage("videoExport.separate") private var separateVideos = false
+    private let videoTips = VideoTip.bundled ?? []
     @State private var document: AIContextDocument?
     @State private var documentTitle = ""
     @State private var documentWorld = ""
@@ -18,13 +33,26 @@ struct AIContextExportView: View {
     @State private var request = UUID()
     @Environment(\.companionTheme) private var theme
     private var en: Bool { language == "en" }
+    private var chosenSkill: AgentSkill? { skills.state.skills.first { $0.id == selectedSkillID && !$0.archived }.map { $0.localized(en ? "en" : "de") } }
+    private var canGenerate: Bool { model.selected != nil && !model.busy && !generating && (!includeChests || (maps.ready && !maps.checking)) && (!includeSkill || chosenSkill != nil) }
+
 
     var body: some View {
+        exportSelectionEvents
+        .onChange(of: videoSelection) { _, _ in clear() }
+        .onChange(of: includeVideos) { _, _ in clear() }
+        .onChange(of: separateVideos) { _, _ in clear() }
+        .onChange(of: includeNavigation) { _, _ in clear() }
+        .onChange(of: includeNavigationPOIs) { _, _ in clear() }
+        .onChange(of: includeChests) { _, _ in clear() }
+        .onChange(of: language) { _, _ in clear() }
+    }
+    private var page: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: en ? "AI export" : "KI-Export") {
                 Button(en ? "Generate context" : "Kontext erzeugen", action: generate)
                     .buttonStyle(CompanionButtonStyle(prominent: true))
-                    .disabled(model.busy || generating || model.selected == nil || (includeChests && (!maps.ready || maps.checking)))
+                    .disabled(!canGenerate)
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
@@ -36,6 +64,28 @@ struct AIContextExportView: View {
                         Text(en ? "Select a savegame" : "Spielstand auswählen").tag(nil as String?)
                         ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
                     }.frame(maxWidth: 680).disabled(model.busy || generating)
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Toggle(en ? "Include an agent skill" : "Agenten-Skill beifügen", isOn: $includeSkill).toggleStyle(.checkbox)
+                            Spacer()
+                            Button(en ? "Manage skills…" : "Skills verwalten …", action: openSkills)
+                        }
+                        if includeSkill {
+                            Picker(en ? "Skill" : "Skill", selection: $selectedSkillID) {
+                                Text(en ? "Choose a skill" : "Skill auswählen").tag("")
+                                ForEach(skills.state.skills.filter { !$0.archived }) { Text($0.localized(en ? "en" : "de").title).tag($0.id) }
+                            }.frame(maxWidth: 600)
+                            if let skill = chosenSkill { Text(skill.summary).font(.callout).foregroundStyle(.secondary) }
+                            else { Text(en ? "Choose an active skill or turn off skill inclusion." : "Wähle einen aktiven Skill oder deaktiviere die Beigabe.").font(.callout).foregroundStyle(.orange) }
+                        }
+                        Toggle(en ? "Include my personal context" : "Meine persönlichen Angaben beifügen", isOn: $includeProfile).toggleStyle(.checkbox)
+                        if includeProfile {
+                            Text(skills.state.profile.isEmpty ? (en ? "No personal context saved yet. Add it in Skills." : "Noch keine persönlichen Angaben gespeichert. Ergänze sie unter Skills.") : skills.state.profile)
+                                .font(.callout).foregroundStyle(.secondary).textSelection(.enabled)
+                        }
+                        Text(en ? "The selected instructions and additions are copied into both formats. Files stay local until you save or share them with an agent." : "Die gewählten Anweisungen und Ergänzungen werden in beide Formate kopiert. Dateien bleiben lokal, bis du sie einem Agenten übergibst.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }.padding(20).companionPanel().disabled(model.busy || generating)
                     Toggle(en ? "Include all saved chests and their contents" : "Alle gespeicherten Kisten mit Inhalten einbeziehen", isOn: $includeChests)
                         .toggleStyle(.checkbox).disabled(model.busy || generating)
                     Text(en ? "The export freshly scans this backup, including chests hidden by UI filters. Chests marked in Maps or under Conversation → My chests count as owned resources. Unmarked containers remain visible with unknown ownership."
@@ -46,6 +96,8 @@ struct AIContextExportView: View {
                              : "Zum Lesen der Kisten werden die Kartenwerkzeuge benötigt. Richte sie hier ein oder deaktiviere die Kisten, um Spielerdaten und benannte Orte zu exportieren.").font(.callout)
                         MapToolsSetup(model: model, maps: maps, english: en)
                     }
+                    NavigationExportOptions(scope: model.selected?.annotationScope ?? "", english: en, enabled: $includeNavigation, includePOIs: $includeNavigationPOIs, pack: $navigationPack).disabled(generating || model.busy)
+                    videoOptions
                     if generating {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack { ProgressView().controlSize(.small); Text(en ? "Verifying backup and reading records… Large worlds can take several minutes." : "Sicherung prüfen und Daten lesen … Bei großen Welten kann das mehrere Minuten dauern.") }
@@ -56,6 +108,13 @@ struct AIContextExportView: View {
                     if let document {
                         Divider()
                         Text(documentTitle).font(.headline)
+                        if let documentDate {
+                            Text((en ? "Export created: " : "Export erstellt: ") + documentDate.formatted(date: .abbreviated, time: .shortened)).font(.callout).foregroundStyle(.secondary)
+                        }
+                        Text(en ? "This is the saved export. Generate a new one to apply changed skills or personal context." : "Dies ist der gespeicherte Export. Erzeuge ihn neu, um geänderte Skills oder persönliche Angaben anzuwenden.").font(.caption).foregroundStyle(.secondary)
+                        if document.videoMarkdown != nil {
+                            Text(en ? "Two Markdown files will be saved or shared together. Attach BOTH files to your agent. JSON includes all selected video notes in one file." : "Zwei Markdown-Dateien werden gemeinsam gespeichert oder geteilt. BEIDE Dateien beim Agenten anhängen. JSON enthält alle ausgewählten Videonotizen in einer Datei.").font(.callout).foregroundStyle(theme.accent)
+                        }
                         Text(sizeDescription(document)).font(.callout).foregroundStyle(.secondary)
                         HStack {
                             Button(en ? "Save Markdown…" : "Markdown speichern …") { save(document, json: false) }
@@ -66,10 +125,10 @@ struct AIContextExportView: View {
                             Label(en ? "Send to iPhone" : "An iPhone übergeben", systemImage: "iphone").font(.headline)
                             HStack {
                                 Button(en ? "Save to iCloud…" : "In iCloud speichern …") {
-                                    sharing.saveToCloud(markdown: document.markdown, world: documentWorld, library: model.library.root, english: en)
+                                    sharing.saveToCloud(markdown: document.markdown, videoMarkdown: document.videoMarkdown, world: documentWorld, library: model.library.root, english: en)
                                 }
                                 Button(en ? "Send via AirDrop…" : "Per AirDrop senden …") {
-                                    sharing.airDrop(markdown: document.markdown, world: documentWorld, library: model.library.root, english: en)
+                                    sharing.airDrop(markdown: document.markdown, videoMarkdown: document.videoMarkdown, world: documentWorld, library: model.library.root, english: en)
                                 }.disabled(sharing.sharing)
                             }.buttonStyle(CompanionButtonStyle())
                             HStack {
@@ -115,15 +174,71 @@ struct AIContextExportView: View {
                 }.padding(CompanionLayout.pageInset).frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .onAppear { maps.check(model) }
+    }
+    private var lifecycleEvents: some View {
+        page
+         .onAppear {
+            try? skills.reload()
+            maps.check(model)
+            if generateRequest == nil { restoreLast(force: openLatest) }
+            openLatest = false
+            consumeGenerateRequest()
+        }
+        .onChange(of: generateRequest) { _, _ in consumeGenerateRequest() }
+        .onChange(of: maps.checking) { _, _ in consumeGenerateRequest() }
+        .onChange(of: model.busy) { _, busy in if !busy { consumeGenerateRequest() } }
+    }
+    private var exportSelectionEvents: some View {
+        lifecycleEvents
+        .onChange(of: selectedSkillID) { _, _ in clear() }
+        .onChange(of: includeSkill) { _, _ in clear() }
+        .onChange(of: includeProfile) { _, _ in clear() }
         .onChange(of: model.selection) { _, _ in clear() }
         .onChange(of: model.library.root) { _, _ in clear() }
-        .onChange(of: includeChests) { _, _ in clear() }
-        .onChange(of: language) { _, _ in clear() }
     }
-    private func clear() { request = UUID(); document = nil; notice = ""; failure = ""; generating = false }
+    private var videoOptions: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Toggle(en ? "Include selected video knowledge" : "Ausgewähltes Videowissen einbeziehen", isOn: $includeVideos).toggleStyle(.checkbox)
+            let selected = VideoKnowledgeExport.selected(videoTips, value: videoSelection)
+            Text(en ? "\(selected.count) videos selected. Summaries, authored steps, sources and timestamps; no full transcripts." : "\(selected.count) Videos ausgewählt. Kurzfassungen, aufbereitete Schritte, Quellen und Sprungmarken; keine Volltranskripte.").font(.caption).foregroundStyle(.secondary)
+            DisclosureGroup(en ? "Choose reviewed videos" : "Aufbereitete Videos auswählen") {
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
+                        ForEach(videoTips.filter { tip in tip.isCurated || selected.contains(where: { v in v.videoID == tip.videoID }) }) { tip in
+                            Toggle(tip.title.value(en), isOn: Binding(
+                                get: { VideoKnowledgeExport.selectedIDs(videoSelection).contains(tip.videoID) },
+                                set: { videoSelection = VideoKnowledgeExport.selecting(tip.videoID, in: videoSelection, enabled: $0) }
+                            )).toggleStyle(.checkbox)
+                        }
+                    }
+                }.frame(maxHeight: 220)
+            }
+            Toggle(en ? "Always save video knowledge as a second Markdown file" : "Videowissen immer als zweite Markdown-Datei speichern", isOn: $separateVideos).toggleStyle(.checkbox).disabled(!includeVideos)
+            Text(en ? "Otherwise it is included in the main document. Above 100 KB combined size, video notes move to a second file automatically. Nothing is truncated." : "Sonst steht es im Hauptdokument. Ab 100 KB Gesamtgröße werden die Videonotizen automatisch in eine zweite Datei ausgelagert. Nichts wird gekürzt.").font(.caption).foregroundStyle(.secondary)
+        }.disabled(generating || model.busy)
+    }
+    private func clear() { request = UUID(); document = nil; documentDate = nil; notice = ""; failure = ""; generating = false }
+    private func consumeGenerateRequest() {
+        guard generateRequest != nil, !maps.checking, !model.busy else { return }
+        generateRequest = nil
+        guard canGenerate else {
+            failure = en ? "Check the savegame, selected skill and map tools above, then generate the export." : "Prüfe oben Spielstand, gewählten Skill und Kartenwerkzeuge und erzeuge dann den Export."
+            return
+        }
+        generate()
+    }
+    private func restoreLast(force: Bool) {
+        guard let record = CompanionActivity.shared.latest("export", root: model.library.root),
+              force || record.saveID == model.selection else { return }
+        do {
+            document = try CompanionExportArchive.read(record, root: model.library.root)
+            documentTitle = record.title
+            documentWorld = model.saves.first { $0.id == record.saveID }?.world ?? "world"
+            documentDate = record.date
+        } catch { failure = en ? "The last local export is no longer available. Generate a new one." : "Der letzte lokale Export ist nicht mehr verfügbar. Erzeuge einen neuen." }
+    }
     private func sizeDescription(_ document: AIContextDocument) -> String {
-        let bytes = document.markdown.utf8.count
+        let bytes = document.markdown.utf8.count + (document.videoMarkdown?.utf8.count ?? 0)
         let size = ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file)
         let inventory = (document.payload["player"] as? [String: Any])?["inventory"] as? [[String: Any]] ?? []
         let storage = (document.payload["storage"] as? [String: Any])?["chests"] as? [[String: Any]] ?? []
@@ -131,23 +246,37 @@ struct AIContextExportView: View {
                   : "Markdown: \(size) · \(inventory.count) belegte Inventarslots · \(storage.count) Kisten · keine gekürzten Datensätze"
     }
     private func generate() {
-        guard let selected = model.selected, !model.busy else { return }
+        guard canGenerate, let selected = model.selected else { return }
         let backend = model.library, root = backend.root, english = en
         let python = includeChests ? maps.python : nil
         let engine = includeChests ? Bundle.main.resourceURL?.appendingPathComponent("MapEngine") : nil
         let names = chests.names
+        let skill = includeSkill ? chosenSkill : nil
+        let profile = includeProfile ? skills.state.profile : nil
+        let videos = includeVideos ? VideoKnowledgeExport.selected(videoTips, value: videoSelection) : []
+        let splitVideos = separateVideos
+        let navigation = includeNavigation ? navigationPack?.selectingPOIs(includeNavigationPOIs) : nil
+        if includeNavigation && navigation == nil { failure = english ? "Load a route from Maps first." : "Zuerst eine Route aus Karten laden."; return }
         let supplement = AIContextSupplement.capture(save: selected, resources: Bundle.main.resourceURL)
         let owned = Set(UserDefaults.standard.stringArray(forKey: "conversation.ownedChests." + selected.annotationScope) ?? [])
         let places = CompanionPlace.named(UserDefaults.standard.dictionary(forKey: "atlasPOI." + selected.annotationScope) as? [String: String] ?? [:])
         clear(); generating = true
         let token = UUID(); request = token
         model.work(english ? "Generating AI context…" : "KI-Kontext wird erzeugt …") {
-            let result = Result { try backend.makeAIContext(selected, python: python, engine: engine, names: names, ownedIDs: owned, places: places, english: english, supplement: supplement) }
+            let result = Result {
+                let rawBase = try backend.makeAIContext(selected, python: python, engine: engine, names: names, ownedIDs: owned, places: places, english: english, supplement: supplement)
+                let base = navigation?.attach(to: rawBase) ?? rawBase
+                let value = AgentSkillExport.attach(skill, profile: profile, to: base, english: english).addingVideos(videos, english: english, separate: splitVideos)
+                let file = try CompanionExportArchive.write(markdown: value.markdown, json: value.json, root: root, videoMarkdown: value.videoMarkdown)
+                return (value, file, Date())
+            }
             DispatchQueue.main.async {
+                if case .success(let value) = result { CompanionActivity.shared.record(CompanionActivityRecord(date: value.2, saveID: selected.id, title: selected.title, path: value.1.path), kind: "export", root: root) }
                 guard request == token, model.selection == selected.id, model.library.root == root else { return }
                 generating = false
                 switch result {
-                case .success(let value): document = value; documentTitle = selected.title; documentWorld = selected.world
+                case .success(let value):
+                    document = value.0; documentTitle = selected.title; documentWorld = selected.world; documentDate = value.2
                 case .failure(let error): failure = error.localizedDescription
                 }
             }
@@ -162,14 +291,19 @@ struct AIContextExportView: View {
         guard panel.runModal() == .OK, let target = panel.url else { return }
         do {
             // Export output must never overwrite a file inside the managed save library.
-            let destination = target.resolvingSymlinksInPath().standardizedFileURL.path
+            let destination = target.deletingLastPathComponent().resolvingSymlinksInPath().appendingPathComponent(target.lastPathComponent).resolvingSymlinksInPath().standardizedFileURL.path
             let root = model.library.root.resolvingSymlinksInPath().standardizedFileURL.path
             guard destination != root, !destination.hasPrefix(root + "/") else {
                 throw LibraryError(en ? "Save the document outside the savegame library." : "Speichere das Dokument außerhalb der Spielstand-Bibliothek.")
             }
-            let data = json ? try value.json : Data(value.markdown.utf8)
-            try data.write(to: target, options: .atomic)
-            notice = (en ? "Saved: " : "Gespeichert: ") + target.path
+            let files: [URL]
+            if json {
+                try value.json.write(to: target, options: .atomic)
+                files = [target]
+            } else {
+                files = try MarkdownExportPackage.write(markdown: value.markdown, videoMarkdown: value.videoMarkdown, to: target, library: model.library.root)
+            }
+            notice = (en ? "Saved: " : "Gespeichert: ") + files.map(\.path).joined(separator: "\n")
             failure = ""
         } catch { failure = error.localizedDescription }
     }

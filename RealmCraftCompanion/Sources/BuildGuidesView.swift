@@ -1,5 +1,6 @@
 import SwiftUI
 import AVFoundation
+import UniformTypeIdentifiers
 
 private func buildCategory(_ id: String, _ english: Bool) -> String {
     switch id {
@@ -515,6 +516,8 @@ struct VideoTipDetail: View {
     var query: String = ""
     @StateObject private var speech = VideoTipSpeech()
     @State private var audioLanguage = "de"
+    @AppStorage(VideoKnowledgeExport.selectionKey) private var videoSelection = ""
+    @State private var exportNotice = ""
     @State private var transcriptLimit = 40
     @Environment(\.companionTheme) private var theme
     private var audioEnglish: Bool { audioLanguage == "en" }
@@ -525,6 +528,7 @@ struct VideoTipDetail: View {
                     Label(buildCategory(tip.category, english).uppercased(), systemImage: "play.rectangle.fill")
                         .font(.caption.bold()).foregroundStyle(theme.accent)
                     Text(tip.title.value(english)).font(.system(size: 27, weight: .bold))
+                    Text(english ? "Short summary" : "Kurzfassung").font(.headline)
                     Text(tip.summary.value(english)).font(.title3).foregroundStyle(.secondary)
                     Text("\(tip.channel) · \(tip.published) · \(VideoTip.time(tip.duration))").font(.callout)
                     Text(tip.coverageLabel(english) + (tip.isShort ? " · Short" : "")).font(.caption.bold()).foregroundStyle(theme.accent)
@@ -532,6 +536,16 @@ struct VideoTipDetail: View {
                         .font(.caption.bold()).foregroundStyle(.orange)
                     Link(english ? "Open original video ↗" : "Originalvideo öffnen ↗", destination: tip.videoURL)
                 }
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(english ? "Export for an agent" : "Für einen Agenten exportieren").font(.headline)
+                    Toggle(english ? "Include this video in the overall AI export" : "Dieses Video in den KI-Gesamtexport aufnehmen", isOn: Binding(
+                        get: { VideoKnowledgeExport.selectedIDs(videoSelection).contains(tip.videoID) },
+                        set: { videoSelection = VideoKnowledgeExport.selecting(tip.videoID, in: videoSelection, enabled: $0) }
+                    )).toggleStyle(.checkbox)
+                    Button(english ? "Export video as Markdown…" : "Video als Markdown exportieren …") { exportVideo() }
+                    Text(english ? "Includes summary, authored steps, timestamp links and review status. No full transcript or audio. Your selection is remembered; AI export can place video notes in a second file." : "Enthält Kurzfassung, aufbereitete Schritte, Sprungmarken und Prüfstatus. Kein Volltranskript oder Audio. Die Auswahl bleibt gespeichert; der KI-Export kann Videonotizen in einer zweiten Datei ablegen.").font(.caption).foregroundStyle(.secondary)
+                    if !exportNotice.isEmpty { Text(exportNotice).font(.caption).textSelection(.enabled) }
+                }.padding(18).companionPanel()
                 VStack(alignment: .leading, spacing: 12) {
                     Text(english ? "Listen" : "Anhören").font(.headline)
                     Picker(english ? "Reading language" : "Vorlesesprache", selection: $audioLanguage) {
@@ -621,6 +635,16 @@ struct VideoTipDetail: View {
             .onChange(of: audioLanguage) { _, _ in speech.stop() }
             .onChange(of: query) { _, _ in transcriptLimit = 40 }
             .onDisappear { speech.stop() }
+    }
+    private func exportVideo() {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [UTType(filenameExtension: "md") ?? .plainText]
+        panel.nameFieldStringValue = "RealmCraft-Video-\(tip.videoID)-\(english ? "en" : "de").md"
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            _ = try MarkdownExportPackage.write(markdown: VideoKnowledgeExport.markdown([tip], english: english), videoMarkdown: nil, to: url, library: UserDefaults.standard.string(forKey: "libraryPath").map { URL(fileURLWithPath: $0) } ?? FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/RealmCraftLibrary/Savegames"))
+            exportNotice = (english ? "Saved: " : "Gespeichert: ") + url.path
+        } catch { exportNotice = error.localizedDescription }
     }
     private func note(_ title: String, _ text: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {

@@ -25,6 +25,16 @@ enum AIExportFiles {
         return target
     }
 
+    static func writePackage(markdown: String, videoMarkdown: String?, world: String, folder: URL, library: URL) throws -> [URL] {
+        let primary = try write(markdown: markdown, world: world, folder: folder, library: library)
+        do {
+            return try MarkdownExportPackage.write(markdown: markdown, videoMarkdown: videoMarkdown, to: primary, library: library)
+        } catch {
+            try? FileManager.default.removeItem(at: primary)
+            throw error
+        }
+    }
+
     static var cloudDrive: URL {
         FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Mobile Documents/com~apple~CloudDocs", isDirectory: true)
     }
@@ -96,7 +106,7 @@ final class AIExportSharing: NSObject, ObservableObject, NSSharingServiceDelegat
         folder = nil; lastSaved = nil; status = ""; failure = ""
     }
 
-    func saveToCloud(markdown: String, world: String, library: URL, english: Bool) {
+    func saveToCloud(markdown: String, videoMarkdown: String? = nil, world: String, library: URL, english: Bool) {
         if folder == nil { chooseFolder(english: english) }
         guard folder != nil else { return }
         do {
@@ -106,13 +116,15 @@ final class AIExportSharing: NSObject, ObservableObject, NSSharingServiceDelegat
             guard AIExportFiles.isCloudFolder(url) else {
                 throw NSError(domain: "AIExport", code: 3, userInfo: [NSLocalizedDescriptionKey: english ? "The folder is no longer in iCloud Drive. Select it again." : "Der Ordner liegt nicht mehr in iCloud Drive. Bitte erneut auswählen."])
             }
-            lastSaved = try AIExportFiles.write(markdown: markdown, world: world, folder: url, library: library)
+            let files = try AIExportFiles.writePackage(markdown: markdown, videoMarkdown: videoMarkdown, world: world, folder: url, library: library)
+            lastSaved = files.first
             folder = url; failure = ""
             status = english ? "Saved in your iCloud folder. macOS handles syncing. On iPhone: Files → iCloud Drive → select the file and attach it in your AI app." : "Im iCloud-Ordner gespeichert. macOS übernimmt die Synchronisierung. Am iPhone: Dateien → iCloud Drive → Datei auswählen und in deiner KI-App anhängen."
+            if files.count > 1 { status += english ? " Attach both Markdown files." : " Beide Markdown-Dateien anhängen." }
         } catch { failure = error.localizedDescription; status = "" }
     }
 
-    func airDrop(markdown: String, world: String, library: URL, english: Bool) {
+    func airDrop(markdown: String, videoMarkdown: String? = nil, world: String, library: URL, english: Bool) {
         guard !sharing else { return }
         self.english = english
         failure = ""; status = ""
@@ -121,12 +133,12 @@ final class AIExportSharing: NSObject, ObservableObject, NSSharingServiceDelegat
             let directory = FileManager.default.temporaryDirectory.appendingPathComponent("RealmCraft-AirDrop-\(UUID().uuidString)")
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
             staging = directory
-            let file = try AIExportFiles.write(markdown: markdown, world: world, folder: directory, library: library)
-            guard service.canPerform(withItems: [file]) else { throw CocoaError(.featureUnsupported) }
+            let files = try AIExportFiles.writePackage(markdown: markdown, videoMarkdown: videoMarkdown, world: world, folder: directory, library: library)
+            guard service.canPerform(withItems: files) else { throw CocoaError(.featureUnsupported) }
             self.service = service; service.delegate = self
             sharing = true; activeOperation = self
             status = english ? "Select your iPhone in AirDrop and accept the file there." : "Wähle dein iPhone in AirDrop und nimm die Datei dort an."
-            service.perform(withItems: [file])
+            service.perform(withItems: files)
         } catch { failure = error.localizedDescription; cleanup() }
     }
     func sharingService(_ sharingService: NSSharingService, didShareItems items: [Any]) {

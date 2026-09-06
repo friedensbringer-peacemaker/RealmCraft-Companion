@@ -2,11 +2,11 @@
 (function(root){
 'use strict';
 const air=id=>id===0||id===639;
-function mesh(blocks,n,h,palette){
+function mesh(blocks,n,h,palette,zStart=0,zEnd=n){
  const vertices=[],indices=(x,y,z)=>(y*n+z)*n+x;
  const dirs=[[1,0,0,.82],[-1,0,0,.67],[0,1,0,1],[0,-1,0,.45],[0,0,1,.75],[0,0,-1,.6]];
  const corners=[[[1,0,0],[1,1,0],[1,1,1],[1,0,1]],[[0,0,1],[0,1,1],[0,1,0],[0,0,0]],[[0,1,1],[1,1,1],[1,1,0],[0,1,0]],[[0,0,0],[1,0,0],[1,0,1],[0,0,1]],[[1,0,1],[1,1,1],[0,1,1],[0,0,1]],[[0,0,0],[0,1,0],[1,1,0],[1,0,0]]];
- for(let y=0;y<h;y++)for(let z=0;z<n;z++)for(let x=0;x<n;x++){
+ for(let y=0;y<h;y++)for(let z=zStart;z<zEnd;z++)for(let x=0;x<n;x++){
   const id=blocks[indices(x,y,z)];if(air(id))continue;const rgb=palette[id]||[219,91,192];
   for(let f=0;f<6;f++){const [dx,dy,dz,shade]=dirs[f],a=x+dx,b=y+dy,c=z+dz;
    if(a>=0&&a<n&&b>=0&&b<h&&c>=0&&c<n&&!air(blocks[indices(a,b,c)]))continue;
@@ -43,5 +43,38 @@ function walk(blocks,n,h,camera,dx,dz){
  for(const [ax,az]of [[dx,0],[0,dz]]){const floor=stand(p[0]+ax,p[2]+az,p[1]-1.7);if(floor!==null){p[0]+=ax;p[2]+=az;p[1]=floor+1.7;}}
  return p;
 }
-const api={air,mesh,matrix,project,walk};if(typeof module!=='undefined')module.exports=api;root.AtlasVoxelCore=api;
+// Swept body collision with gravity; crawling changes clearance without moving feet.
+function move(blocks,n,h,camera,state,dx,dz,dt,crawl=false,jump=false){
+ const solid=(x,y,z)=>x<0||z<0||x>=n||z>=n||y<0||(y<h&&!air(blocks[(y*n+z)*n+x]));
+ const clear=(x,y,z,height)=>{
+  for(let a=Math.floor(x-.24);a<=Math.floor(x+.24);a++)for(let b=Math.floor(z-.24);b<=Math.floor(z+.24);b++)
+   for(let c=Math.floor(y+1e-6);c<=Math.floor(y+height-1e-6);c++)if(solid(a,c,b))return false;
+  return true;
+ };
+ let [x,eye,z]=camera,y=eye-(state.crawl?.55:1.7);
+ state.crawl=crawl||!clear(x,y,z,1.8);
+ const height=state.crawl?.8:1.8,offset=state.crawl?.55:1.7;
+ let grounded=!clear(x,y-.02,z,height);state.vy=state.vy||0;
+ if(jump&&grounded&&!state.crawl)state.vy=8;
+ for(const [ax,az]of [[dx,0],[0,dz]]){
+  const steps=Math.max(1,Math.ceil(Math.hypot(ax,az)/.15));
+  for(let i=0;i<steps;i++){
+   const nx=x+ax/steps,nz=z+az/steps;
+   if(clear(nx,y,nz,height)){x=nx;z=nz;}
+   else if(grounded&&!state.crawl&&state.vy<=0&&clear(x,y+1,z,height)&&clear(nx,y+1,nz,height)){x=nx;z=nz;y+=1;}
+   else break;
+  }
+ }
+ state.vy-=22*dt;const dy=state.vy*dt,steps=Math.max(1,Math.ceil(Math.abs(dy)/.1));
+ for(let i=0;i<steps;i++){
+  if(clear(x,y+dy/steps,z,height))y+=dy/steps;
+  else{ // Resolve to the first contact, without tunnelling through floors or ceilings.
+   let lo=0,hi=1;for(let j=0;j<16;j++){const m=(lo+hi)/2;if(clear(x,y+dy/steps*m,z,height))lo=m;else hi=m;}
+   y+=dy/steps*lo;state.vy=0;break;
+  }
+ }
+ state.grounded=!clear(x,y-.02,z,height);
+ return [x,y+offset,z];
+}
+const api={air,mesh,matrix,project,walk,move};if(typeof module!=='undefined')module.exports=api;root.AtlasVoxelCore=api;
 })(globalThis);

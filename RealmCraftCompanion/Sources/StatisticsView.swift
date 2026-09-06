@@ -2,6 +2,9 @@ import SwiftUI
 
 struct StatisticsView: View {
     @ObservedObject var model: Model
+    @ObservedObject var maps: MapController
+    @ObservedObject var chests: ChestController
+    let openMaps: () -> Void
     let language: String
     @State private var snapshot: WorldStatistics?
     @State private var source = ""
@@ -61,6 +64,7 @@ struct StatisticsView: View {
                                 .foregroundStyle(.secondary)
                         }.padding(.vertical, 16)
                     }
+                    ChestStatisticsView(model: model, maps: maps, chests: chests, language: language, openMaps: openMaps)
                     VStack(alignment: .leading, spacing: 16) {
                         Text(english ? "Historical statistics not currently readable" : "Historische Statistiken derzeit nicht auslesbar").font(.headline)
                         unavailable(english ? "Blocks mined / resources collected by type" : "Abgebaute Blöcke / gesammelte Ressourcen je Typ",

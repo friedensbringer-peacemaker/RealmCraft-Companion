@@ -29,9 +29,9 @@ private enum HelpCategory: String, CaseIterable, Identifiable {
 private extension HelpArticle {
     var category: HelpCategory {
         switch id {
-        case "start", "companion", "setup", "appearance": return .gettingStarted
+        case "start", "companion", "setup", "manualTransfer", "appearance": return .gettingStarted
         case "library", "backup", "restore", "zip", "maps", "places", "biomes", "chests", "player", "statistics", "editor": return .world
-        case "aiExport", "conversation": return .ai
+        case "aiExport", "skills", "conversation": return .ai
         case "videos", "builds", "mobs", "resources": return .knowledge
         case "trouble", "feedback", "agent": return .support
         case "updates", "backlog": return .updates
@@ -87,7 +87,7 @@ DEINE WELT
 • Karten: Gespeicherte Landschaft, Ebenen, Orte, Biome und Kisten erkunden; die 3D-Ansicht ist eine Beta.
 • Kisten: Materialien suchen, Fundorte vergleichen und eigene oder bereits entdeckte Behälter markieren.
 • Spieler: Inventar, Rüstung, Level, Haltbarkeit und Reparaturprognosen lesen; eine lokale Skin-Vorschau einstellen.
-• Statistiken · Beta: Den gespeicherten gemeinsamen Bau-/Abbauzähler auslesen.
+• Statistiken · Beta: Bau-/Abbauzähler und aktuelle Truhenbestände nach Item und Thema auslesen.
 • Editor · Beta / Preview: Gegenstände oder Level in einer neuen Sicherungskopie bearbeiten.
 
 KI-WERKZEUGE
@@ -111,7 +111,7 @@ YOUR WORLD
 • Maps: Explore saved terrain, layers, places, biomes and chests; the 3D view is a beta.
 • Chests: Search materials, compare locations and mark owned or discovered containers.
 • Player: Read inventory, armor, level, durability and repair forecasts; configure a local skin preview.
-• Statistics · Beta: Read the saved combined build/dig counter.
+• Statistics · Beta: Read the build/dig counter and current chest stock by item and theme.
 • Editor · Beta / Preview: Edit items or level in a new backup copy.
 
 AI TOOLS
@@ -129,6 +129,7 @@ CONTROLS
 The actions menu (…) contains additional operations for each area. Settings at the bottom left contains Quest setup, Appearance, Exploration & spoilers, Item icons and Language. It also offers quitting or restarting Companion instances; active work must finish first. Report data / bug opens a report draft for you to review.
 """),
     .init(id: "setup", icon: "cable.connector", deTitle: "Einrichtung", enTitle: "Step-by-step setup", de: releaseDocument("SETUP-de"), en: releaseDocument("SETUP-en")),
+    .init(id: "manualTransfer", icon: "externaldrive.badge.wifi", deTitle: "Übertragung ohne ADB", enTitle: "Transfer without ADB", de: releaseDocument("TRANSFER-de"), en: releaseDocument("TRANSFER-en")),
     .init(id: "appearance", icon: "paintpalette", deTitle: "Optik, Icons & Spoiler", enTitle: "Appearance, icons & spoilers", de: """
 SPRACHE UND OPTIK
 Einstellungen unten links enthält „Optik“ mit Blockwelt/Klassisch sowie Deutsch/English. Die Gesprächssprache wird separat im Bereich Gespräch eingestellt. Eigene Weltnamen werden nicht übersetzt.
@@ -177,6 +178,13 @@ Unter Einstellungen → Quest einrichten → Alle Einstellungen kannst du den Sp
 Standardmäßig liegt die Library unter ~/Library/Application Support/RealmCraftLibrary/Savegames.
 
 PLATZ SPAREN
+### Backup- und Speicherstatus
+Die Savegame-Details prüfen den tatsächlichen Dateispeicher. „Optimiert“ bedeutet, dass alle Dateien den gemeinsamen Speicherpool nutzen; „Teilweise optimiert“ gilt für einen Teil der Dateien. Klappe die Liste gemeinsam genutzter Dateien auf und klicke einen Spielstand an, um ihn auszuwählen.
+
+Hardlinks erzeugen keine Abhängigkeit von einem anderen Savegame: Jeder vollständige Stand bleibt beim Löschen anderer Stände nutzbar. Eine Editor-Herkunft wird separat angezeigt und ist keine Voraussetzung zum Wiederherstellen. Fehlende Dateien oder symbolische Verknüpfungen führen zu einem unbekannten Status. Diese Prüfung ersetzt keine SHA-256-Inhaltsprüfung.
+
+Der Cloud-Status sucht Library-ZIP-Archive im eingestellten Cloud-Backup-Ordner und vergleicht das Manifest dieses Spielstands. Ein Treffer kann im Finder angezeigt werden. Archivinhalt und Upload beim Anbieter werden dabei nicht erneut geprüft. Kein Treffer bedeutet nur, dass dort kein passendes Library-Archiv gefunden wurde. RealmCraft-/Meta-Online-Spielstände bleiben unbekannt, weil keine Verbindung zu diesen Diensten besteht. Nach Änderungen „Status erneut prüfen“ verwenden.
+
 „Speicher optimieren“ prüft die Sicherungen und legt identische Dateiinhalte nur einmal ab. Die einzelnen Sicherungen behalten ihre normale Ordnerstruktur. Neue Sicherungen können ebenfalls platzsparend gespeichert werden. Das reduziert den lokalen Speicherbedarf, macht den Geräteimport aber nicht automatisch inkrementell oder schneller.
 
 Weltdateien in der Library nicht direkt bearbeiten: Identische Dateien können zwischen Sicherungen geteilt sein. Verwende den Editor für eine getrennte Kopie oder importiere eine separat bearbeitete Welt als neuen Eintrag. Für eine externe Komplettsicherung verwende den Library-Backup-ZIP-Export.
@@ -195,6 +203,13 @@ Use Settings → Quest setup → All settings to change the storage folder. Exis
 The default location is ~/Library/Application Support/RealmCraftLibrary/Savegames.
 
 SAVE DISK SPACE
+### Backup & storage status
+Savegame details inspect actual file storage. Optimized means every file uses the shared storage pool; Partially optimized applies to some files. Expand the shared-files list and click a snapshot to select it.
+
+Hard links do not create dependencies on another savegame: each complete snapshot survives deletion of other snapshots. Editor provenance is shown separately and is not required for restoration. Missing files or symbolic links produce an unavailable status. This inspection does not replace SHA-256 content verification.
+
+Cloud status searches library ZIP archives in the configured cloud backup folder and compares this snapshot's manifest. Reveal a match in Finder. Archive contents and provider upload are not reverified by this check. No match only means no matching library archive was found there. RealmCraft / Meta online saves remain unknown because Companion does not connect to those services. Use Check status again after changes.
+
 Optimize storage verifies backups and stores identical file contents only once while retaining each backup's normal folder structure. New backups can also use this deduplicated storage. It reduces local disk use but does not automatically make device imports incremental or faster.
 
 Do not edit world files directly inside the library: identical files may be shared across backups. Use the editor to create a separate copy or import a separately modified world as a new entry. Use the full-library ZIP export for an external archive.
@@ -466,7 +481,16 @@ Die Anzeige liest den gespeicherten gemeinsamen Zähler für Bau- und Abbauaktio
 
 Für neuere Aktivitäten zuerst eine neue Sicherung erstellen. Geprüft werden das relevante world_data und seine Zuordnung zur Welt. Nicht unterstützte Formate oder beschädigte Daten erzeugen einen sichtbaren Fehler.
 
-Historische Summen zu einzelnen Ressourcen, getöteten Kreaturen, Laufstrecke, Todesfällen und Crafting sind derzeit nicht zuverlässig auslesbar. Fehlende Werte bedeuten nicht null. Aktuelle Bestände findest du in Spieler und Kisten.
+TRUHENBESTÄNDE · BETA
+1. Klicke im Abschnitt „Truhenbestände“ auf „Truhen auslesen“. Die Kartenwerkzeuge müssen eingerichtet sein; siehe „Karten erstellen“. Ein bereits unter Kisten gelesener Index wird wiederverwendet. Der Scan prüft die Sicherung vor und nach dem Lesen.
+2. Suche nach deutschem/englischem Itemnamen oder ID. Filtere nach Dimension, Thema und Items in vermutlichen Spielertruhen.
+3. Sortiere nach Anzahl aller Truhen, Spieler-Anzahl, Itemname oder ID, auf- oder absteigend. Die Sortierung gilt innerhalb der Themen; deaktiviere „Nach Thema gruppieren“ für eine gemeinsame Rangliste.
+
+Die Spalten zeigen Stückzahlen und die Anzahl der Truhen, die das Item enthalten. Spielertruhen sind eine Teilmenge aller Truhen, keine zusätzliche Menge. Die vermutliche Zuordnung übernimmt Eigentumsmarkierungen und automatisch über nahe Schilder erkannte Truhen aus Kisten. Thematische Gruppen sind Companion-Zuordnungen, keine ausgelesenen Spielkategorien. Unbekannte Items bleiben mit ihrer ID unter „Sonstiges / nicht zugeordnet“ sichtbar.
+
+Alle Truhen schließt ausgeblendete und generierte Truhen ein. Im spoilerarmen Modus werden nur bekannte Truhen gezählt. Dimensionsfilter ändern die Truhenabdeckung; Suche und Itemfilter ändern die angezeigten Bestandsummen. Unlesbare Inhalte fehlen in den Summen, Scanprobleme kennzeichnen ein Teilergebnis. Diese Bestände sind eine Momentaufnahme der gewählten Sicherung.
+
+Historische Summen zu einzelnen Ressourcen, getöteten Kreaturen, Laufstrecke, Todesfällen und Crafting sind derzeit nicht zuverlässig auslesbar. Fehlende Werte bedeuten nicht null. Das persönliche Inventar findest du unter Spieler.
 """, en: """
 1. Open Your world → Statistics · Beta.
 2. Select a local backup by world and date.
@@ -476,7 +500,16 @@ This reads the saved combined build/dig action counter. Both building and diggin
 
 Create a new backup for newer activity. The relevant world_data and its world identity are checked. Unsupported formats or damaged data produce a visible error.
 
-Historical totals for individual resources, creature kills, distance, deaths and crafting are not currently readable reliably. Missing values do not mean zero. Player and Chests show current stock.
+CHEST CONTENTS · BETA
+1. Click Read chests in Chest contents. Map tools must be set up; see Create maps. An index already read in Chests is reused. The scan verifies the backup before and after reading.
+2. Search by English/German item name or ID. Filter by dimension, theme and items in presumed player chests.
+3. Sort by all-chest quantity, player quantity, item name or ID, ascending or descending. Sorting applies within themes; disable Group by theme for a global ranking.
+
+Columns show quantities and the number of chests containing each item. Player chests are a subset of all chests, not an additional quantity. Presumed ownership reuses ownership marks and automatic assignments from nearby signs in Chests. Themes are Companion assignments, not saved game categories. Unknown items remain visible by ID under Other / unclassified.
+
+All chests includes hidden and generated chests. Spoiler-light mode counts only known chests. The dimension filter changes chest coverage; search and item filters change displayed stock totals. Unreadable contents are missing from totals and scan issues indicate a partial result. These quantities describe the selected backup snapshot.
+
+Historical totals for individual resources, creature kills, distance, deaths and crafting are not currently readable reliably. Missing values do not mean zero. See Player for personal inventory.
 """),
     .init(id: "editor", icon: "slider.horizontal.3", deTitle: "Editor · Beta / Preview", enTitle: "Editor · Beta / Preview", de: """
 Der Editor ist eine experimentelle Beta/Preview. Änderungen können einen Spielstand unbrauchbar machen. Bewahre vor Tests eine unabhängige, rückspielbare Sicherung auf.
@@ -508,6 +541,39 @@ OPTIONAL QUEST TEST
 Quest test → Prepare separate Quest test world creates a test copy with a new world ID. Device transfer is confirmed separately afterwards. Save and close RealmCraft first, and carefully check the device, source and test world ID.
 
 Appearance in RealmCraft, successful loading and continued saving are not guaranteed. Test a small change, save and reload. Normal restore instead replaces the matching world ID; it is not a substitute for the separate beta test workflow.
+"""),
+    .init(id: "skills", icon: "text.book.closed", deTitle: "Skills verwalten", enTitle: "Manage skills", de: """
+Öffne Skills in der Navigation unter KI-Werkzeuge. Die zentrale Bibliothek enthält wiederverwendbare Anweisungen für Weltassistenz, Spielstand-Arbeit, Hilfe und Companion-Entwicklung.
+
+BEARBEITEN UND VERSIONIEREN
+Mit „Neuer Skill“ legst du eigene Anweisungen an. „Bearbeiten / Umbenennen“ ändert Titel, Beschreibung, Anweisungen und eigene Ergänzungen. Jede Speicherung eines bestehenden Skills bewahrt den vorherigen Stand in der Versionshistorie. Dort kannst du einen Stand ansehen und als neue Version wiederherstellen. Archivieren blendet einen Skill aus der aktiven Auswahl aus; Löschen entfernt auch seine lokale Historie.
+
+IMPORT UND EXPORT
+Das obere Aktionsmenü (…) importiert Markdown oder ein Skill-Paket und exportiert die gesamte Bibliothek. Im Aktionsmenü eines Skills kannst du SKILL.md oder ein Paket mit Versionen exportieren und den Skill duplizieren. Pakete enthalten Skill-Ergänzungen und Historie, aber kein persönliches Profil. Bei gleichen IDs entstehen Importkopien; bestehende Skills bleiben erhalten. Markdown importiert die Textanweisung, keine Versionshistorie. Importierte Anweisungen werden nicht ausgeführt.
+
+SPRACHEN UND LOKALE ÜBERSETZUNG
+Mitgelieferte Skills enthalten Deutsch und Englisch; die Ansicht folgt der App-Sprache. Im Editor wechselst du zwischen den Fassungen. Das Exportmenü bietet Deutsch, Englisch oder beide Sprachen in einer Markdown-Datei; JSON-Pakete enthalten alle vorhandenen Fassungen und deren Historie.
+
+„Aus anderer Sprache mit lokalem Qwen übersetzen“ erstellt einen Entwurf aus der anderen Fassung. Starte dafür LM Studio mit Qwen3.5-4B und dem lokalen Server auf Port 1234. Bei langen Skills kann eine größere Kontextgröße nötig sein; maximal 18 KB Text werden angenommen. Der Entwurf ersetzt den sichtbaren Editorinhalt. Prüfe Bedeutung, Zahlen und Befehle vor dem Speichern. Abbrechen oder Modellfehler bewahren den bisherigen Text. Ohne lokalen Server bleibt manuelles Übersetzen möglich; es gibt keinen Cloud-Fallback.
+
+MIT AGENTEN VERWENDEN
+„Für KI-Export verwenden“ wählt den Skill im KI-Export aus. Alternativ Markdown kopieren oder SKILL.md an einen Agenten übergeben. Die automatische Erkennung hängt vom Agenten ab. Entwicklungsskills können ohne Weltexport verwendet werden. Persönliche Angaben werden im KI-Export separat und freiwillig beigefügt.
+""", en: """
+Open Skills under AI tools in the navigation. The central library contains reusable instructions for world assistance, savegame work, help maintenance and Companion development.
+
+EDIT AND VERSION
+New skill creates your own instructions. Edit / Rename changes the title, description, instructions and additions. Each save of an existing skill preserves its previous state in Version history. Inspect an earlier state and restore it as a new version. Archiving removes a skill from active selection; deleting also removes its local history.
+
+IMPORT AND EXPORT
+The top actions menu (…) imports Markdown or a skill package and exports the entire library. Each skill's actions menu exports SKILL.md or a package with versions and duplicates the skill. Packages include skill notes and history but exclude the personal profile. Matching IDs create import copies and preserve existing skills. Markdown imports instructions without history. Importing instructions does not execute them.
+
+LANGUAGES AND LOCAL TRANSLATION
+Bundled skills include German and English; the view follows the app language. Switch language versions in the editor. Export German, English or both in one Markdown document; JSON packages contain all available languages and their history.
+
+Translate from other language with local Qwen creates a draft from the other version. Start LM Studio with Qwen3.5-4B and its local server on port 1234. Long skills may need a larger context; inputs up to 18 KB are accepted. The result replaces the visible editor draft. Check meaning, numbers and commands before saving. Cancellation or a model error preserves the existing text. Manual translation remains available without a server; there is no cloud fallback.
+
+USE WITH AGENTS
+Use for AI export selects the skill in AI export. Alternatively, copy Markdown or pass SKILL.md to an agent. Automatic recognition depends on the agent. Development skills work without a world export. Personal context is a separate opt-in in AI export.
 """),
     .init(id: "aiExport", icon: "doc.text.magnifyingglass", deTitle: "KI-Export", enTitle: "AI export", de: """
 Unter KI-Werkzeuge → KI-Export erzeugst du aus einer geprüften Sicherung einen lesbaren Weltkontext für einen externen Assistenten.

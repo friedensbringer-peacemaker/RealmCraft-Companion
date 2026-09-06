@@ -25,3 +25,24 @@ test('short movement and look inputs react immediately, without waiting for a he
  const v=Object.create(context.window.AtlasVoxelViewer.prototype);Object.assign(v,{ready:true,mode:'walk',n:8,h:8,camera:[4.5,2.7,4.5],yaw:Math.PI,pitch:0,blocks:new Uint16Array(512)});v.blocks.fill(1,0,64);
  v.nudge('w');assert.ok(v.camera[2]<4.5);assert.equal(v.camera[1],2.7);v.nudge('j');assert.ok(v.yaw>Math.PI);v.nudge('i');assert.ok(v.pitch<0);
 });
+test('jump rises, lands and cannot pass through a ceiling',()=>{
+ const {move}=require('../Resources/MapEngine/realmcraft_map/web/voxel-core.js'),n=8,h=8,b=new Uint16Array(n*n*h);b.fill(1,0,n*n);
+ let p=[4.5,2.7,4.5],state={},peak=p[1];
+ for(let i=0;i<120;i++){p=move(b,n,h,p,state,0,0,1/60,false,i===0);peak=Math.max(peak,p[1]);}
+ assert.ok(peak>3.9);assert.ok(Math.abs(p[1]-2.7)<.001);assert.ok(state.grounded);
+ b.fill(1,3*n*n,4*n*n);p=[4.5,2.7,4.5];state={};peak=p[1];
+ for(let i=0;i<120;i++){p=move(b,n,h,p,state,0,0,1/60,false,i===0);peak=Math.max(peak,p[1]);}
+ assert.ok(peak<=2.901);assert.ok(Math.abs(p[1]-2.7)<.001);
+});
+test('crawl enters a one-block passage and standing waits for clearance',()=>{
+ const {move}=require('../Resources/MapEngine/realmcraft_map/web/voxel-core.js'),n=8,h=8,b=new Uint16Array(n*n*h);b.fill(1,0,n*n);
+ for(let z=0;z<n;z++)for(let x=4;x<n;x++){b[(2*n+z)*n+x]=1;b[(3*n+z)*n+x]=1;}
+ let state={},p=[3.5,2.7,3.5];p=move(b,n,h,p,state,1,0,0,false);assert.ok(p[0]<4);
+ p=move(b,n,h,p,state,1,0,0,true);assert.ok(p[0]>4);assert.ok(Math.abs(p[1]-1.55)<.001);
+ p=move(b,n,h,p,state,0,0,0,false);assert.equal(state.crawl,true);
+ p=move(b,n,h,p,state,-2,0,0,false);p=move(b,n,h,p,state,0,0,0,false);assert.equal(state.crawl,false);assert.ok(Math.abs(p[1]-2.7)<.001);
+});
+test('sliced geometry matches full geometry without extra internal faces',()=>{
+ const n=8,b=new Uint16Array(n*n*4);for(let i=0;i<b.length;i++)b[i]=i%7?1:0;
+ const full=mesh(b,n,4,{}),parts=[mesh(b,n,4,{},0,4),mesh(b,n,4,{},4,8)];assert.equal(parts.reduce((a,m)=>a+m.length,0),full.length);
+});

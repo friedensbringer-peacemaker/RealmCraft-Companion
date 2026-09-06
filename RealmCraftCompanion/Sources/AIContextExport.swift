@@ -1,12 +1,5 @@
 import Foundation
 
-/// A self-contained snapshot. Missing sections are explicit; totals never imply a complete world census.
-struct AIContextDocument {
-    let payload: [String: Any]
-    let markdown: String
-    var json: Data { get throws { try JSONSerialization.data(withJSONObject: payload, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]) } }
-}
-
 enum AIContextExport {
     static func make(save: Savegame, manifest: [String: String], player: PlayerSnapshot?, spawn: CompanionSpawnPoint?,
                      playerIssue: String?, chests: ChestIndex?, chestIssue: String?, names: [String: ItemName],
