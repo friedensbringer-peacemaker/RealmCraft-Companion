@@ -14,7 +14,7 @@ The Companion includes verified backup/restore workflows, maps, chest and player
 
 ## Browser demo
 
-The **[Companion Web Demo](RealmCraftWebDemo/README.md)** is a separate, dependency-free web project in this repository. Use the GitHub Pages link in the repository's About section to try its map, chest search, inventory sandbox, 46 build guides, ten reference recipes and context export. All world and inventory examples are synthetic. No real saves are served or edited.
+The **[Companion Web Demo](RealmCraftWebDemo/README.md)** is a separate, dependency-free web project in this repository. Use the GitHub Pages link in the repository's About section to try its map, chest search, inventory sandbox, 46 build guides, ten reference recipes and context export. Start with synthetic examples, load the reviewed demonstration ZIP, or open a local savegame ZIP entirely in your browser. Local files are never uploaded or patched.
 
 ## Build
 

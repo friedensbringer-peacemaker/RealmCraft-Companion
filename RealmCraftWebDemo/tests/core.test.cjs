@@ -43,7 +43,7 @@ test('exports are independent snapshots with ownership-separated totals',()=>{
  const state=C.initial();state.markers.push({name:'<img onerror=alert(1)>',x:1,z:2});
  const snap=C.snapshot(state);state.inventory[0].quantity=3;
  assert.equal(snap.inventory[0].quantity,48);assert.equal(snap.ownedStorageTotals.diamond,undefined);
- assert.equal(snap.markers[0].name,'<img onerror=alert(1)>');assert.match(snap.source,/Synthetic/);
+ assert.equal(snap.markers[0].name,'<img onerror=alert(1)>');assert.match(snap.source.name,/Synthetic/);
 });
 test('synthetic map has repeatable bounded terrain over the full selectable extent',()=>{
  const types=new Set();for(let x=-64;x<64;x++)for(let z=-64;z<64;z++){

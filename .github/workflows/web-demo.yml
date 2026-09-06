@@ -24,9 +24,14 @@ jobs:
       - name: Test demo logic
         run: node --test RealmCraftWebDemo/tests/*.test.cjs
       - name: Check JavaScript syntax
-        run: node --check RealmCraftWebDemo/app.js
+        run: |
+          for script in RealmCraftWebDemo/*.js; do node --check "$script"; done
+      - name: Fetch the checksum-pinned reviewed demo
+        env:
+          DEMO_OWNER: ${{ github.repository_owner }}
+        run: python3 RealmCraftWebDemo/tools/fetch_demo.py --owner "$DEMO_OWNER" --output "$RUNNER_TEMP/demo.zip"
       - name: Build static demo and validate guide catalogs
-        run: python3 RealmCraftWebDemo/tools/build.py
+        run: python3 RealmCraftWebDemo/tools/build.py --demo-zip "$RUNNER_TEMP/demo.zip"
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:

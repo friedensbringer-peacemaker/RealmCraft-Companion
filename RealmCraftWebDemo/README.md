@@ -16,9 +16,9 @@ Open the GitHub Pages link shown in this repository's About section. The deploym
 - **Recipes:** searchable reference catalog and direct-ingredient material checks for a bed or crafting table. Counts include only explicitly owned demo chests; inventory and intermediate crafting are excluded.
 - **Context export:** download the current demo inventory, chests and places as Markdown or JSON. Nothing is sent to an AI service.
 
-All map terrain, coordinates, chest contents and inventory are **deterministically fabricated examples**. No real world, savegame, screenshot, player export or device data is included. Map terrain is schematic; it does not reproduce RealmCraft world generation. Ownership marks are user annotations, not inferred ownership. The map's surface height and a chest's saved example height may differ, as underground chests are also shown.
+The initial map, chests and inventory are **deterministically fabricated examples**. The **Demo-ZIP laden** button loads the previously reviewed public demo world, shared with the Android Companion. **Eigene ZIP öffnen …** reads a selected local savegame entirely in a Web Worker in the browser; it never uploads the file. Map terrain is schematic; it does not reproduce RealmCraft world generation. Ownership marks are user annotations, not inferred ownership. The map's surface height and a chest's saved example height may differ, as underground chests are also shown.
 
-Changes last for the current page session. Download a context before reloading if you want to keep a record. Resetting the demo requires confirmation. The web edition cannot import, patch or restore a real savegame. Guide and recipe evidence limitations from the Companion remain visible; a web rendering does not prove in-game compatibility.
+Changes last for the current page session. Download a context before reloading if you want to keep a record. Resetting the demo requires confirmation. The web edition can read supported ZIP savegames, but cannot patch or restore them. Sandbox edits change only the in-memory view and context exports; they do not produce a playable savegame ZIP. Guide and recipe evidence limitations from the Companion remain visible; a web rendering does not prove in-game compatibility.
 
 ## Run locally
 
@@ -36,9 +36,16 @@ Open `http://localhost:8080`. A local HTTP server is needed for the catalog JSON
 
 `data/BuildGuides.json` and `data/ConversationRecipes.json` are copied from the reviewed public Companion resources and retain their evidence and original reference links. `core.js` defines all synthetic examples and deterministic terrain in plain source; there are no embedded archives or opaque world-data payloads. The source and bundled catalogs use the repository's MIT license, reproduced in `LICENSE`. This unofficial community project is not affiliated with Tellurion Mobile.
 
-The deployment workflow runs the core regression tests and validates catalog topology before building. `tools/build.py` selects six web files explicitly and writes a SHA-256 asset manifest. No files from the surrounding Companion workspace are served. Layout is responsive; no external fonts, textures, trackers, analytics or runtime dependencies are loaded.
+The deployment workflow runs core and ZIP-reader regression tests and validates catalog topology before building. `tools/build.py` selects web files explicitly and writes a SHA-256 asset manifest. The pipeline downloads only the previously reviewed demo release asset, verifies the checksum pinned in `demo-source.json`, and packages it separately as `demo.zip` in the Pages artifact. Raw save files are not committed to Git. No files from the surrounding Companion workspace are served. Layout is responsive; no external fonts, textures, trackers, analytics or runtime dependencies are loaded.
 
 ## Update log
+
+### 0.2.0 — 2026-09-06
+
+- Added local ZIP opening and a checksum-verified shared public demo download.
+- Added strict read-only ZIP, v9 terrain/chest and v2 player decoders, with world selection, cancellation, bounded extraction, CRC checks and atomic data replacement.
+- Connected loaded terrain, dimensions, chest searches, ownership, inventory, material checks and context exports to the same imported snapshot.
+- Preserved missing/unreadable inventory and chest states explicitly; source files remain untouched.
 
 ### 0.1.0 — 2026-09-06
 
@@ -50,5 +57,24 @@ The deployment workflow runs the core regression tests and validates catalog top
 ## Backlog
 
 - Add an English interface using the catalogs' existing English content.
-- Consider a separately reviewed optional real demo-world map after selecting its publication snapshot.
 - Extend browser automation coverage and add persistent, importable demo annotations.
+
+## ZIP help / ZIP-Hilfe
+
+**Deutsch:** Oben „Demo-ZIP laden“ oder „Eigene ZIP öffnen …“ wählen. Die Demo wird zuerst heruntergeladen und gegen die veröffentlichte Prüfsumme geprüft. Bei mehreren Welten die gewünschte Welt auswählen und „Ausgewählte Welt öffnen“ bestätigen. Erst der fertige Import ersetzt den bisherigen Datenstand einschließlich Sitzungsänderungen. Eine neue ZIP mit neuen Daten kann jederzeit genauso geöffnet werden; ein Neubau der Website ist dafür nicht nötig. Dateien bleiben lokal, werden nicht auf GitHub hochgeladen und nicht verändert. Ein Fehler oder Abbruch lässt den bisherigen Stand stehen. Eigentum ist anfangs unbekannt; eigene Kisten bewusst markieren. Fehlende Spielerdaten sind unbekannt, nicht leer. „Demo zurücksetzen“ kehrt zu den synthetischen Beispielen zurück. Bauanleitungen und Rezepte sind feste Referenzkataloge und kein Bestandteil eines Savegames.
+
+**English:** Choose “Demo-ZIP laden” to fetch the reviewed public demo or “Eigene ZIP öffnen …” to open a local ZIP. Select the desired world and confirm “Ausgewählte Welt öffnen”. A completed import replaces the current snapshot and session edits together. Opening a new ZIP immediately uses its updated data without rebuilding the website. No local file is uploaded or modified. Failure or cancellation preserves the previous snapshot. Ownership starts unknown; mark owned chests explicitly. Missing player data remains unknown rather than empty. Reset returns to the synthetic examples. Build guides and recipes are reference catalogs rather than savegame contents.
+
+Supported ZIPs contain `world_data` and `o.X,Z` / `n.X,Z` files at one level, optionally inside a world folder. Multiple such folders are selectable. The observed v9 world/chunk and v2 player layouts are supported; unsupported chunks are reported, and completely unreadable terrain is rejected. Nether shows the highest block up to Y 90. The map uses saved surface blocks, not textures or visited-area history. ZIP Store and Deflate are accepted, with a current browser supporting `DecompressionStream("deflate-raw")`. ZIP64, multipart/encrypted archives and links are rejected. Limits: 128 MiB compressed, 512 MiB declared expanded, 8 MiB per entry, 40,000 ZIP entries and 16,000 chunks per world. Extraction is bounded and verifies CRCs; no archive path is written to disk. Uploaded ZIPs are not restored to the Quest.
+
+### Updating the shared public demo
+
+The hosted demo is deliberately checksum-pinned. Replacing a release attachment alone does **not** silently publish unreviewed game data. After reviewing a newly uploaded demo ZIP, update its release/asset and SHA-256 in `demo-source.json` and push the reviewed change, or run the Pages workflow again once its configuration matches. The workflow fetches and verifies the selected archive; all visitors then load the new data. Only the explicitly approved demo world may be published through this route. Local ZIP opening requires neither publication nor a configuration change.
+
+For a local preview that includes the hosted-demo button, pass the reviewed archive to the build:
+
+```sh
+python3 tools/build.py --demo-zip /path/to/reviewed-demo.zip
+```
+
+The `WorldCatalog.json` item names, block names and original schematic colors derive from the reviewed Companion catalog and map palette under the same license. Parser tests use fabricated data; the existing public demo ZIP is used only as a separate integration check.
