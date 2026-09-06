@@ -1,0 +1,284 @@
+[
+  {
+    "id": "planks",
+    "title": {
+      "de": "Holzbretter",
+      "en": "Wooden planks"
+    },
+    "aliases": [
+      "bretter",
+      "planks",
+      "holzbrett"
+    ],
+    "materials": {
+      "de": "1 Holzstamm ergibt 4 Bretter.",
+      "en": "1 log produces 4 planks."
+    },
+    "steps": {
+      "de": "Lege einen Holzstamm in das Crafting-Feld.",
+      "en": "Place a log in the crafting grid."
+    },
+    "source": {
+      "title": "How to craft",
+      "url": "https://www.minecraft.net/en-us/article/how-craft"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "table",
+    "title": {
+      "de": "Werkbank",
+      "en": "Crafting table"
+    },
+    "aliases": [
+      "crafting table",
+      "craftingtable",
+      "werkbank"
+    ],
+    "materials": {
+      "de": "4 Holzbretter für 1 Werkbank.",
+      "en": "4 wooden planks for 1 crafting table."
+    },
+    "steps": {
+      "de": "Fülle ein Quadrat aus 2 mal 2 Feldern mit je einem Brett.",
+      "en": "Fill a 2 by 2 square with one plank per slot."
+    },
+    "source": {
+      "title": "How to craft",
+      "url": "https://www.minecraft.net/en-us/article/how-craft"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "sticks",
+    "title": {
+      "de": "Stöcke",
+      "en": "Sticks"
+    },
+    "aliases": [
+      "stock",
+      "stöcke",
+      "stocke",
+      "sticks",
+      "stick"
+    ],
+    "materials": {
+      "de": "2 Holzbretter.",
+      "en": "2 wooden planks."
+    },
+    "steps": {
+      "de": "Platziere die beiden Bretter direkt übereinander im Crafting-Feld.",
+      "en": "Place the two planks vertically above each other in the crafting grid."
+    },
+    "source": {
+      "title": "Taking Inventory: Stick",
+      "url": "https://www.minecraft.net/fi-fi/article/taking-inventory--stick"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "pickaxe",
+    "title": {
+      "de": "Holzspitzhacke",
+      "en": "Wooden pickaxe"
+    },
+    "aliases": [
+      "holzspitzhacke",
+      "wooden pickaxe",
+      "holzpickel"
+    ],
+    "materials": {
+      "de": "3 Holzbretter und 2 Stöcke für 1 Holzspitzhacke.",
+      "en": "3 wooden planks and 2 sticks for 1 wooden pickaxe."
+    },
+    "steps": {
+      "de": "An der Werkbank: drei Bretter in die obere Reihe, darunter zwei Stöcke in der mittleren Spalte.",
+      "en": "At a crafting table: three planks across the top row, then two sticks down the middle column."
+    },
+    "source": {
+      "title": "How to Minecraft",
+      "url": "https://www.minecraft.net/en-us/article/how-minecraft"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "furnace",
+    "title": {
+      "de": "Ofen",
+      "en": "Furnace"
+    },
+    "aliases": [
+      "ofen",
+      "furnace"
+    ],
+    "materials": {
+      "de": "8 Bruchstein für 1 Ofen.",
+      "en": "8 cobblestone for 1 furnace."
+    },
+    "steps": {
+      "de": "An der Werkbank den Rand des 3-mal-3-Rasters mit Bruchstein füllen. Die Mitte bleibt frei.",
+      "en": "At a crafting table, fill the outside of the 3 by 3 grid with cobblestone, leaving the center empty."
+    },
+    "source": {
+      "title": "How to survive your first night",
+      "url": "https://www.minecraft.net/en-us/article/how-survive-your-first-night-minecraft"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "sword",
+    "title": {
+      "de": "Holzschwert",
+      "en": "Wooden sword"
+    },
+    "aliases": [
+      "holzschwert",
+      "wooden sword"
+    ],
+    "materials": {
+      "de": "2 Holzbretter und 1 Stock für 1 Holzschwert.",
+      "en": "2 wooden planks and 1 stick for 1 wooden sword."
+    },
+    "steps": {
+      "de": "An der Werkbank in einer Spalte: oben ein Brett, darunter ein Brett, ganz unten ein Stock.",
+      "en": "At a crafting table in one column: plank at the top, plank in the middle, stick at the bottom."
+    },
+    "source": {
+      "title": "Taking Inventory: Sword",
+      "url": "https://www.minecraft.net/ko-kr/article/taking-inventory--sword"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "hoe",
+    "title": {
+      "de": "Holzhacke",
+      "en": "Wooden hoe"
+    },
+    "aliases": [
+      "holzhacke",
+      "wooden hoe"
+    ],
+    "materials": {
+      "de": "2 Holzbretter und 2 Stöcke für 1 Holzhacke.",
+      "en": "2 wooden planks and 2 sticks for 1 wooden hoe."
+    },
+    "steps": {
+      "de": "An der Werkbank zwei Bretter oben nebeneinander, darunter zwei Stöcke in der mittleren Spalte.",
+      "en": "At a crafting table put two planks side by side at the top, then two sticks down the middle column."
+    },
+    "source": {
+      "title": "Block of the Week: Farmland",
+      "url": "https://www.minecraft.net/en-us/article/block-week-farmland"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "gate",
+    "title": {
+      "de": "Zauntor",
+      "en": "Fence gate"
+    },
+    "aliases": [
+      "zauntor",
+      "fence gate"
+    ],
+    "materials": {
+      "de": "4 Stöcke und 2 Holzbretter für 1 Zauntor.",
+      "en": "4 sticks and 2 wooden planks for 1 fence gate."
+    },
+    "steps": {
+      "de": "An der Werkbank zwei Reihen belegen: jeweils Stock, Brett, Stock.",
+      "en": "At a crafting table fill two rows, each with stick, plank, stick."
+    },
+    "source": {
+      "title": "Fence gate",
+      "url": "https://www.minecraft.net/ko-kr/article/fence-gate"
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    }
+  },
+  {
+    "id": "bed",
+    "title": {
+      "de": "Bett",
+      "en": "Bed"
+    },
+    "aliases": [
+      "bett",
+      "betten",
+      "bed",
+      "beds"
+    ],
+    "materials": {
+      "de": "3 Wollblöcke derselben Farbe und 3 Holzbretter für 1 Bett.",
+      "en": "3 wool blocks of the same color and 3 wooden planks for 1 bed."
+    },
+    "steps": {
+      "de": "An der Werkbank: drei Wollblöcke nebeneinander in die mittlere Reihe, direkt darunter drei Holzbretter. Verwende zum Testen Bretter derselben Holzart.",
+      "en": "At a crafting table: three wool blocks across the middle row, with three wooden planks directly below. Use the same wood type when testing."
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    },
+    "source": {
+      "title": "Minecraft: Spawning and dying",
+      "url": "https://www.minecraft.net/en-us/article/spawning-and-dying"
+    }
+  },
+  {
+    "id": "chest",
+    "title": {
+      "de": "Kiste",
+      "en": "Chest"
+    },
+    "aliases": [
+      "kiste",
+      "kisten",
+      "truhe",
+      "truhen",
+      "chest",
+      "chests"
+    ],
+    "materials": {
+      "de": "8 Holzbretter für 1 Kiste.",
+      "en": "8 wooden planks for 1 chest."
+    },
+    "steps": {
+      "de": "An der Werkbank die acht äußeren Felder des 3-mal-3-Rasters mit Brettern füllen. Das mittlere Feld bleibt leer.",
+      "en": "At a crafting table, fill the eight outside slots of the 3 by 3 grid with planks. Leave the center empty."
+    },
+    "evidence": {
+      "de": "Minecraft-Referenz: In RealmCraft VR noch nicht geprüft. Bitte mit dem Rezept im Spiel vergleichen.",
+      "en": "Minecraft reference: not yet verified in RealmCraft VR. Compare with the in-game recipe."
+    },
+    "source": {
+      "title": "Mojang: Bedrock chest recipe",
+      "url": "https://github.com/Mojang/bedrock-samples/blob/main/behavior_pack/recipes/chest.json"
+    }
+  }
+]

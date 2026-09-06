@@ -12,6 +12,10 @@ A community macOS companion for RealmCraft VR on Meta Quest, built with SwiftUI.
 
 The Companion includes verified backup/restore workflows, maps, chest and player readers, build guides, local conversation tools and optional save editing. Read the in-app guidance and individual feature documentation for compatibility limits and beta status. This is an independent community project.
 
+## Browser demo
+
+The **[Companion Web Demo](RealmCraftWebDemo/README.md)** is a separate, dependency-free web project in this repository. Use the GitHub Pages link in the repository's About section to try its map, chest search, inventory sandbox, 46 build guides, ten reference recipes and context export. All world and inventory examples are synthetic. No real saves are served or edited.
+
 ## Build
 
 The native app targets macOS 14 or later. Install Xcode Command Line Tools and Python 3, then run:
