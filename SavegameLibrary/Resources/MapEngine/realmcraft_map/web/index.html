@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Deine gespeicherte Realmcraft-Welt als lokale, interaktive Karte.">
+  <title>Realmcraft Atlas</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23152d36'/%3E%3Cpath d='m6 23 9-16 11 16-10-5z' fill='%23b7d879'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside id="sidebar">
+    <header><span class="brand-icon" aria-hidden="true">◈</span><div><h1>Realmcraft <b>Atlas</b></h1><p>DEINE WELT. IM ÜBERBLICK.</p></div><button id="collapse" class="icon mobile" aria-label="Seitenleiste schließen">×</button></header>
+    <div class="world"><span class="eyebrow">SPIELSTAND</span><strong id="world-name">Weltkarte</strong><span id="saved-date" class="muted"></span></div>
+    <section><label for="dimension">Dimension</label><select id="dimension"><option value="o">Oberwelt</option><option value="n">Nether</option></select><p id="slice-note" class="small muted" hidden>Horizontalschnitt: oberster Block bis Y = 90. Das Nether-Dach wird ausgeblendet.</p></section>
+    <section><span class="field-label">Darstellung</span><div class="segmented" role="group" aria-label="Darstellung"><button id="terrain" class="active" aria-pressed="true">Landschaft</button><button id="height" aria-pressed="false">Höhenkarte</button></div><label class="check"><input id="grid" type="checkbox"> Chunk-Raster <span>16 × 16</span></label></section>
+    <section class="mirror-section"><details><summary id="mirror-title">Ausrichtung</summary><label id="rotation-label" for="rotation-slider">Drehwinkel</label><input id="rotation-slider" type="range" min="0" max="360" step="1" value="0" aria-label="Drehwinkel"><label class="check"><input id="mirror-x" type="checkbox"><span id="mirror-x-label">Links ↔ rechts</span></label><label class="check"><input id="mirror-z" type="checkbox"><span id="mirror-z-label">Oben ↔ unten</span></label><button id="orientation-save" class="text-button" type="button">Ausrichtung speichern</button><p id="orientation-status" class="small muted" role="status" aria-live="polite"></p><button id="mirror-reset" class="text-button" type="button">Ausrichtung zurücksetzen</button></details></section>
+    <section class="level-section"><div class="section-heading"><label for="vertical-mode">Weltebene</label><span id="level-badge" class="badge">Y 64</span></div><select id="vertical-mode"><option value="surface">Oberfläche</option><option value="slice">Einzelebene</option><option value="below">Oberfläche bis Ebene</option></select><div class="level-slider"><input type="range" id="y-slider" min="0" max="255" value="64" aria-label="Y-Ebene"><input type="number" id="y-value" min="0" max="255" value="64" aria-label="Y-Ebene direkt eingeben"></div><div class="level-steps" role="group" aria-label="Ebene ändern"><button data-step="-10">−10</button><button data-step="-5">−5</button><button data-step="-1">−1</button><button data-step="1">+1</button><button data-step="5">+5</button><button data-step="10">+10</button></div><p id="level-note" class="small muted">Wähle eine Ebene, um unter die Oberfläche zu schauen.</p><p id="level-status" class="small muted" role="status" aria-live="polite"></p></section>
+    <section><label for="x-input">Koordinaten suchen</label><form id="locate"><div class="coords-input"><label>X<input id="x-input" type="number" step="1" placeholder="0" required></label><label>Z<input id="z-input" type="number" step="1" placeholder="0" required></label><button class="go" aria-label="Zu Koordinaten springen">↗</button></div><p id="search-message" role="status" class="small muted"></p></form></section>
+    <section class="poi-section"><h2 id="poi-heading"></h2><label class="check"><input id="poi-visible" type="checkbox" checked><span id="poi-show"></span></label><select id="poi-kind" aria-label="Places category"></select><div class="poi-nav"><button id="poi-prev" type="button">←</button><span id="poi-count" role="status"></span><button id="poi-next" type="button">→</button></div><div id="poi-detail" hidden><strong id="poi-name"></strong><p id="poi-coords" class="mono"></p><p id="poi-clues" class="small muted"></p><div id="chest-preview" hidden aria-live="polite"></div><form id="poi-rename"><input id="poi-input" maxlength="60"><button id="poi-save" class="text-button"></button></form></div><p id="poi-note" class="small muted"></p><p id="poi-storage" class="small warning" hidden></p></section>
+    <section class="places"><div class="section-heading"><h2>Meine Orte</h2><span id="marker-count" class="badge">0</span></div><p id="empty-markers" class="muted small">Klicke auf die Karte, um einen Ort zu merken.</p><ul id="markers"></ul><button id="export-markers" class="text-button" hidden>Orte als JSON exportieren ↓</button><p id="storage-note" class="small muted" hidden>Orte bleiben nur für diese Sitzung erhalten. Nutze den JSON-Export zum Sichern.</p></section>
+    <footer><div class="stats"><div><strong id="chunk-count">—</strong><span>Chunks</span></div><div><strong id="block-count">—</strong><span>Blockspalten</span></div></div><div class="legend" id="legend"><span><i style="background:#79a64d"></i>Land</span><span><i style="background:#377ca9"></i>Wasser</span><span><i style="background:#929892"></i>Stein</span></div><p id="coverage-note" class="small muted">Gespeicherte Welt · schematische Blockfarben</p><p id="error-note" class="small warning" hidden></p></footer>
+  </aside>
+  <main id="map-area">
+    <canvas id="map" tabindex="0" aria-label="Interaktive Weltkarte. Mit Pfeiltasten verschieben, Plus und Minus zoomen, F für die ganze Welt."></canvas>
+    <div class="map-top"><button id="expand" class="pill mobile" aria-label="Seitenleiste öffnen">☰ Atlas</button><span class="pill dimension-pill"><i></i><span id="map-label">Oberwelt</span></span><span class="pill local-pill">● Lokal & offline</span></div>
+    <div class="pill biome-pill" id="biome-readout" aria-live="off"></div>
+    <div class="map-tools"><button id="zoom-in" aria-label="Vergrößern" title="Vergrößern (+)">+</button><button id="zoom-out" aria-label="Verkleinern" title="Verkleinern (−)">−</button><hr><button id="fit" aria-label="Ganze Welt anzeigen" title="Ganze Welt (F)">⌗</button><button id="origin" aria-label="Zum Ursprung X 0, Z 0" title="Zum Ursprung (0, 0)">⌖</button></div>
+    <button id="compass" class="compass" type="button" aria-label="Karte drehen"><span>−Z</span><svg id="compass-arrow" viewBox="0 0 40 48" aria-hidden="true"><path d="M20 3 33 39 20 31 7 39Z" fill="#e0eacb"/><path d="M20 3V31L7 39Z" fill="#718b78"/></svg><small id="rotation-angle">0°</small></button>
+    <article id="selection" hidden aria-label="Ausgewählter Ort"><button id="close-selection" class="close icon" aria-label="Auswahl schließen">×</button><span class="eyebrow">AUSGEWÄHLTER BLOCK</span><h2 id="selected-name"></h2><p id="selected-coords" class="mono"></p><p id="selected-biome" class="small muted"></p><form id="add-marker"><label for="marker-name">Ort benennen</label><div class="marker-entry"><input id="marker-name" maxlength="60" placeholder="z. B. Mein Zuhause" required><button class="go" aria-label="Ort speichern">+</button></div></form></article>
+    <div class="map-bottom"><span class="pill mono" id="cursor-coords">X — &nbsp; Z —</span><div class="scale-wrap"><span id="scale-label">100 Blöcke</span><div id="scale-line"></div></div><span class="pill help">Ziehen · Scrollen · Klicken</span></div>
+    <div id="fatal" role="alert" hidden>Die Kartendaten konnten nicht geladen werden. Bitte öffne die index.html im vollständig exportierten Kartenordner.</div>
+  </main>
+  <script src="map.data.js"></script>
+  <script src="geometry.js"></script>
+  <script src="columns.js"></script>
+  <script src="layers.js"></script>
+  <script src="biomes.js"></script>
+  <script src="points.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

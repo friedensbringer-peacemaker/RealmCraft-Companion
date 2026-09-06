@@ -1,0 +1,92 @@
+[
+  {
+    "id": "website",
+    "icon": "globe",
+    "category": "official",
+    "title": "RealmCraft VR",
+    "de": "Die offizielle Website des VR-Spiels mit Trailer und weiterführenden Links.",
+    "en": "The VR game’s official website, trailer and further links.",
+    "url": "https://realmcraftvr.com/",
+    "source": "https://store.steampowered.com/app/2943620/Realmcraft_VR/"
+  },
+  {
+    "id": "youtube",
+    "icon": "play.rectangle",
+    "category": "official",
+    "title": "YouTube · RealmCraft VR",
+    "de": "Videos, Tutorials und Updates vom Kanal des offiziellen Website-Trailers.",
+    "en": "Videos, tutorials and updates from the channel behind the official website trailer.",
+    "url": "https://www.youtube.com/@RealmCraftVR",
+    "source": "https://www.youtube.com/watch?v=0vX1hKJk_oY"
+  },
+  {
+    "id": "meta",
+    "icon": "visionpro",
+    "category": "official",
+    "title": "Meta Quest Store",
+    "de": "Spielseite für Quest. Preise und Verfügbarkeit direkt im Store prüfen.",
+    "en": "Quest game listing. Check prices and availability directly in the store.",
+    "url": "https://www.meta.com/experiences/realmcraft/5355683574480106/",
+    "source": "https://realmcraftvr.com/"
+  },
+  {
+    "id": "steam",
+    "icon": "desktopcomputer",
+    "category": "official",
+    "title": "Steam · RealmCraft VR",
+    "de": "PC-VR-Spielseite und Ankündigungen. Die Savegame-Funktion dieses Tools ist für Quest ausgelegt.",
+    "en": "PC VR listing and announcements. This companion’s savegame feature targets Quest.",
+    "url": "https://store.steampowered.com/app/2943620/Realmcraft_VR/",
+    "source": "https://realmcraftvr.com/"
+  },
+  {
+    "id": "discord",
+    "icon": "bubble.left.and.bubble.right",
+    "category": "community",
+    "title": "Discord",
+    "de": "Von der offiziellen Website verlinkter Server für Austausch und Fragen.",
+    "en": "Server linked by the official website for discussion and questions.",
+    "url": "https://discord.gg/BzcgVtSufH",
+    "source": "https://realmcraftvr.com/"
+  },
+  {
+    "id": "feedback",
+    "icon": "lightbulb",
+    "category": "community",
+    "title": "Feedback · Canny",
+    "de": "Ideen und Wünsche für das Spiel. Der Backlog dieses Companion-Tools steht separat in der Hilfe.",
+    "en": "Ideas and requests for the game. This companion’s own backlog is separately available in Help.",
+    "url": "https://realmcraft-vr.canny.io/",
+    "source": "https://realmcraftvr.com/"
+  },
+  {
+    "id": "reddit",
+    "icon": "person.3",
+    "category": "community",
+    "title": "Reddit · RealmCraft VR",
+    "de": "Community-Diskussionen; von der offiziellen Website verlinkt.",
+    "en": "Community discussions linked from the official website.",
+    "url": "https://reddit.com/r/RealmCraftVR/",
+    "source": "https://realmcraftvr.com/"
+  },
+  {
+    "id": "wiki",
+    "icon": "books.vertical",
+    "category": "reference",
+    "title": "RealmCraft Game Wiki",
+    "de": "Allgemeines Community-Wiki, vom Hersteller verlinkt. Nicht speziell für VR; Rezepte und Mechaniken können abweichen.",
+    "en": "General community wiki linked by the publisher. Not VR-specific; recipes and mechanics may differ.",
+    "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki",
+    "source": "https://www.tellurionmobile.com/faq/"
+  },
+  {
+    "id": "faq",
+    "icon": "questionmark.circle",
+    "category": "reference",
+    "title": "Tellurion Mobile · FAQ",
+    "de": "Allgemeine RealmCraft-Hilfe des Herstellers. Viele Hinweise beziehen sich auf die mobile Version.",
+    "en": "Publisher’s general RealmCraft help. Many answers refer to the mobile edition.",
+    "url": "https://www.tellurionmobile.com/faq/",
+    "source": "https://www.tellurionmobile.com/faq/"
+  }
+]

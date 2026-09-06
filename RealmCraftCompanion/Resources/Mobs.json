@@ -1,0 +1,1417 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-06",
+  "aiGenerated": true,
+  "entries": [
+    {
+      "id": "bee",
+      "name": {
+        "de": "Biene",
+        "en": "Bee"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "1.0.2",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Bee",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/pt-pt/article/around-block--flower-forest",
+        "reference": {
+          "de": "Beispiel aus Minecraft: Blumenwälder mit Bienennestern.",
+          "en": "Minecraft example: flower forests with bee nests."
+        }
+      }
+    },
+    {
+      "id": "cat",
+      "name": {
+        "de": "Katze",
+        "en": "Cat"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "1.0.2",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Cat",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/nl-nl/article/village---pillage-out-today-bedrock",
+        "reference": {
+          "de": "Minecraft-Vergleich: Dörfer; eine Struktur, kein eigenes Biom.",
+          "en": "Minecraft comparison: villages; a structure, not a biome."
+        }
+      }
+    },
+    {
+      "id": "cow",
+      "name": {
+        "de": "Kuh",
+        "en": "Cow"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "2025-03-21",
+      "evidenceURL": "https://steamdb.info/patchnotes/17807925/",
+      "note": {
+        "de": "Melken erwähnt.",
+        "en": "Milking mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Cow",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/around-block--plains",
+        "reference": {
+          "de": "Beispiel aus Minecraft: Ebenen mit Grasflächen.",
+          "en": "Minecraft example: grassy plains."
+        }
+      }
+    },
+    {
+      "id": "sheep",
+      "name": {
+        "de": "Schaf",
+        "en": "Sheep"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "2025-03-21",
+      "evidenceURL": "https://steamdb.info/patchnotes/17807925/",
+      "note": {
+        "de": "Färben erwähnt.",
+        "en": "Dyeing mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Sheep",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/around-block--plains",
+        "reference": {
+          "de": "Beispiel aus Minecraft: Ebenen mit Grasflächen.",
+          "en": "Minecraft example: grassy plains."
+        }
+      }
+    },
+    {
+      "id": "pig",
+      "name": {
+        "de": "Schwein",
+        "en": "Pig"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "0.9.85",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Reiten erwähnt.",
+        "en": "Riding mentioned."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Pig",
+      "minecraftURL": "https://minecraft.wiki/w/Pig",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/around-block--plains",
+        "reference": {
+          "de": "Beispiel aus Minecraft: Ebenen mit Grasflächen.",
+          "en": "Minecraft example: grassy plains."
+        }
+      }
+    },
+    {
+      "id": "wolf",
+      "name": {
+        "de": "Wolf",
+        "en": "Wolf"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "0.9.95",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Zähmung ergänzt.",
+        "en": "Taming added."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Wolf",
+      "minecraftURL": "https://minecraft.wiki/w/Wolf",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "realmcraft_wiki",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Wolf",
+        "reference": {
+          "de": "Allgemeines RealmCraft-Wiki: Grasblöcke. Ein bestimmtes VR-Biom ist damit nicht belegt.",
+          "en": "General RealmCraft wiki: grass blocks. This does not establish a particular VR biome."
+        }
+      }
+    },
+    {
+      "id": "ocelot",
+      "name": {
+        "de": "Ozelot",
+        "en": "Ocelot"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "2025-03-21",
+      "evidenceURL": "https://steamdb.info/patchnotes/17807925/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Ocelot",
+      "minecraftURL": "https://minecraft.wiki/w/Ocelot",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "realmcraft_wiki",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Ocelot",
+        "reference": {
+          "de": "Allgemeines RealmCraft-Wiki: Dschungel. Übertragbarkeit auf VR ungeprüft.",
+          "en": "General RealmCraft wiki: jungles. Applicability to VR is unverified."
+        }
+      }
+    },
+    {
+      "id": "llama",
+      "name": {
+        "de": "Lama",
+        "en": "Llama"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "1.0.0",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Zähmung und Reiten erwähnt.",
+        "en": "Taming and riding mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Llama",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/llama",
+        "reference": {
+          "de": "Minecraft-Vergleich: Savannenplateau und windgepeitschte Hügel; weitere Savannen je nach Edition.",
+          "en": "Minecraft comparison: savanna plateau and windswept hills; additional savannas depend on edition."
+        }
+      }
+    },
+    {
+      "id": "parrot",
+      "name": {
+        "de": "Papagei",
+        "en": "Parrot"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "1.0.0",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Zähmung ergänzt.",
+        "en": "Taming added."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Parrot",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/around-block--jungle",
+        "reference": {
+          "de": "Minecraft-Vergleich: Dschungel.",
+          "en": "Minecraft comparison: jungles."
+        }
+      }
+    },
+    {
+      "id": "turtle",
+      "name": {
+        "de": "Schildkröte",
+        "en": "Turtle"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "0.9.72",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Turtle",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/360007164271-Minecraft-1-5-0-Bedrock",
+        "reference": {
+          "de": "Minecraft-Vergleich: Strände und Küstengewässer.",
+          "en": "Minecraft comparison: beaches and coastal waters."
+        }
+      }
+    },
+    {
+      "id": "pufferfish",
+      "name": {
+        "de": "Kugelfisch",
+        "en": "Pufferfish"
+      },
+      "kind": "animal",
+      "status": "released",
+      "evidenceLabel": "2025-01-17",
+      "evidenceURL": "https://steamdb.info/patchnotes/17039452/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Pufferfish",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://help.minecraft.net/hc/en-us/articles/360046470431-Minecraft-Types-of-Biomes",
+        "reference": {
+          "de": "Minecraft-Vergleich: warme Meeresregionen. Die passende Wassertemperatur in VR ist ungeprüft.",
+          "en": "Minecraft comparison: warm ocean regions. Required water temperature in VR is unverified."
+        }
+      }
+    },
+    {
+      "id": "villager",
+      "name": {
+        "de": "Dorfbewohner",
+        "en": "Villager"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.0",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Villager",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/around-block--plains",
+        "reference": {
+          "de": "Minecraft-Vergleich: Dörfer, beispielsweise in Ebenen.",
+          "en": "Minecraft comparison: villages, for example in plains."
+        }
+      }
+    },
+    {
+      "id": "iron_golem",
+      "name": {
+        "de": "Eisengolem",
+        "en": "Iron Golem"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.1",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Iron_Golem",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/iron-golem",
+        "reference": {
+          "de": "Minecraft-Vergleich: Dörfer und Plünderer-Außenposten; Strukturen, keine eigenen Biome.",
+          "en": "Minecraft comparison: villages and pillager outposts; structures, not biomes."
+        }
+      }
+    },
+    {
+      "id": "zombie",
+      "name": {
+        "de": "Zombie",
+        "en": "Zombie"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.1",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Türverhalten geändert.",
+        "en": "Door behavior changed."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombie",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/pt-pt/article/around-block--flower-forest",
+        "reference": {
+          "de": "Minecraft-Vergleich: nachts in vielen Oberwelt-Biomen, beispielsweise Blumenwäldern.",
+          "en": "Minecraft comparison: many Overworld biomes at night, for example flower forests."
+        }
+      }
+    },
+    {
+      "id": "drowned",
+      "name": {
+        "de": "Ertrunkener",
+        "en": "Drowned"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "2025-01-17",
+      "evidenceURL": "https://steamdb.info/patchnotes/17039452/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Drowned",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/360004167771-Minecraft-Java-Edition-Snapshot-18W11A",
+        "reference": {
+          "de": "Minecraft-Vergleich: Gewässer der Oberwelt. Konkrete VR-Gewässer oder Biome nicht gesichert.",
+          "en": "Minecraft comparison: Overworld waters. Specific VR waters or biomes are not established."
+        }
+      }
+    },
+    {
+      "id": "creeper",
+      "name": {
+        "de": "Creeper",
+        "en": "Creeper"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.0",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/allnews/",
+      "note": {
+        "de": "Manuelles Zünden erwähnt.",
+        "en": "Manual ignition mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Creeper",
+      "habitat": {
+        "dimension": "overworld",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/pt-pt/article/around-block--flower-forest",
+        "reference": {
+          "de": "Minecraft-Vergleich: nachts in vielen Oberwelt-Biomen, beispielsweise Blumenwäldern.",
+          "en": "Minecraft comparison: many Overworld biomes at night, for example flower forests."
+        }
+      }
+    },
+    {
+      "id": "ghast",
+      "name": {
+        "de": "Ghast",
+        "en": "Ghast"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "2025-04-17",
+      "evidenceURL": "https://steamdb.info/patchnotes/18147050/",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Ghast",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "minecraft",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://www.minecraft.net/en-us/article/ghast",
+        "reference": {
+          "de": "Minecraft-Vergleich: Nether. Konkrete VR-Spawnbiome sind nicht belegt.",
+          "en": "Minecraft comparison: Nether. Specific VR spawn biomes are not documented."
+        }
+      }
+    },
+    {
+      "id": "piglin",
+      "name": {
+        "de": "Piglin",
+        "en": "Piglin"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Verhalten überarbeitet.",
+        "en": "Behavior revised."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Piglin",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "baby_piglin",
+      "name": {
+        "de": "Piglin (Baby)",
+        "en": "Piglin (Baby)"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Variante ausdrücklich erwähnt.",
+        "en": "Variant explicitly mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Piglin",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "hoglin",
+      "name": {
+        "de": "Hoglin",
+        "en": "Hoglin"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Verhalten überarbeitet.",
+        "en": "Behavior revised."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Hoglin",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "baby_hoglin",
+      "name": {
+        "de": "Hoglin (Baby)",
+        "en": "Hoglin (Baby)"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Variante ausdrücklich erwähnt.",
+        "en": "Variant explicitly mentioned."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Hoglin",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "piglin_brute",
+      "name": {
+        "de": "Piglin (Barbar)",
+        "en": "Piglin (Brute)"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Piglin_Brute",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "zoglin",
+      "name": {
+        "de": "Zoglin",
+        "en": "Zoglin"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zoglin",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://minecraft.wiki/rest.php/v1/page/Zoglin/html",
+        "reference": {
+          "de": "Kein gesicherter natürlicher VR-Spawnort. Minecraft-Vergleich: Umwandlung eines Hoglins außerhalb des Nether, etwa in der Overworld.",
+          "en": "No established natural VR spawn location. Minecraft comparison: transformation of a hoglin outside the Nether, for example in the Overworld."
+        }
+      }
+    },
+    {
+      "id": "zombified_piglin",
+      "name": {
+        "de": "Piglin (Zombifiziert)",
+        "en": "Piglin (Zombified)"
+      },
+      "kind": "mob",
+      "status": "released",
+      "evidenceLabel": "1.0.3",
+      "evidenceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+      "note": {
+        "de": "Neu ergänzt.",
+        "en": "New addition."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombified_Piglin",
+      "habitat": {
+        "dimension": "nether",
+        "basis": "vr_release",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282",
+        "reference": {
+          "de": "Im Nether-Update 1.0.3 genannt. Das Update legt keine konkreten Spawnbiome oder Spawnbedingungen fest.",
+          "en": "Named in Nether update 1.0.3. The update does not specify spawn biomes or conditions."
+        }
+      }
+    },
+    {
+      "id": "horse",
+      "name": {
+        "de": "Pferd",
+        "en": "Horse"
+      },
+      "kind": "animal",
+      "status": "planned",
+      "evidenceLabel": "Roadmap · 2026-09-06",
+      "evidenceURL": "https://realmcraft-vr.canny.io/",
+      "note": {
+        "de": "In Arbeit laut Roadmap; Veröffentlichung nicht belegt.",
+        "en": "In progress on the roadmap; release not evidenced."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Horse",
+      "minecraftURL": "https://minecraft.wiki/w/Horse",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraft-vr.canny.io/",
+        "reference": {
+          "de": "Die Integration in VR ist hier noch nicht belegt; daher wird kein aktueller Spiel-Fundort behauptet.",
+          "en": "VR integration is not established here; no current in-game location is claimed."
+        }
+      }
+    },
+    {
+      "id": "frog",
+      "name": {
+        "de": "Frosch",
+        "en": "Frog"
+      },
+      "kind": "animal",
+      "status": "planned",
+      "evidenceLabel": "Roadmap · 2026-09-06",
+      "evidenceURL": "https://realmcraft-vr.canny.io/",
+      "note": {
+        "de": "In Arbeit laut Roadmap; Veröffentlichung nicht belegt.",
+        "en": "In progress on the roadmap; release not evidenced."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Frog",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraft-vr.canny.io/",
+        "reference": {
+          "de": "Die Integration in VR ist hier noch nicht belegt; daher wird kein aktueller Spiel-Fundort behauptet.",
+          "en": "VR integration is not established here; no current in-game location is claimed."
+        }
+      }
+    },
+    {
+      "id": "zombie_horse",
+      "name": {
+        "de": "Pferd (Zombie)",
+        "en": "Horse (Zombie)"
+      },
+      "kind": "mob",
+      "status": "planned",
+      "evidenceLabel": "Roadmap · 2026-09-06",
+      "evidenceURL": "https://realmcraft-vr.canny.io/",
+      "note": {
+        "de": "In Arbeit laut Roadmap; Veröffentlichung nicht belegt.",
+        "en": "In progress on the roadmap; release not evidenced."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombie_Horse",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraft-vr.canny.io/",
+        "reference": {
+          "de": "Die Integration in VR ist hier noch nicht belegt; daher wird kein aktueller Spiel-Fundort behauptet.",
+          "en": "VR integration is not established here; no current in-game location is claimed."
+        }
+      }
+    },
+    {
+      "id": "chicken",
+      "name": {
+        "de": "Huhn",
+        "en": "Chicken"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Wiki · Breeding",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Im allgemeinen Wiki erwähnt; in VR hier nicht bestätigt. Wiki-Seite beschreibt veraltete Inhalte.",
+        "en": "Mentioned in the general wiki; not confirmed for VR here. Wiki page describes outdated content."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "minecraftURL": "https://minecraft.wiki/w/Chicken",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Die Integration in VR ist hier noch nicht belegt; daher wird kein aktueller Spiel-Fundort behauptet.",
+          "en": "VR integration is not established here; no current in-game location is claimed."
+        }
+      }
+    },
+    {
+      "id": "rabbit",
+      "name": {
+        "de": "Kaninchen",
+        "en": "Rabbit"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Wiki · Breeding",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Im allgemeinen Wiki erwähnt; in VR hier nicht bestätigt. Wiki-Seite beschreibt veraltete Inhalte.",
+        "en": "Mentioned in the general wiki; not confirmed for VR here. Wiki page describes outdated content."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "minecraftURL": "https://minecraft.wiki/w/Rabbit",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Die Integration in VR ist hier noch nicht belegt; daher wird kein aktueller Spiel-Fundort behauptet.",
+          "en": "VR integration is not established here; no current in-game location is claimed."
+        }
+      }
+    },
+    {
+      "id": "baby_cow",
+      "name": {
+        "de": "Kuh (Baby)",
+        "en": "Cow (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Cow#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Kuh“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Cow” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_sheep",
+      "name": {
+        "de": "Schaf (Baby)",
+        "en": "Sheep (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Sheep#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Schaf“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Sheep” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_pig",
+      "name": {
+        "de": "Schwein (Baby)",
+        "en": "Pig (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Pig",
+      "minecraftURL": "https://minecraft.wiki/w/Pig#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Schwein“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Pig” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_wolf",
+      "name": {
+        "de": "Wolf (Baby)",
+        "en": "Wolf (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Wolf",
+      "minecraftURL": "https://minecraft.wiki/w/Wolf#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Wolf“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Wolf” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_ocelot",
+      "name": {
+        "de": "Ozelot (Baby)",
+        "en": "Ocelot (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Ocelot",
+      "minecraftURL": "https://minecraft.wiki/w/Ocelot#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Ozelot“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Ocelot” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_horse",
+      "name": {
+        "de": "Pferd (Baby)",
+        "en": "Horse (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Horse",
+      "minecraftURL": "https://minecraft.wiki/w/Horse#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Pferd“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Horse” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_chicken",
+      "name": {
+        "de": "Huhn (Baby)",
+        "en": "Chicken (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "minecraftURL": "https://minecraft.wiki/w/Chicken#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Huhn“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Chicken” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_rabbit",
+      "name": {
+        "de": "Kaninchen (Baby)",
+        "en": "Rabbit (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "RealmCraft Game Wiki · Breeding (allgemeines Spiel, kein VR-Nachweis)",
+      "evidenceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "note": {
+        "de": "Babyform im allgemeinen RealmCraft-Wiki dokumentiert; die dortige Zuchtbeschreibung ist teilweise historisch. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in the general RealmCraft wiki; its breeding description is partly historical. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+      "minecraftURL": "https://minecraft.wiki/w/Rabbit#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://realmcraftgame.fandom.com/wiki/Breeding",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Kaninchen“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Rabbit” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_bee",
+      "name": {
+        "de": "Biene (Baby)",
+        "en": "Bee (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Bee#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Biene“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Bee” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_cat",
+      "name": {
+        "de": "Katze (Baby)",
+        "en": "Cat (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Cat#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Katze“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Cat” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_llama",
+      "name": {
+        "de": "Lama (Baby)",
+        "en": "Llama (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Llama#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Lama“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Llama” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_turtle",
+      "name": {
+        "de": "Schildkröte (Baby)",
+        "en": "Turtle (Baby)"
+      },
+      "kind": "animal",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Turtle#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Schildkröte“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Turtle” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_zombie",
+      "name": {
+        "de": "Zombie (Baby)",
+        "en": "Zombie (Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombie#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Zombie“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Zombie” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_drowned",
+      "name": {
+        "de": "Ertrunkener (Baby)",
+        "en": "Drowned (Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Drowned#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Ertrunkener“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Drowned” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_villager",
+      "name": {
+        "de": "Dorfbewohner (Baby)",
+        "en": "Villager (Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Villager#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Dorfbewohner“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Villager” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_zombified_piglin",
+      "name": {
+        "de": "Piglin (Zombifiziert, Baby)",
+        "en": "Piglin (Zombified, Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombified_Piglin#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Piglin (Zombifiziert)“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Piglin (Zombified)” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_zoglin",
+      "name": {
+        "de": "Zoglin (Baby)",
+        "en": "Zoglin (Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zoglin#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Zoglin“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Zoglin” for location references."
+        }
+      }
+    },
+    {
+      "id": "baby_zombie_horse",
+      "name": {
+        "de": "Pferd (Zombie, Baby)",
+        "en": "Horse (Zombie, Baby)"
+      },
+      "kind": "mob",
+      "status": "unverified",
+      "evidenceLabel": "Minecraft Bedrock 26.10 · Baby-Mob-Liste (kein RealmCraft-VR-Nachweis)",
+      "evidenceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+      "note": {
+        "de": "Babyform in Minecraft dokumentiert. Für RealmCraft VR ist diese konkrete Babyform nicht separat belegt. Der Status der erwachsenen Form bestätigt nicht automatisch die Babyform.",
+        "en": "Baby form documented in Minecraft. This specific baby form is not separately documented for RealmCraft VR. The adult form’s status does not automatically confirm the baby form."
+      },
+      "realmWikiURL": null,
+      "minecraftURL": "https://minecraft.wiki/w/Zombie_Horse#Baby",
+      "habitat": {
+        "dimension": "unknown",
+        "basis": "unknown",
+        "biomes": {
+          "de": "Nicht eindeutig belegt.",
+          "en": "Not clearly documented."
+        },
+        "sourceURL": "https://feedback.minecraft.net/hc/en-us/articles/44418129038733-Minecraft-Bedrock-Edition-26-10-Tiny-Takeover",
+        "reference": {
+          "de": "Vorkommen und Spawnbiome dieser Babyform sind für RealmCraft VR nicht bestätigt. Fundort-Orientierung siehe erwachsene Form „Pferd (Zombie)“.",
+          "en": "Occurrence and spawn biomes of this baby form are unconfirmed for RealmCraft VR. See the adult form “Horse (Zombie)” for location references."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "0": {
+    "en": "None",
+    "de": "Keine",
+    "symbol": "None"
+  },
+  "1": {
+    "en": "Sharpness",
+    "de": "Schärfe",
+    "symbol": "Sharpness"
+  },
+  "2": {
+    "en": "Smite",
+    "de": "Bann",
+    "symbol": "Smite"
+  },
+  "3": {
+    "en": "Bane of Arthropods",
+    "de": "Nemesis der Gliederfüßer",
+    "symbol": "BaneOfArthropods"
+  },
+  "4": {
+    "en": "Efficiency",
+    "de": "Effizienz",
+    "symbol": "Efficiency"
+  },
+  "5": {
+    "en": "Fortune",
+    "de": "Glück",
+    "symbol": "Fortune"
+  },
+  "6": {
+    "en": "Silk Touch",
+    "de": "Behutsamkeit",
+    "symbol": "SilkTouch"
+  },
+  "7": {
+    "en": "Protection",
+    "de": "Schutz",
+    "symbol": "Protection"
+  },
+  "8": {
+    "en": "Fire Protection",
+    "de": "Feuerschutz",
+    "symbol": "FireProtection"
+  },
+  "9": {
+    "en": "Feather Falling",
+    "de": "Federfall",
+    "symbol": "FeatherFalling"
+  },
+  "10": {
+    "en": "Unbreaking",
+    "de": "Haltbarkeit",
+    "symbol": "Unbreaking"
+  },
+  "11": {
+    "en": "Respiration",
+    "de": "Atmung",
+    "symbol": "Respiration"
+  },
+  "12": {
+    "en": "Mending",
+    "de": "Reparatur",
+    "symbol": "Mending"
+  },
+  "13": {
+    "en": "Knockback",
+    "de": "Rückstoß",
+    "symbol": "Knockback"
+  },
+  "14": {
+    "en": "Aqua Affinity",
+    "de": "Wasseraffinität",
+    "symbol": "AquaAffinity"
+  },
+  "15": {
+    "en": "Blast Protection",
+    "de": "Explosionsschutz",
+    "symbol": "BlastProtection"
+  },
+  "16": {
+    "en": "Frost Walker",
+    "de": "Eisläufer",
+    "symbol": "FrostWalker"
+  },
+  "17": {
+    "en": "Infinity",
+    "de": "Unendlichkeit",
+    "symbol": "Infinity"
+  },
+  "18": {
+    "en": "Power",
+    "de": "Stärke",
+    "symbol": "Power"
+  },
+  "19": {
+    "en": "Projectile Protection",
+    "de": "Schusssicher",
+    "symbol": "ProjectileProtection"
+  },
+  "20": {
+    "en": "Fire Aspect",
+    "de": "Verbrennung",
+    "symbol": "FireAspect"
+  },
+  "21": {
+    "en": "Punch",
+    "de": "Schlag",
+    "symbol": "Punch"
+  },
+  "22": {
+    "en": "Curse of Binding",
+    "de": "Fluch der Bindung",
+    "symbol": "CurseOfBinding"
+  },
+  "23": {
+    "en": "Curse of Vanishing",
+    "de": "Fluch des Verschwindens",
+    "symbol": "CurseOfVanishing"
+  }
+}

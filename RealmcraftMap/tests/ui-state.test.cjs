@@ -1,0 +1,23 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const elements=new Map(),classes={add(){},remove(){},toggle(){}};
+function element(){return{value:'',textContent:'',hidden:false,options:[{value:'o',remove(){}}],classList:classes,style:{},clientWidth:1000,clientHeight:700,append(){},replaceChildren(){},setAttribute(){},addEventListener(){},getContext(){return new Proxy({},{get:()=>()=>{}});}};}
+const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
+const steps=[-10,-5,-1,1,5,10].map(n=>({...element(),dataset:{step:String(n)}}));
+const data={title:'fixture',generatedAt:'2026-09-05T00:00:00Z',sourceFileCount:1,scope:'complete',errors:[],registry:{},dimensions:{o:{label:'Oberwelt',count:1,bounds:[0,0,16,16],grids:[[1,1]],chunks:{},unknownIds:[]}}};
+const context=vm.createContext({document:{getElementById:get,querySelectorAll:()=>steps,body:{classList:classes}},console,Map,Set,Number,Math,Date,Uint8Array,localStorage:{getItem:()=>null},requestAnimationFrame:()=>1,ResizeObserver:class{observe(){}},AtlasLayers:class{},setTimeout,Image:class{}});
+context.window=context;context.REALMCRAFT_MAP=data;
+for(const file of ['geometry.js','app.js'])vm.runInContext(fs.readFileSync('realmcraft_map/web/'+file,'utf8'),context);
+assert.equal(get('level-badge').textContent,'Y 64');
+steps[5].onclick();assert.equal(get('y-value').value,74);assert.equal(get('vertical-mode').value,'slice');
+steps[1].onclick();assert.equal(get('y-value').value,69);
+steps[2].onclick();assert.equal(get('y-value').value,68);
+steps[3].onclick();assert.equal(get('y-value').value,69);
+steps[4].onclick();assert.equal(get('y-value').value,74);
+steps[0].onclick();assert.equal(get('y-value').value,64);
+get('y-value').onchange({target:{value:'999'}});assert.equal(get('y-value').value,255);
+get('y-slider').oninput({target:{value:'-9'}});assert.equal(get('y-value').value,0);
+get('y-slider').oninput({target:{value:'50'}});
+get('map').onkeydown({key:'PageDown',shiftKey:true,preventDefault(){}});assert.equal(get('y-value').value,40);
+get('map').onkeydown({key:'PageUp',altKey:true,preventDefault(){}});assert.equal(get('y-value').value,45);
+get('vertical-mode').onchange({target:{value:'below'}});assert.ok(get('map-label').textContent.includes('bis Y 45'));
+console.log('Y controls: ±1/5/10, mode changes, input bounds, slider and keyboard passed.');

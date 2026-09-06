@@ -1,0 +1,94 @@
+{
+  "Boy": [
+    {
+      "mesh": "-637922057035906256_BoyArmorMaterial",
+      "material": "BoyArmorMaterial",
+      "name": "ArmorBoyBoots",
+      "texture": "BoyArmorMaterial.png"
+    },
+    {
+      "mesh": "4604501992815919920_BoyArmorMaterial",
+      "material": "BoyArmorMaterial",
+      "name": "ArmorBoyBulletproof",
+      "texture": "BoyArmorMaterial.png"
+    },
+    {
+      "mesh": "6065324298707600176_BoyArmorMaterial",
+      "material": "BoyArmorMaterial",
+      "name": "ArmorBoyHelmet",
+      "texture": "BoyArmorMaterial.png"
+    },
+    {
+      "mesh": "-7245887039596985552_BoyArmorMaterial",
+      "material": "BoyArmorMaterial",
+      "name": "ArmorBoyPants",
+      "texture": "BoyArmorMaterial.png"
+    },
+    {
+      "mesh": "9031859097980830512_BoyMainMat",
+      "material": "BoyMainMat",
+      "name": "boy",
+      "texture": "BoyMainMat.png"
+    },
+    {
+      "mesh": "-5231201459925023952_BoyMainMat",
+      "material": "BoyMainMat",
+      "name": "boy_head",
+      "texture": "BoyMainMat.png"
+    }
+  ],
+  "Girl": [
+    {
+      "mesh": "-1624820281779688596_GirlMainMat",
+      "material": "GirlMainMat",
+      "name": "girl",
+      "texture": "GirlMainMat.png"
+    },
+    {
+      "mesh": "-9107564557131977876_GirlMainMat",
+      "material": "GirlMainMat",
+      "name": "girl_head",
+      "texture": "GirlMainMat.png"
+    },
+    {
+      "mesh": "-6193515373353178260_GirlArmorMaterial",
+      "material": "GirlArmorMaterial",
+      "name": "ArmorGirlBoots",
+      "texture": "GirlArmorMaterial.png"
+    },
+    {
+      "mesh": "-4603603996214367380_GirlArmorMaterial",
+      "material": "GirlArmorMaterial",
+      "name": "ArmorGirlPants",
+      "texture": "GirlArmorMaterial.png"
+    },
+    {
+      "mesh": "-2474324699991315604_GirlArmorMaterial",
+      "material": "GirlArmorMaterial",
+      "name": "ArmorGirlHelmet",
+      "texture": "GirlArmorMaterial.png"
+    },
+    {
+      "mesh": "8474363691575405420_GirlArmorMaterial",
+      "material": "GirlArmorMaterial",
+      "name": "ArmorGirlBulletproof",
+      "texture": "GirlArmorMaterial.png"
+    }
+  ],
+  "Hand0": [
+    {
+      "mesh": "Hand0_3135026477731531639",
+      "material": "HandMat",
+      "name": "Hand_R",
+      "texture": null
+    }
+  ],
+  "Hand1": [
+    {
+      "mesh": "Hand1_-803509302399763016",
+      "material": "HandMat",
+      "name": "Hand_R",
+      "texture": null
+    }
+  ]
+}

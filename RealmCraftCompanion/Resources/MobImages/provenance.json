@@ -1,0 +1,259 @@
+{
+  "source": "Local RealmCraft VR Quest APK",
+  "apkSHA256": "6bf52e4cc0bfc20d383cc83389b627329cfb0d48ef54d098b906ef4014aa2301",
+  "renderer": "SceneKit static preview using original mesh, skin bind poses and textures; neutral lighting; no AI-generated artwork",
+  "images": {
+    "cow": {
+      "file": "cow.png",
+      "parts": [
+        {
+          "mesh": "8862673534101700475_CowMat",
+          "material": "CowMat"
+        }
+      ]
+    },
+    "pig": {
+      "file": "pig.png",
+      "parts": [
+        {
+          "mesh": "8620182126473162373_PigMat",
+          "material": "PigMat"
+        }
+      ]
+    },
+    "sheep": {
+      "file": "sheep.png",
+      "parts": [
+        {
+          "mesh": "-5997594195562028363_WoolMat",
+          "material": "WoolMat"
+        },
+        {
+          "mesh": "4781611605776573109_SheepMat",
+          "material": "SheepMat"
+        },
+        {
+          "mesh": "6014876848510771893_SheepMat",
+          "material": "SheepMat"
+        },
+        {
+          "mesh": "8524053791460991669_WoolMat",
+          "material": "WoolMat"
+        }
+      ]
+    },
+    "bee": {
+      "file": "bee.png",
+      "parts": [
+        {
+          "mesh": "-6731232104210397360_Bee_mat",
+          "material": "Bee_mat"
+        },
+        {
+          "mesh": "877740608897124176_Bee_mat",
+          "material": "Bee_mat"
+        }
+      ]
+    },
+    "cat": {
+      "file": "cat.png",
+      "parts": [
+        {
+          "mesh": "-2728144999457998883_CatMaterial",
+          "material": "CatMaterial"
+        }
+      ]
+    },
+    "wolf": {
+      "file": "wolf.png",
+      "parts": [
+        {
+          "mesh": "3440228219239142113_WolfMat",
+          "material": "WolfMat"
+        }
+      ]
+    },
+    "ocelot": {
+      "file": "ocelot.png",
+      "parts": [
+        {
+          "mesh": "5659944104271536015_OcelotMat",
+          "material": "OcelotMat"
+        }
+      ]
+    },
+    "llama": {
+      "file": "llama.png",
+      "parts": [
+        {
+          "mesh": "-3031237499820507464_LlamaMatWhite",
+          "material": "LlamaMatWhite"
+        }
+      ]
+    },
+    "parrot": {
+      "file": "parrot.png",
+      "parts": [
+        {
+          "mesh": "4977502026975453666_ParrotBlueMat",
+          "material": "ParrotBlueMat"
+        }
+      ]
+    },
+    "pufferfish": {
+      "file": "pufferfish.png",
+      "parts": [
+        {
+          "mesh": "-7104391149256185014_PufferfishMaterial",
+          "material": "PufferfishMaterial"
+        },
+        {
+          "mesh": "3428423696369707850_PufferfishMaterial",
+          "material": "PufferfishMaterial"
+        }
+      ]
+    },
+    "turtle": {
+      "file": "turtle.png",
+      "parts": [
+        {
+          "mesh": "-655067871425328289_TurtleMat",
+          "material": "TurtleMat"
+        },
+        {
+          "mesh": "-8555699700153054369_TurtleMat",
+          "material": "TurtleMat"
+        }
+      ]
+    },
+    "villager": {
+      "file": "villager.png",
+      "parts": [
+        {
+          "mesh": "-5158351272021298245_VillagerMat",
+          "material": "VillagerMat"
+        }
+      ]
+    },
+    "iron_golem": {
+      "file": "iron_golem.png",
+      "parts": [
+        {
+          "mesh": "2994865399494155548_IronGolemMat",
+          "material": "IronGolemMat"
+        }
+      ]
+    },
+    "zombie": {
+      "file": "zombie.png",
+      "parts": [
+        {
+          "mesh": "-2458331201566274502_ZombieMat",
+          "material": "ZombieMat"
+        },
+        {
+          "mesh": "1358897152467209274_ZombieMat",
+          "material": "ZombieMat"
+        }
+      ]
+    },
+    "drowned": {
+      "file": "drowned.png",
+      "parts": [
+        {
+          "mesh": "1224922062906811078_DrownedMat",
+          "material": "DrownedMat"
+        },
+        {
+          "mesh": "4429094684706955974_DrownedMat",
+          "material": "DrownedMat"
+        },
+        {
+          "mesh": "7786773500066751174_DrownedMat",
+          "material": "DrownedMat"
+        }
+      ]
+    },
+    "creeper": {
+      "file": "creeper.png",
+      "parts": [
+        {
+          "mesh": "538431780759516544_CreeperMat",
+          "material": "CreeperMat"
+        }
+      ]
+    },
+    "ghast": {
+      "file": "ghast.png",
+      "parts": [
+        {
+          "mesh": "6524289948122469205_GhastMat",
+          "material": "GhastMat"
+        }
+      ]
+    },
+    "piglin": {
+      "file": "piglin.png",
+      "parts": [
+        {
+          "mesh": "-8359808681600209479_PiglinMat",
+          "material": "PiglinMat"
+        }
+      ]
+    },
+    "piglin_brute": {
+      "file": "piglin_brute.png",
+      "parts": [
+        {
+          "mesh": "-8359808681600209479_PiglinBruteMat",
+          "material": "PiglinBruteMat"
+        }
+      ]
+    },
+    "zombified_piglin": {
+      "file": "zombified_piglin.png",
+      "parts": [
+        {
+          "mesh": "-8359808681600209479_ZombifiedPiglinMat",
+          "material": "ZombifiedPiglinMat"
+        }
+      ]
+    },
+    "hoglin": {
+      "file": "hoglin.png",
+      "parts": [
+        {
+          "mesh": "-6275539692992074580_HoglingMat",
+          "material": "HoglingMat"
+        }
+      ]
+    },
+    "zoglin": {
+      "file": "zoglin.png",
+      "parts": [
+        {
+          "mesh": "-6275539692992074580_ZoglingMat",
+          "material": "ZoglingMat"
+        }
+      ]
+    },
+    "chicken": {
+      "file": "chicken.png",
+      "parts": [
+        {
+          "mesh": "5288338659073679570_ChickenMat",
+          "material": "ChickenMat"
+        }
+      ]
+    },
+    "rabbit": {
+      "file": "rabbit.png",
+      "parts": [
+        {
+          "mesh": "-5014558633809941907_RabbitBrownMat",
+          "material": "RabbitBrownMat"
+        }
+      ]
+    }
+  }
+}

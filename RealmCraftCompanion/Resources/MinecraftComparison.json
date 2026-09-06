@@ -1,0 +1,494 @@
+[
+  {
+    "id": "building",
+    "category": "blocks",
+    "status": "included",
+    "title": {
+      "de": "Bauen & Grundmaterialien",
+      "en": "Building & basic materials"
+    },
+    "realmcraft": {
+      "de": "Abbauen, Bauen und Crafting sind enthalten; Creative bietet Baumaterialien ohne Survival-Beschaffung.",
+      "en": "Mining, building and crafting are included; Creative provides building materials without Survival gathering."
+    },
+    "minecraft": {
+      "de": "Blöcke wie Stein, Holz und Erde bilden die Welt; Survival und Creative sind enthalten.",
+      "en": "Blocks such as stone, wood and dirt form the world; Survival and Creative are included."
+    },
+    "difference": {
+      "de": "Der VR-Modus Architect ergänzt Bauwerkzeuge. Ein Block im Creative-Inventar belegt noch kein Survival-Rezept und keine vollständige Funktion.",
+      "en": "VR’s Architect mode adds building tools. A block in the Creative inventory does not establish a Survival recipe or complete functionality."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Blocks",
+    "minecraftWiki": "https://minecraft.wiki/w/Block",
+    "version": "VR: Creative / Survival; Architect 0.8",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Quelle / source",
+        "url": "https://store.steampowered.com/app/2943620/Realmcraft_VR/"
+      },
+      {
+        "title": "RealmCraft VR · 0.8 · 2025-07-30",
+        "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/how-minecraft"
+      }
+    ]
+  },
+  {
+    "id": "bamboo",
+    "category": "blocks",
+    "status": "included",
+    "title": {
+      "de": "Bambus & Baustoffe",
+      "en": "Bamboo & building materials"
+    },
+    "realmcraft": {
+      "de": "Bambusblock, entrindeter Bambusblock und Bambusbretter sind seit 0.9.72 dokumentiert.",
+      "en": "Bamboo blocks, stripped bamboo blocks and bamboo planks are documented since 0.9.72."
+    },
+    "minecraft": {
+      "de": "Bambus lässt sich ebenfalls zu Blöcken und Brettern verarbeiten.",
+      "en": "Bamboo can also be crafted into blocks and planks."
+    },
+    "difference": {
+      "de": "Ähnliche Materialien bedeuten keine identische Auswahl aller Treppen, Stufen oder Rezepte. Prüfe die konkrete Variante im Spiel.",
+      "en": "Similar materials do not imply identical stair, slab or recipe coverage. Check the specific variant in the game."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Blocks",
+    "minecraftWiki": "https://minecraft.wiki/w/Block_of_Bamboo",
+    "version": "VR 0.9.72 · 2025-10-24",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/block-month--bamboo"
+      }
+    ]
+  },
+  {
+    "id": "interactive",
+    "category": "blocks",
+    "status": "included",
+    "title": {
+      "de": "Nutzbare Blöcke",
+      "en": "Functional blocks"
+    },
+    "realmcraft": {
+      "de": "Glocke, interaktive Schilder, Rahmen und Komposter: 1.0.1. Nutzbare Bienenstöcke und Bienennester: 1.0.2.",
+      "en": "Bell, interactive signs, item frames and composters: 1.0.1. Usable beehives and bee nests: 1.0.2."
+    },
+    "minecraft": {
+      "de": "Diese Blöcke sind ebenfalls enthalten: Dekoration, Gegenstandsanzeige, Kompostierung und Bienenhaltung.",
+      "en": "These blocks are also included for decoration, item display, composting and beekeeping."
+    },
+    "difference": {
+      "de": "In RealmCraft wurden einige vorhandene Blöcke erst später interaktiv. Sichtbar oder platzierbar ist daher nicht gleich funktional.",
+      "en": "Some existing RealmCraft blocks became interactive in later updates. Visible or placeable does not necessarily mean functional."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Blocks",
+    "minecraftWiki": "https://minecraft.wiki/w/Block",
+    "version": "VR 1.0.1 / 1.0.2",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+        "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+      },
+      {
+        "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+        "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+      }
+    ]
+  },
+  {
+    "id": "tools",
+    "category": "items",
+    "status": "included",
+    "title": {
+      "de": "Werkzeuge & Gegenstände",
+      "en": "Tools & items"
+    },
+    "realmcraft": {
+      "de": "Schere und Tonklumpen: 0.8. Schild: 0.9.95. Schildkröten-Hornschild und Schildkrötenpanzer: 1.0.0.",
+      "en": "Shears and clay balls: 0.8. Shield: 0.9.95. Turtle scute and turtle shell: 1.0.0."
+    },
+    "minecraft": {
+      "de": "Scheren, Ton, Schilde und Schildkrötenpanzer gehören ebenfalls zum Spiel.",
+      "en": "Shears, clay, shields and turtle shells are also part of the game."
+    },
+    "difference": {
+      "de": "Die gemeinsame Bezeichnung garantiert weder dieselbe Haltbarkeit noch dieselben Rezepte. Minecraft-Rezepte als Orientierung verwenden und in VR prüfen.",
+      "en": "Shared names guarantee neither identical durability nor recipes. Use Minecraft recipes as a reference and verify them in VR."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Item",
+    "minecraftWiki": "https://minecraft.wiki/w/Item",
+    "version": "VR 0.8 / 0.9.95 / 1.0.0",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 0.8 · 2025-07-30",
+        "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+      },
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      },
+      {
+        "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+        "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+      }
+    ]
+  },
+  {
+    "id": "enchanting",
+    "category": "mechanics",
+    "status": "included",
+    "title": {
+      "de": "Verzauberungen & Kampf",
+      "en": "Enchanting & combat"
+    },
+    "realmcraft": {
+      "de": "Verzaubern am Zaubertisch und per Buch am Amboss ist seit 1.0.1 enthalten. Schnelle Folgeangriffe verursachen weniger Schaden.",
+      "en": "Enchanting at a table and with books at an anvil is included since 1.0.1. Rapid consecutive attacks deal less damage."
+    },
+    "minecraft": {
+      "de": "Zaubertisch, Amboss und verzauberte Bücher sind enthalten. Java nutzt einen Angriffs-Cooldown; Bedrock hat andere Kampfregeln.",
+      "en": "Enchanting tables, anvils and enchanted books are included. Java uses an attack cooldown; Bedrock has different combat rules."
+    },
+    "difference": {
+      "de": "Kampfwerte und verfügbare Verzauberungen nicht pauschal übertragen. VR 1.0.3 deaktiviert den Schild nach einem geblockten Axtangriff für fünf Sekunden.",
+      "en": "Do not assume identical combat stats or enchantment coverage. VR 1.0.3 disables a shield for five seconds after blocking an axe attack."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Item",
+    "minecraftWiki": "https://minecraft.wiki/w/Enchanting",
+    "version": "VR 1.0.1 / 1.0.3",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+        "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+      },
+      {
+        "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+        "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+      }
+    ]
+  },
+  {
+    "id": "animals",
+    "category": "mobs",
+    "status": "included",
+    "title": {
+      "de": "Tiere & Zähmen",
+      "en": "Animals & taming"
+    },
+    "realmcraft": {
+      "de": "Panda und Papagei sind belegt; Wölfe ab 0.9.95. Seit 1.0.0 sind auch Papageien und Lamas zähmbar.",
+      "en": "Pandas and parrots are documented; wolves since 0.9.95. Parrots and llamas can also be tamed since 1.0.0."
+    },
+    "minecraft": {
+      "de": "Pandas, Papageien, Wölfe und Lamas sind enthalten. Nicht jede Tierart lässt sich zähmen.",
+      "en": "Pandas, parrots, wolves and llamas are included. Not every animal species can be tamed."
+    },
+    "difference": {
+      "de": "Der alte Hinweis „nur Wölfe zähmbar“ gilt nicht mehr allgemein. Spawnregeln, Zucht und Verhalten müssen je Tier getrennt geprüft werden.",
+      "en": "The old “only wolves can be tamed” note is no longer generally valid. Check spawning, breeding and behavior separately for each animal."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Entities",
+    "minecraftWiki": "https://minecraft.wiki/w/Mob",
+    "version": "VR 0.8 / 0.9.95 / 1.0.0",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+        "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+      },
+      {
+        "title": "RealmCraft VR · 0.8 · 2025-07-30",
+        "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+      },
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/panda"
+      }
+    ]
+  },
+  {
+    "id": "bees",
+    "category": "mobs",
+    "status": "included",
+    "title": {
+      "de": "Katzen & Bienen",
+      "en": "Cats & bees"
+    },
+    "realmcraft": {
+      "de": "Seit 1.0.2: Katzen mit rohem Fisch zähmen; sie vertreiben Creeper. Bienen bestäuben Pflanzen; Waben lassen sich ernten.",
+      "en": "Since 1.0.2: tame cats with raw fish; they repel creepers. Bees pollinate plants; honeycombs can be harvested."
+    },
+    "minecraft": {
+      "de": "Katzen und Bienen sowie Bienenstöcke, Bienennester und Honigwaben sind ebenfalls enthalten.",
+      "en": "Cats and bees, as well as beehives, bee nests and honeycombs, are also included."
+    },
+    "difference": {
+      "de": "Diese Inhalte sind bereits veröffentlicht. Gleiche Tierarten belegen keine identischen Spawnraten oder Farm-Erträge.",
+      "en": "These features have already shipped. Matching species do not establish identical spawn rates or farm yields."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Entities",
+    "minecraftWiki": "https://minecraft.wiki/w/Bee",
+    "version": "VR 1.0.2 · 2026-07-03",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+        "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+      }
+    ]
+  },
+  {
+    "id": "villagers",
+    "category": "mobs",
+    "status": "included",
+    "title": {
+      "de": "Dorfbewohner & Handel",
+      "en": "Villagers & trading"
+    },
+    "realmcraft": {
+      "de": "Dorfbewohner: 1.0.0. Eisengolem: 1.0.1. Handel mit Smaragden und Berufsaufstieg: 1.0.2.",
+      "en": "Villagers: 1.0.0. Iron golem: 1.0.1. Emerald trading and profession progression: 1.0.2."
+    },
+    "minecraft": {
+      "de": "Dorfbewohner handeln mit Smaragden; Berufe, Handelsstufen und Eisengolems sind enthalten.",
+      "en": "Villagers trade using emeralds; professions, trade levels and iron golems are included."
+    },
+    "difference": {
+      "de": "Minecraft-Handelstabellen, Rabatte und Eisenfarm-Anleitungen sind keine bestätigten RealmCraft-Regeln. Angebote und Golem-Verhalten direkt in VR prüfen.",
+      "en": "Minecraft trade tables, discounts and iron farm tutorials are not confirmed RealmCraft rules. Check offers and golem behavior in VR."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Village",
+    "minecraftWiki": "https://minecraft.wiki/w/Trading",
+    "version": "VR 1.0.0–1.0.2",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+        "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+      },
+      {
+        "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+        "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+      },
+      {
+        "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+        "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/taking-inventory--emerald"
+      }
+    ]
+  },
+  {
+    "id": "nethermobs",
+    "category": "mobs",
+    "status": "included",
+    "title": {
+      "de": "Nether-Mobs",
+      "en": "Nether mobs"
+    },
+    "realmcraft": {
+      "de": "1.0.3 ergänzt Piglin-Barbar, Zoglin und zombifizierten Piglin; Piglins und Hoglins erhalten erweiterte KI einschließlich Goldreaktionen und Tauschhandel.",
+      "en": "1.0.3 adds piglin brutes, zoglins and zombified piglins; piglins and hoglins gain expanded AI including gold reactions and bartering."
+    },
+    "minecraft": {
+      "de": "Diese Mob-Arten und Piglin-Tauschhandel sind ebenfalls enthalten.",
+      "en": "These mob types and piglin bartering are also included."
+    },
+    "difference": {
+      "de": "Die Update-Meldung bestätigt die genannten Arten, keine vollständige Minecraft-Mob-Liste. Beutetabellen und Verhaltensdetails können abweichen.",
+      "en": "The update confirms these species, not the complete Minecraft mob roster. Loot tables and behavior details may differ."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Entities",
+    "minecraftWiki": "https://minecraft.wiki/w/Piglin",
+    "version": "VR 1.0.3 · 2026-08-20",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+        "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/minecraft-changelog-1-17-0-50"
+      }
+    ]
+  },
+  {
+    "id": "redstone",
+    "category": "mechanics",
+    "status": "partial",
+    "title": {
+      "de": "Redstone & Automatisierung",
+      "en": "Redstone & automation"
+    },
+    "realmcraft": {
+      "de": "Erste Redstone-Komponenten: 0.9.72. Spender und Werfer: 0.9.90.",
+      "en": "Initial redstone components: 0.9.72. Dispensers and droppers: 0.9.90."
+    },
+    "minecraft": {
+      "de": "Redstone steuert Schaltungen; der Crafter automatisiert Herstellung. Java und Bedrock unterscheiden sich in Schaltungsdetails.",
+      "en": "Redstone controls circuits; the crafter automates crafting. Java and Bedrock differ in circuit details."
+    },
+    "difference": {
+      "de": "Grundumfang bestätigt, vollständige Gleichheit nicht. Crafter und konkrete Minecraft-Schaltungen sind für VR hier nicht bestätigt; vor einem Großbau klein testen.",
+      "en": "A basic set is confirmed, full parity is not. Crafter support and specific Minecraft circuits are not confirmed here for VR; test a small build first."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Blocks",
+    "minecraftWiki": "https://minecraft.wiki/w/Redstone_circuits",
+    "version": "VR 0.9.72 / 0.9.90",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/crafting-crafter"
+      }
+    ]
+  },
+  {
+    "id": "travel",
+    "category": "mechanics",
+    "status": "included",
+    "title": {
+      "de": "Transport & Angeln",
+      "en": "Transport & fishing"
+    },
+    "realmcraft": {
+      "de": "Loren, Truhenboote und Bambusflöße: 0.9.72. Angeln per Taste oder Handbewegung: 0.9.80/0.9.85.",
+      "en": "Minecarts, chest boats and bamboo rafts: 0.9.72. Fishing by trigger or hand movement: 0.9.80/0.9.85."
+    },
+    "minecraft": {
+      "de": "Loren, Boote, Bambusflöße und Angeln sind enthalten.",
+      "en": "Minecarts, boats, bamboo rafts and fishing are included."
+    },
+    "difference": {
+      "de": "VR ergänzt körperliche Interaktion. Eine Angel war schon vor der Angelmechanik vorhanden; Item-Kataloge allein belegen daher keine Nutzbarkeit.",
+      "en": "VR adds physical interaction. The fishing rod existed before fishing worked; item catalogs alone therefore do not establish functionality."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Item",
+    "minecraftWiki": "https://minecraft.wiki/w/Transportation",
+    "version": "VR 0.9.72 / 0.9.80 / 0.9.85",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      }
+    ]
+  },
+  {
+    "id": "dimensions",
+    "category": "world",
+    "status": "partial",
+    "title": {
+      "de": "Dimensionen & Endgame",
+      "en": "Dimensions & endgame"
+    },
+    "realmcraft": {
+      "de": "Oberwelt und Nether sind dokumentiert. Das offizielle Promo vom 4. Juni 2025 zeigt bereits das Nether-Update.",
+      "en": "Overworld and Nether are documented. The official promo from June 4, 2025 already includes the Nether update."
+    },
+    "minecraft": {
+      "de": "Oberwelt, Nether und Ende sind enthalten; der Enderdrache gehört zum Ende.",
+      "en": "Overworld, Nether and the End are included; the Ender dragon belongs to the End."
+    },
+    "difference": {
+      "de": "Für Ende, Enderdrachen und Elytra liegt in den hier geprüften VR-Updates kein belastbarer Verfügbarkeitsnachweis vor. Das bedeutet „nicht bestätigt“, nicht „sicher nicht vorhanden“.",
+      "en": "The VR updates checked here do not establish availability of the End, Ender dragon or elytra. This means “unconfirmed”, not “definitely absent”."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki",
+    "minecraftWiki": "https://minecraft.wiki/w/Dimension",
+    "version": "VR: Nether 2025; Prüfung / review 2026-09-05",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Quelle / source",
+        "url": "https://www.youtube.com/watch?v=YoYweTA26Go"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/health-minecraft"
+      }
+    ]
+  },
+  {
+    "id": "structures",
+    "category": "world",
+    "status": "included",
+    "title": {
+      "de": "Bauwerke & Biome",
+      "en": "Structures & biomes"
+    },
+    "realmcraft": {
+      "de": "Schiffswracks, Zombiedörfer, Eiszapfen-Biom: 0.9.90. Waldanwesen: 1.0.0.",
+      "en": "Shipwrecks, zombie villages and ice spikes biome: 0.9.90. Woodland mansions: 1.0.0."
+    },
+    "minecraft": {
+      "de": "Diese Bauwerke und Landschaftstypen sind ebenfalls enthalten.",
+      "en": "These structures and landscapes are also included."
+    },
+    "difference": {
+      "de": "Gleiche Namen bedeuten keine gleiche Weltgenerierung: Seeds, Koordinaten, Häufigkeiten und Beutekisten nicht zwischen Spielen übertragen.",
+      "en": "Shared names do not imply identical world generation: do not transfer seeds, coordinates, frequencies or chest loot between games."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/Village",
+    "minecraftWiki": "https://minecraft.wiki/w/Structure",
+    "version": "VR 0.9.90 / 1.0.0",
+    "sources": [
+      {
+        "title": "RealmCraft VR · Update Log",
+        "url": "https://steamcommunity.com/app/2943620/allnews/"
+      },
+      {
+        "title": "Minecraft · Mojang",
+        "url": "https://www.minecraft.net/en-us/article/meet-nitwit"
+      }
+    ]
+  },
+  {
+    "id": "sharing",
+    "category": "mechanics",
+    "status": "partial",
+    "title": {
+      "de": "Welten teilen & Multiplayer",
+      "en": "World sharing & multiplayer"
+    },
+    "realmcraft": {
+      "de": "World Sharing seit 1.0.0: Andere laden eine geteilte Welt herunter und erkunden sie lokal.",
+      "en": "World Sharing since 1.0.0: others download a shared world and explore it locally."
+    },
+    "minecraft": {
+      "de": "Minecraft bietet gemeinsames Spielen über Mehrspielerwelten und Server.",
+      "en": "Minecraft supports playing together through multiplayer worlds and servers."
+    },
+    "difference": {
+      "de": "Welten teilen ist kein Beleg für gleichzeitigen Multiplayer. Auch geteilte Welten sind dadurch nicht mit Minecraft-Spielständen kompatibel.",
+      "en": "Sharing worlds does not establish simultaneous multiplayer. Shared worlds do not thereby become compatible with Minecraft saves."
+    },
+    "realmcraftWiki": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki",
+    "minecraftWiki": "https://minecraft.wiki/w/Multiplayer",
+    "version": "VR 1.0.0 · 2026-04-06",
+    "sources": [
+      {
+        "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+        "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+      },
+      {
+        "title": "Minecraft · Multiplayer (Mojang)",
+        "url": "https://www.minecraft.net/en-us/article/how-play-minecraft-server"
+      }
+    ]
+  }
+]

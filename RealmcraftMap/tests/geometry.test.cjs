@@ -1,0 +1,12 @@
+const assert = require('node:assert/strict');
+const {chunkOrigin,worldAt,zoomAt}=require('../realmcraft_map/web/geometry.js');
+assert.equal(chunkOrigin(-1),-16);
+assert.equal(chunkOrigin(-16),-16);
+assert.equal(chunkOrigin(-17),-32);
+assert.equal(chunkOrigin(15),0);
+const view={x:-100,z:200,zoom:2},before=worldAt(230,170,view,1000,700);
+const next=zoomAt(230,170,3,view,1000,700),after=worldAt(230,170,next,1000,700);
+assert.ok(Math.abs(before.x-after.x)<1e-9);
+assert.ok(Math.abs(before.z-after.z)<1e-9);
+assert.equal(zoomAt(0,0,1e9,view,1000,700).zoom,32);
+console.log('Geometry: negative coordinates, zoom anchoring and limits passed.');

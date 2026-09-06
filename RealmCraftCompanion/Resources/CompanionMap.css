@@ -1,0 +1,42 @@
+/* Native Companion skin. Injected into existing and newly generated maps. */
+:root[data-companion] {font-size:14px;--radius:10px}
+:root[data-companion="block"] {color-scheme:dark;color:#e4e9df;--muted:#acb8a6;--border:#455240;--accent:#a8cf6e;--paper:#1f2621;--control:#29322b;--radius:3px}
+:root[data-companion="classic"][data-appearance="dark"] {color-scheme:dark;color:#e1e8e8;--muted:#a6b5b5;--border:#3b4849;--accent:#65c6c4;--paper:#202728;--control:#2c3536}
+:root[data-companion] #sidebar {width:260px;box-shadow:none;border-right:1px solid var(--border)}
+:root[data-companion] header {padding:16px 18px}
+:root[data-companion] header p {display:none}
+:root[data-companion] h1 {font-size:17px;letter-spacing:0}
+:root[data-companion] .brand-icon {font-size:24px}
+:root[data-companion] .world,:root[data-companion] section,:root[data-companion] footer {padding:14px 18px}
+:root[data-companion] select,:root[data-companion] button,:root[data-companion] input,:root[data-companion] .segmented,:root[data-companion] #selection,:root[data-companion] .map-tools,:root[data-companion] .pill {border-radius:var(--radius)}
+:root[data-companion] select {padding:8px}
+:root[data-companion] .map-tools {right:16px;top:78px}
+:root[data-companion] .map-top {left:16px;right:16px;top:16px}
+:root[data-companion] .biome-pill {left:16px;top:60px}
+:root[data-companion] .pill {padding:8px 10px}
+:root[data-companion] #selection {max-height:calc(100% - 170px);overflow-y:auto}
+:root[data-companion="block"] select,:root[data-appearance="dark"][data-companion] select,
+:root[data-companion="block"] input,:root[data-appearance="dark"][data-companion] input,
+:root[data-companion="block"] .coords-input label,:root[data-appearance="dark"][data-companion] .coords-input label,
+:root[data-companion="block"] .level-steps button,:root[data-appearance="dark"][data-companion] .level-steps button,
+:root[data-companion="block"] .poi-nav button,:root[data-appearance="dark"][data-companion] .poi-nav button,
+:root[data-companion="block"] .map-tools,:root[data-appearance="dark"][data-companion] .map-tools,
+:root[data-companion="block"] .segmented,:root[data-appearance="dark"][data-companion] .segmented,
+:root[data-companion="block"] footer,:root[data-appearance="dark"][data-companion] footer,
+:root[data-companion="block"] #poi-detail,:root[data-appearance="dark"][data-companion] #poi-detail {background:var(--control);color:inherit;border-color:var(--border)}
+:root[data-companion="block"] .segmented button,:root[data-appearance="dark"][data-companion] .segmented button {color:var(--muted)}
+:root[data-companion="block"] .segmented button.active,:root[data-appearance="dark"][data-companion] .segmented button.active {background:var(--accent);color:#132018}
+:root[data-companion="block"] .badge,:root[data-appearance="dark"][data-companion] .badge {background:var(--control);color:var(--accent)}
+:root[data-companion="block"] .legend,:root[data-appearance="dark"][data-companion] .legend,
+:root[data-companion="block"] #selection .mono,:root[data-appearance="dark"][data-companion] #selection .mono {color:var(--muted)}
+:root[data-companion="block"] #map-area {background-color:#141c17;background-image:linear-gradient(#22302655 1px,transparent 1px),linear-gradient(90deg,#22302655 1px,transparent 1px);background-size:24px 24px;background-position:0 0}
+:root[data-companion="block"] .map-tools button:hover,:root[data-appearance="dark"][data-companion] .map-tools button:hover {background:var(--border)}
+
+/* Keep the embedded map focused on the world, with direct numeric level input. */
+:root[data-companion] #sidebar {width:220px}
+:root[data-companion] #sidebar header,:root[data-companion] .level-steps {display:none}
+:root[data-companion] .world {padding-top:18px}
+
+:root[data-companion] .ownership-toolbar{left:16px;top:98px}
+:root[data-companion] #ownership-panel{left:16px;bottom:66px;background:var(--control);color:inherit;border-color:var(--border)}
+:root[data-companion] #ownership-panel .muted{color:var(--muted)}

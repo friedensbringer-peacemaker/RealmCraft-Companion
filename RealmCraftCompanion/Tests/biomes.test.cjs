@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const context={window:{}};vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../Resources/MapEngine/realmcraft_map/web/biomes.js'),'utf8'),context);const biomes=context.window.AtlasBiomes;
+const data={dimensions:{o:{biomes:{'-32,0':Array.from({length:16},(_,i)=>i)}}},biomeNames:{4:{en:'Forest',de:'Wald'}}};
+test('X-major four-block grid including negative world coordinates',()=>{assert.equal(biomes.lookup(data,'o',-28,0).id,4);assert.equal(biomes.lookup(data,'o',-32,4).id,1);assert.equal(biomes.lookup(data,'o',-17,15).id,15);assert.equal(biomes.lookup(data,'o',-16,0),null);});
+test('bilingual labels, unknown IDs and missing data remain explicit',()=>{assert.match(biomes.label(data,'o',-28,0,true),/Forest/);assert.match(biomes.label(data,'o',-28,0,false),/Wald/);assert.match(biomes.label(data,'o',-32,4,true),/Unknown/);assert.match(biomes.label(data,'n',0,0,true),/no data/);});

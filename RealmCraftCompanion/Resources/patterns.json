@@ -1,0 +1,13 @@
+[
+{"de":"Gesichert und geprüft · {0} Dateien.","en":"Backed up and verified · {0} files."},
+{"de":"Importiert · {0} Dateien geprüft.","en":"Imported · {0} files verified."},
+{"de":"ZIP exportiert: {0}","en":"ZIP exported: {0}"},
+{"de":"Quest und RealmCraft erkannt · {0} Welt(en) verfügbar.","en":"Quest and RealmCraft detected · {0} world(s) available."},
+{"de":"Dateien prüfen · {0} …","en":"Checking files · {0} …"},
+{"de":"Library kopieren: {0} …","en":"Copying library: {0} …"},
+{"de":"Programm konnte nicht gestartet werden: {0}\n{1}","en":"Could not start program: {0}\n{1}"},
+{"de":"Spielstatus konnte nicht sicher geprüft werden: {0}","en":"The game state could not be verified safely: {0}"},
+{"de":"Kein vollständiges RealmCraft-Savegame: world_data oder player_data fehlt. Gefunden: {0}","en":"Incomplete RealmCraft savegame: world_data or player_data is missing. Found: {0}"},
+{"de":"Aktivierung konnte nicht abschließend bestätigt werden. RealmCraft vorerst geschlossen lassen. Die automatische Sicherung ist in der Library; eine vorherige Quest-Kopie bleibt unter {0}.\n{1}","en":"Activation could not be confirmed. Keep RealmCraft closed. The automatic backup is in the library; a previous Quest copy remains at {0}.\n{1}"},
+{"de":"Quest verbunden · {0} Welt(en) gefunden.","en":"Quest connected · {0} world(s) found."}
+]

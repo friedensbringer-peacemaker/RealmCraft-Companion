@@ -1,0 +1,95 @@
+"""Inspect Git-selected files before publication; never print matched private content."""
+import argparse
+from pathlib import PurePosixPath
+import re
+import struct
+import subprocess
+import sys
+
+DENIED_PARTS = {'backups', 'restore-candidates', 'AI-Exports', '.objects', '.env', '.cache', '__pycache__'}
+DENIED_NAMES = {'player_data', 'world_data', 'screenshot.jpg', 'poiOverworld', 'poiTheNether'}
+TEXT_EXTENSIONS = {'.swift', '.py', '.md', '.txt', '.json', '.strings', '.rtf', '.js', '.cjs', '.html', '.css', '.sh', '.toml', '.command', '.tsv', '.obj', '.yml', '.yaml'}
+TEXT_NAMES = {'LICENSE', '.gitignore', '.gitattributes'}
+PATTERNS = {
+    'personal local path': re.compile(r'/(?:Users|home)/[\w.-]+/|[A-Za-z]:\\Users\\[\w.-]+\\'),
+    'private key': re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
+    'credential': re.compile(r'gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-proj-[A-Za-z0-9_-]{20,}'),
+    'personal email': re.compile(r'[A-Za-z0-9._%+-]+@(?:gmail|icloud|gmx|hotmail|outlook|yahoo)\.[A-Za-z]+', re.I),
+}
+
+def inspect(path, data, mode='100644'):
+    p = PurePosixPath(path)
+    errors = []
+    if mode not in {'100644', '100755'}: errors.append('symlink or unsupported Git mode')
+    if set(p.parts) & DENIED_PARTS or p.name in DENIED_NAMES or re.fullmatch(r'[on]\.-?\d+,-?\d+', p.name):
+        errors.append('private or generated data path')
+    if len(data) >= 50*1024*1024: errors.append('oversized file requires separate review')
+    if p.suffix == '.png':
+        if not {'MobImages', 'PlayerSkins'}.intersection(p.parts): errors.append('unapproved image location')
+        if not data.startswith(b'\x89PNG\r\n\x1a\n'): return errors + ['invalid PNG']
+        offset = 8
+        try:
+            ended = False
+            while offset < len(data):
+                length = struct.unpack('>I', data[offset:offset+4])[0]
+                kind = data[offset+4:offset+8]
+                offset += length + 12
+                if offset > len(data): raise ValueError()
+                if kind in {b'tEXt', b'zTXt', b'iTXt', b'eXIf', b'tIME'}: errors.append('image metadata requires review')
+                if kind == b'IEND':
+                    ended = True
+                    if offset != len(data): errors.append('trailing PNG data')
+                    break
+            if not ended: errors.append('missing PNG end')
+        except (ValueError, struct.error): errors.append('malformed PNG')
+    elif p.suffix in TEXT_EXTENSIONS or p.name in TEXT_NAMES:
+        try: text = data.decode('utf-8')
+        except UnicodeDecodeError: return errors + ['non-UTF-8 text requires review']
+        for label, pattern in PATTERNS.items():
+            if pattern.search(text): errors.append(label)
+    else: errors.append('unapproved file type; archives and binary data are not allowed')
+    return errors
+
+def git(*args):
+    return subprocess.check_output(['git', *args])
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--staged', action='store_true', help='Read index bytes instead of working-tree bytes')
+    args = parser.parse_args()
+    records = git('ls-files', '--stage', '-z').split(b'\0')
+    blobs = {}
+    if args.staged:
+        ids = [record.split(b'\t', 1)[0].split()[1] for record in records if record]
+        packed = subprocess.check_output(['git', 'cat-file', '--batch'], input=b'\n'.join(ids)+b'\n')
+        offset = 0
+        for oid in ids:
+            end = packed.index(b'\n', offset)
+            header = packed[offset:end].split()
+            if len(header) != 3 or header[1] != b'blob': raise ValueError('Unexpected Git object')
+            size = int(header[2]); offset = end + 1
+            blobs[oid.decode()] = packed[offset:offset+size]
+            offset += size + 1
+    failures = 0; count = 0
+    for record in records:
+        if not record: continue
+        header, path_bytes = record.split(b'\t', 1)
+        mode, oid, stage = header.decode().split()
+        path = path_bytes.decode('utf-8')
+        if stage != '0':
+            print(f'{path}: unresolved merge'); failures += 1; continue
+        if args.staged:
+            data = blobs[oid]
+        else:
+            from pathlib import Path
+            if Path(path).is_symlink():
+                print(f'{path}: symlink'); failures += 1; continue
+            data = Path(path).read_bytes()
+        errors = inspect(path, data, mode)
+        if errors: print(f'{path}: {", ".join(errors)}'); failures += 1
+        count += 1
+    if not count: print('No Git-selected files to check.'); return 1
+    print(f'Publication check: {count} files, {failures} failures. Manual content review is still required.')
+    return bool(failures)
+
+if __name__ == '__main__': sys.exit(main())

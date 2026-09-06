@@ -1,0 +1,246 @@
+{
+  "0": {
+    "en": "Ocean",
+    "de": "Ozean"
+  },
+  "1": {
+    "en": "Plains",
+    "de": "Ebene"
+  },
+  "2": {
+    "en": "Desert",
+    "de": "Wüste"
+  },
+  "3": {
+    "en": "Windswept Hills",
+    "de": "Zerklüftete Hügel"
+  },
+  "4": {
+    "en": "Forest",
+    "de": "Wald"
+  },
+  "5": {
+    "en": "Taiga",
+    "de": "Taiga"
+  },
+  "6": {
+    "en": "Swamp",
+    "de": "Sumpf"
+  },
+  "7": {
+    "en": "River",
+    "de": "Fluss"
+  },
+  "8": {
+    "en": "Nether Wastes",
+    "de": "Nether-Ödland"
+  },
+  "9": {
+    "en": "The End",
+    "de": "Das Ende"
+  },
+  "10": {
+    "en": "Frozen Ocean",
+    "de": "Gefrorener Ozean"
+  },
+  "11": {
+    "en": "Frozen River",
+    "de": "Gefrorener Fluss"
+  },
+  "12": {
+    "en": "Snowy Plains",
+    "de": "Verschneite Ebene"
+  },
+  "13": {
+    "en": "Mushroom Fields",
+    "de": "Pilzland"
+  },
+  "14": {
+    "en": "Beach",
+    "de": "Strand"
+  },
+  "15": {
+    "en": "Jungle",
+    "de": "Dschungel"
+  },
+  "16": {
+    "en": "Sparse Jungle",
+    "de": "Lichter Dschungel"
+  },
+  "17": {
+    "en": "Deep Ocean",
+    "de": "Tiefer Ozean"
+  },
+  "18": {
+    "en": "Stony Shore",
+    "de": "Felsküste"
+  },
+  "19": {
+    "en": "Snowy Beach",
+    "de": "Verschneiter Strand"
+  },
+  "20": {
+    "en": "Birch Forest",
+    "de": "Birkenwald"
+  },
+  "21": {
+    "en": "Dark Forest",
+    "de": "Dunkler Wald"
+  },
+  "22": {
+    "en": "Snowy Taiga",
+    "de": "Verschneite Taiga"
+  },
+  "23": {
+    "en": "Old Growth Pine Taiga",
+    "de": "Riesenbaumtaiga"
+  },
+  "24": {
+    "en": "Windswept Forest",
+    "de": "Zerklüfteter Wald"
+  },
+  "25": {
+    "en": "Savanna",
+    "de": "Savanne"
+  },
+  "26": {
+    "en": "Savanna Plateau",
+    "de": "Savannenplateau"
+  },
+  "27": {
+    "en": "Badlands",
+    "de": "Tafelberge"
+  },
+  "28": {
+    "en": "Wooded Badlands",
+    "de": "Bewaldete Tafelberge"
+  },
+  "29": {
+    "en": "Small End Islands",
+    "de": "Kleine Endinseln"
+  },
+  "30": {
+    "en": "End Midlands",
+    "de": "End-Mittelland"
+  },
+  "31": {
+    "en": "End Highlands",
+    "de": "End-Hochland"
+  },
+  "32": {
+    "en": "End Barrens",
+    "de": "End-Kargland"
+  },
+  "33": {
+    "en": "Warm Ocean",
+    "de": "Warmer Ozean"
+  },
+  "34": {
+    "en": "Lukewarm Ocean",
+    "de": "Lauwarmer Ozean"
+  },
+  "35": {
+    "en": "Cold Ocean",
+    "de": "Kalter Ozean"
+  },
+  "36": {
+    "en": "Deep Lukewarm Ocean",
+    "de": "Tiefer lauwarmer Ozean"
+  },
+  "37": {
+    "en": "Deep Cold Ocean",
+    "de": "Tiefer kalter Ozean"
+  },
+  "38": {
+    "en": "Deep Frozen Ocean",
+    "de": "Tiefer gefrorener Ozean"
+  },
+  "39": {
+    "en": "The Void",
+    "de": "Die Leere"
+  },
+  "40": {
+    "en": "Sunflower Plains",
+    "de": "Sonnenblumenebene"
+  },
+  "41": {
+    "en": "Windswept Gravelly Hills",
+    "de": "Zerklüftete Geröllhügel"
+  },
+  "42": {
+    "en": "Flower Forest",
+    "de": "Blumenwald"
+  },
+  "43": {
+    "en": "Ice Spikes",
+    "de": "Eiszapfen"
+  },
+  "44": {
+    "en": "Old Growth Birch Forest",
+    "de": "Alter Birkenwald"
+  },
+  "45": {
+    "en": "Old Growth Spruce Taiga",
+    "de": "Alte Fichtentaiga"
+  },
+  "46": {
+    "en": "Windswept Savanna",
+    "de": "Zerklüftete Savanne"
+  },
+  "47": {
+    "en": "Eroded Badlands",
+    "de": "Abgetragene Tafelberge"
+  },
+  "48": {
+    "en": "Bamboo Jungle",
+    "de": "Bambusdschungel"
+  },
+  "49": {
+    "en": "Soul Sand Valley",
+    "de": "Seelensandtal"
+  },
+  "50": {
+    "en": "Crimson Forest",
+    "de": "Karmesinwald"
+  },
+  "51": {
+    "en": "Warped Forest",
+    "de": "Wirrwald"
+  },
+  "52": {
+    "en": "Basalt Deltas",
+    "de": "Basaltdeltas"
+  },
+  "53": {
+    "en": "Dripstone Caves",
+    "de": "Tropfsteinhöhlen"
+  },
+  "54": {
+    "en": "Lush Caves",
+    "de": "Üppige Höhlen"
+  },
+  "55": {
+    "en": "Meadow",
+    "de": "Bergwiese"
+  },
+  "56": {
+    "en": "Grove",
+    "de": "Hain"
+  },
+  "57": {
+    "en": "Snowy Slopes",
+    "de": "Verschneite Hänge"
+  },
+  "58": {
+    "en": "Frozen Peaks",
+    "de": "Vereiste Gipfel"
+  },
+  "59": {
+    "en": "Jagged Peaks",
+    "de": "Zerklüftete Gipfel"
+  },
+  "60": {
+    "en": "Stony Peaks",
+    "de": "Felsige Gipfel"
+  }
+}

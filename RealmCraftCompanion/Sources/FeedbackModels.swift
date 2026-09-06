@@ -1,0 +1,72 @@
+import Foundation
+
+struct FeedbackContext: Codable {
+    let area: String
+    var entryID: String? = nil
+    var entryName: String? = nil
+    var catalogDate: String? = nil
+    var evidenceStatus: String? = nil
+    var sources: [String] = []
+}
+
+struct FeedbackAttachment: Identifiable {
+    let id = UUID()
+    let data: Data
+    let fileExtension: String
+}
+
+struct FeedbackReport: Codable {
+    let schemaVersion: Int
+    let createdAt: String
+    let type: String
+    let summary: String
+    let description: String
+    let stepsToReproduce: String
+    let expectedResult: String
+    let actualResult: String
+    let application: [String: String]
+    let context: FeedbackContext
+    let attachments: [String]
+    let catalogNotice: String?
+
+    // Strict JSON is a valid Hjson document. Encoding keeps multiline text and quotes safe.
+    func document() throws -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+        return String(decoding: try encoder.encode(self), as: UTF8.self)
+    }
+
+    static func attachmentNames(_ attachments: [FeedbackAttachment]) -> [String] {
+        attachments.enumerated().map { "screenshot-\(String(format: "%02d", $0.offset + 1)).\($0.element.fileExtension)" }
+    }
+
+    func writePackage(to directory: URL, images: [FeedbackAttachment]) throws -> [URL] {
+        guard attachments == Self.attachmentNames(images) else { throw CocoaError(.fileWriteInvalidFileName) }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let documentURL = directory.appendingPathComponent("report.hjson")
+        try document().write(to: documentURL, atomically: true, encoding: .utf8)
+        var files = [documentURL]
+        for (name, image) in zip(attachments, images) {
+            guard ["png", "jpg", "jpeg", "heic"].contains(image.fileExtension) else { throw CocoaError(.fileWriteInvalidFileName) }
+            let url = directory.appendingPathComponent(name)
+            try image.data.write(to: url, options: .atomic)
+            files.append(url)
+        }
+        return files
+    }
+
+    func writeArchive(to destination: URL, images: [FeedbackAttachment]) throws {
+        let staging = FileManager.default.temporaryDirectory.appendingPathComponent("RealmCraft-Export-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: staging) }
+        let folder = staging.appendingPathComponent("RealmCraft-Report")
+        _ = try writePackage(to: folder, images: images)
+        let archive = staging.appendingPathComponent("report.zip")
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
+        process.arguments = ["-c", "-k", "--norsrc", "--noextattr", "--keepParent", folder.path, archive.path]
+        try process.run()
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { throw CocoaError(.fileWriteUnknown) }
+        try Data(contentsOf: archive).write(to: destination, options: .atomic)
+    }
+}
