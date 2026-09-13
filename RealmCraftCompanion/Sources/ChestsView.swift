@@ -361,7 +361,7 @@ struct ChestsView: View {
             if chests.index != nil {
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
-                    searchField.padding(16)
+                    CompanionSearchRow { searchField }
                     List(locations, selection: $selected) { group in
                         VStack(alignment: .leading, spacing: 6) {
                             Label(group.members.count == 1 ? (chestName(group.anchor) ?? (english ? "Storage location" : "Lagerort")) : (english ? "Storage location" : "Lagerort"), systemImage: "shippingbox.fill").font(.headline)

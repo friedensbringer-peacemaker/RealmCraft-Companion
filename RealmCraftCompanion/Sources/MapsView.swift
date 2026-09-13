@@ -283,8 +283,10 @@ struct LocalMapWebView: NSViewRepresentable {
         var value: [String: Any] = ["saveID": saveID, "world": world, "portals": [], "plans": []]
         do {
             if let worldFolder {
-                value["portals"] = try PortalReader.read(worldFolder).portals.map { p in
-                    ["id": p.id, "dimension": p.dimension, "x": p.anchor.x, "y": p.anchor.y, "z": p.anchor.z, "bounds": p.bounds, "count": p.blocks.count] as [String: Any]
+                let inventory = try PortalReader.read(worldFolder)
+                let names = (try? PortalLabelStore(url: library.appendingPathComponent(".portal-labels").appendingPathComponent(saveID + ".json")).load(fingerprint: inventory.fingerprint)) ?? [:]
+                value["portals"] = inventory.portals.map { p in
+                    ["id": p.id, "dimension": p.dimension, "x": p.anchor.x, "y": p.anchor.y, "z": p.anchor.z, "bounds": p.bounds, "count": p.blocks.count, "name": names[p.id] ?? ""] as [String: Any]
                 }
             }
         } catch { value["inventoryError"] = english ? "Saved portal inventory unavailable for this snapshot." : "Gespeicherter Portalbestand für diese Sicherung nicht verfügbar." }

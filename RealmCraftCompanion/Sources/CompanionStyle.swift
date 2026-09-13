@@ -5,6 +5,7 @@ enum CompanionLayout {
     static let pageInset: CGFloat = 28
     static let panelInset: CGFloat = 20
     static let headerHeight: CGFloat = 64
+    static let brandHeaderHeight: CGFloat = 74
     static let actionHeight: CGFloat = 32
     static let primaryActionWidth: CGFloat = 180
     static let actionSpacing: CGFloat = 12
@@ -16,6 +17,18 @@ enum CompanionLayout {
     static let detailTitle: Font = .system(size: 20, weight: .semibold)
     static let readingWidth: CGFloat = 760
     static let formLabelWidth: CGFloat = 140
+}
+
+/// Shared vertical rhythm for app-wide and list-scoped search controls.
+struct CompanionSearchRow<Content: View>: View {
+    var horizontalInset: CGFloat = CompanionLayout.panelInset
+    @ViewBuilder var content: () -> Content
+    var body: some View {
+        content()
+            .frame(height: CompanionLayout.actionHeight)
+            .padding(.horizontal, horizontalInset)
+            .padding(.vertical, 12)
+    }
 }
 
 /// Fixed label column across rows; compact panes stack labels above controls.
@@ -268,7 +281,7 @@ struct CompanionPageHeader<Actions: View>: View {
             }
         }
       }.padding(.horizontal, CompanionLayout.pageInset).padding(.vertical, compact ? 8 : 12)
-            .frame(minHeight: CompanionLayout.headerHeight).frame(maxWidth: .infinity)
+            .frame(minHeight: guidance == nil ? CompanionLayout.headerHeight : CompanionLayout.brandHeaderHeight).frame(maxWidth: .infinity)
     }
     private var alignedActions: some View {
         HStack(spacing: CompanionLayout.actionSpacing) { actions }

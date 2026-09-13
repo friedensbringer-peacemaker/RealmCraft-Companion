@@ -56,6 +56,14 @@
     "generatedNotice": {
       "de": "Aus der App-Hilfe erzeugt. Änderungen bitte an den verknüpften Quellen vornehmen.",
       "en": "Generated from app help. Please make changes in the linked sources."
+    },
+    "releaseSummary": {
+      "de": "Version 1.7.59 verbindet bebilderte Rezeptanleitungen und vollständige KI-Exporte mit Portal-Gegenstellenvorschlägen, einheitlichen Suchfeldern und erweiterten optionalen Rezeptbildern.",
+      "en": "Version 1.7.59 combines illustrated recipe walkthroughs and complete AI exports with portal counterpart suggestions, consistent search fields and expanded optional recipe artwork."
+    },
+    "buildOutput": {
+      "de": "Das Build-Skript erstellt ein neues temporäres App-Bundle und gibt dessen Pfad aus. Eine bestehende Installation wird nicht automatisch ersetzt.",
+      "en": "The build script creates a fresh temporary app bundle and prints its path. It does not automatically replace an existing installation."
     }
   },
   "screenshots": [

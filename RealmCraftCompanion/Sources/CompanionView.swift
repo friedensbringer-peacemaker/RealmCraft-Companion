@@ -47,7 +47,7 @@ struct CompanionView: View {
                         Text("Version \(AppInfo.version)").font(.caption2).foregroundStyle(.secondary)
                             .textSelection(.enabled)
                     }
-                }.padding(.horizontal, 18).frame(height: 74)
+                }.padding(.horizontal, 18).frame(height: CompanionLayout.brandHeaderHeight)
                 CompanionSearchSidebar(english: english, focusRequest: $searchFocusRequest, open: openLookup) {
                   List(selection: Binding(get: { selected }, set: { selected = $0 })) {
                     Label(CompanionFeature.home.title(english), systemImage: CompanionFeature.home.icon)
@@ -84,7 +84,7 @@ struct CompanionView: View {
             Divider()
             Group {
                 switch feature {
-                case .portals: PortalsView(model: model, language: language)
+                case .portals: PortalsView(model: model, language: language, maps: maps)
                 case .metro: MetroView(model: model, maps: maps, language: language)
                 case .editor: SaveEditorView(model: model, maps: maps, chests: chests, language: language, keyboardFocus: $keyboardFocus)
                 case .home: home

@@ -281,6 +281,16 @@ def discover(base):
             entries.append(entry("document", ref["path"], {"de": path.read_text(), "en": other.read_text()}, ref))
     # Scope new authored sections explicitly: historical local notes may contain user data.
     for relative, heading, identity in (
+        ('docs/UI-UX-AUDIT-2026-09-12.md', '## Consistent list searches · 1.7.58 (80) · 2026-09-13', "list-search-1.7.58"),
+        ('Resources/CHANGELOG.md', '# 1.7.58 · Consistent list searches · 2026-09-13', "list-search-1.7.58"),
+        ("Resources/CHANGELOG.md", "# 1.7.57 · Illustrated recipe walkthroughs · 2026-09-13", "crafting-walkthrough-1.7.57"),
+        ("Resources/CHANGELOG.md", "# 1.7.59 · Recipe icon coverage · 2026-09-13", "crafting-icons-1.7.59"),
+        ("Resources/ITEM-ICONS.md", "## Stationsgrafiken und bestehende Installationen · 1.7.59", "crafting-icons-1.7.59"),
+        ("Resources/BACKLOG.md", "## Illustrated recipe walkthroughs · 1.7.57 (79) · 2026-09-13", "crafting-walkthrough-1.7.57"),
+        ("Resources/CRAFTING-SOURCES.md", "## Illustrated walkthroughs and agent scope · 1.7.57", "crafting-walkthrough-1.7.57"),
+        ("docs/FEATURE-MAP.md", "## Illustrated recipes and agent questions · 1.7.57 (79) · 2026-09-13", "crafting-walkthrough-1.7.57"),
+        ("Resources/CHANGELOG.md", '# 1.7.55 · Search-row alignment · 2026-09-13', "search-row-1.7.55"),
+        ("docs/UI-UX-AUDIT-2026-09-12.md", '## Search-row alignment · 1.7.55 (77) · 2026-09-13', "search-row-1.7.55"),
         ("Resources/CHANGELOG.md", '# 1.7.54 · Public documentation workflow · 2026-09-13', "public-docs-1.7.54"),
         ("Resources/BACKLOG.md", '## Public documentation workflow · 1.7.54 (76) · 2026-09-13', "public-docs-1.7.54"),
         ("Resources/CHANGELOG.md", "# 1.7.54 · Recipe Markdown for agents · 2026-09-13", "crafting-agent-1.7.54"),
@@ -306,6 +316,8 @@ def discover(base):
         ("Resources/CHANGELOG.md", "## Metro network assistant candidate · 2026-09-13", "metro-network-assistant"),
         ("Resources/BACKLOG.md", "## Metro network assistant · 1.7.47 (69) · 2026-09-13", "metro-network-assistant"),
         ("docs/METRO-WORKSPACE-2026-09-09.md", "## Network assistant implementation · 1.7.47 (69) · 2026-09-13", "metro-network-assistant"),
+        ("Resources/CHANGELOG.md", "# 1.7.56 · Portal counterpart candidates and names · 2026-09-13", "portal-counterpart-candidates"),
+        ("Resources/BACKLOG.md", "## Portal pairs · automatic candidates and 2D follow-up · 2026-09-13", "portal-counterpart-follow-up"),
         ("Resources/CHANGELOG.md", "## Ore viewport and zoom candidate · 2026-09-13", "ore-viewport-ux"),
         ("Resources/BACKLOG.md", "## Ore UX first package · 1.7.47 (69) · 2026-09-13", "ore-viewport-ux"),
         ("docs/UI-UX-AUDIT-2026-09-12.md", "## Ore first implementation package · 1.7.47 (69) · 2026-09-13", "ore-viewport-ux"),
@@ -323,8 +335,11 @@ def discover(base):
                 continue
             section = text.split(heading, 1)[1]
             section = re.split(r"(?m)^#{1,2} ", section, maxsplit=1)[0]
-            item = entry("document", [relative, identity], {"de": "", "en": heading + section.rstrip() + "\n"}, {"path": relative, "heading": heading})
-            item["note"] = "English source section; German remains open. Preserve Markdown and evidence limitations. Other sections are not imported."
+            source_language = "de" if relative == "Resources/ITEM-ICONS.md" else "en"
+            source = {"de": "", "en": ""}
+            source[source_language] = heading + section.rstrip() + "\n"
+            item = entry("document", [relative, identity], source, {"path": relative, "heading": heading})
+            item["note"] = ("German source section; English remains open." if source_language == "de" else "English source section; German remains open.") + " Preserve Markdown and evidence limitations. Other sections are not imported."
             entries.append(item)
     merged = {}
     for item in entries:

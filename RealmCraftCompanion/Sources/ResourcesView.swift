@@ -41,8 +41,10 @@ struct ResourcesView: View {
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             if section != "knowledge" {
-                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
-                    .textFieldStyle(.roundedBorder).padding(16)
+                CompanionSearchRow(horizontalInset: CompanionLayout.pageInset) {
+                    TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
+                        .textFieldStyle(.roundedBorder)
+                }
             }
             if section == "knowledge" {
                 MinecraftComparisonView(english: english, query: $query)
@@ -168,8 +170,10 @@ private struct MinecraftComparisonView: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 12) {
-                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
-                    .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
+                CompanionSearchRow {
+                    TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
+                    .textFieldStyle(.roundedBorder)
+                }
                 Picker(english ? "Category" : "Kategorie", selection: $category) {
                     ForEach(["all"] + sortedCategories, id: \.self) { Text(categoryTitle($0)).tag($0) }
                 }.labelsHidden().padding(.horizontal, 16)

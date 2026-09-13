@@ -42,10 +42,12 @@ enum IconPack: String, CaseIterable, Identifiable {
               let values = try? JSONDecoder().decode([String: String].self, from: data) else { return [:] }
         return values.filter { ($0.value.hasPrefix("PNG/") || $0.value.hasPrefix("assets/minecraft/textures/")) && !$0.value.contains("..") && $0.value.hasSuffix(".png") }
     }
+    func hasVerifiedMetadata(at root: URL) -> Bool {
+        (try? String(contentsOf: root.appendingPathComponent("verified.sha256"), encoding: .utf8)) == digest
+            && FileManager.default.fileExists(atPath: root.appendingPathComponent(creditFile).path)
+    }
     func validInstallation(at root: URL, mapping: [String: String]) -> Bool {
-        guard !mapping.isEmpty,
-              (try? String(contentsOf: root.appendingPathComponent("verified.sha256"), encoding: .utf8)) == digest,
-              FileManager.default.fileExists(atPath: root.appendingPathComponent(creditFile).path) else { return false }
+        guard !mapping.isEmpty, hasVerifiedMetadata(at: root) else { return false }
         return mapping.values.allSatisfy { NSImage(contentsOf: root.appendingPathComponent($0)) != nil }
     }
     func install(archive: URL, destination: URL, mapping: [String: String]) throws {
@@ -81,6 +83,7 @@ enum IconPack: String, CaseIterable, Identifiable {
 @MainActor final class ItemIconStore: ObservableObject {
     static let shared = ItemIconStore()
     @Published private(set) var installed: Set<IconPack> = []
+    @Published private(set) var incomplete: Set<IconPack> = []
     @Published private(set) var downloading: IconPack?
     @Published var error: String?
     var busy: Bool { downloading != nil }
@@ -97,7 +100,10 @@ enum IconPack: String, CaseIterable, Identifiable {
     func directory(_ pack: IconPack) -> URL { root.appendingPathComponent(pack.folder) }
     func count(_ pack: IconPack) -> Int { mappings[pack]?.count ?? 0 }
     func refresh() {
-        installed = Set(IconPack.allCases.filter { $0.validInstallation(at: directory($0), mapping: mappings[$0] ?? [:]) })
+        // A larger mapping after an app update must not hide all previously installed images.
+        // Individual missing files remain unavailable until an explicit pack refresh succeeds.
+        installed = Set(IconPack.allCases.filter { !(mappings[$0] ?? [:]).isEmpty && $0.hasVerifiedMetadata(at: directory($0)) })
+        incomplete = Set(installed.filter { !$0.validInstallation(at: directory($0), mapping: mappings[$0] ?? [:]) })
         images.removeAll()
     }
     func image(for id: Int, pack: IconPack) -> NSImage? {
@@ -217,6 +223,11 @@ struct ItemIconSettings: View {
                     Button(english ? "Remove pack" : "Pack entfernen", role: .destructive) { store.remove(inspected) }
                 }.disabled(store.busy)
                 Text(english ? "Installed · offline available. Other installed packs are retained." : "Installiert · offline verfügbar. Andere installierte Packs bleiben erhalten.").font(.caption).foregroundStyle(.secondary)
+                if store.incomplete.contains(inspected) {
+                    Text(english ? "Additional mapped icons are missing. Existing images remain available; refresh the pack to add the missing files." : "Zusätzliche zugeordnete Icons fehlen. Vorhandene Bilder bleiben verfügbar; ergänze die fehlenden Dateien durch erneutes Laden des Packs.")
+                        .font(.caption).foregroundStyle(.secondary)
+                    Button(english ? "Load missing icons" : "Fehlende Icons ergänzen") { store.download(inspected) }.disabled(store.busy)
+                }
             } else {
                 Text(english ? "Downloaded only when you choose Download & use. Your current display stays active until installation succeeds." : "Download erst mit „Herunterladen & nutzen“. Deine aktuelle Anzeige bleibt bis zur erfolgreichen Installation aktiv.").font(.caption)
                 Button(english ? "Download & use" : "Herunterladen & nutzen") { store.download(inspected) }.disabled(store.busy)

@@ -3,6 +3,13 @@ import SwiftUI
 struct PortalsView: View {
     @ObservedObject var model: Model
     let language: String
+    @ObservedObject var maps: MapController
+    @State private var portalNames: [String: String] = [:]
+    @State private var signNames: [String: [String]] = [:]
+    @State private var signStatus = ""
+    @State private var scanToken = UUID()
+    @State private var renameID: String?
+    @State private var renameText = ""
     @State private var draftID = UUID()
     private var draftToken: String { DraftTransitions.fingerprint([start, destination, name, note]) }
     private var dirty: Bool { !name.isEmpty || !note.isEmpty || !start.isEmpty || !destination.isEmpty }
@@ -56,6 +63,25 @@ struct PortalsView: View {
                             }
                         }
                     }
+                    if !suggestions.isEmpty {
+                        Text(english ? "Automatic counterpart candidates" : "Automatische Gegenportal-Kandidaten").font(.title3.bold())
+                        Text(english ? "Nearest saved portal after assumed X/Z scaling by 8. This is not a verified link: height, search radius and actual travel may change the destination. Each direction is evaluated separately; several portals may share a candidate." : "Nächstes gespeichertes Portal nach angenommener X/Z-Umrechnung mit Faktor 8. Keine bestätigte Verbindung: Höhe, Suchradius und tatsächliche Reisen können ein anderes Ziel ergeben. Jede Richtung wird separat betrachtet; mehrere Portale können denselben Kandidaten haben.").font(.caption).foregroundStyle(.secondary)
+                        ForEach(suggestions) { candidate in
+                            GroupBox {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(label(candidate.start) + " → " + label(candidate.destination)).textSelection(.enabled)
+                                    Text((english ? "Horizontal deviation in destination dimension: " : "Horizontaler Abstand in der Zieldimension: ") + coordinate(candidate.distance)).font(.caption)
+                                    if candidate.tied { Text(english ? "Ambiguous: equally near candidates" : "Mehrdeutig: gleich nahe Kandidaten").foregroundStyle(.orange) }
+                                    Button(english ? "Review / record travel" : "Prüfen / Reise vermerken") {
+                                        model.drafts.perform {
+                                            start = candidate.start; destination = candidate.destination
+                                            name = label(candidate.start) + " → " + label(candidate.destination); note = ""
+                                        }
+                                    }
+                                }.frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
                     ForEach(pairs) { pair in
                         GroupBox {
                             VStack(alignment: .leading, spacing: 9) {
@@ -67,9 +93,16 @@ struct PortalsView: View {
                         }
                     }
                     Text(english ? "Portals in this snapshot" : "Portale in dieser Sicherung").font(.title3.bold())
+                    if !signStatus.isEmpty { Text(signStatus).font(.caption).foregroundStyle(.secondary) }
                     ForEach(portals) { portal in
                         VStack(alignment: .leading, spacing: 5) {
                             Text(label(portal.id)).font(.headline)
+                            Button(english ? "Edit portal name" : "Portal beschriften") { renameID = portal.id; renameText = portalNames[portal.id] ?? suggestedName(portal.id) ?? "" }
+                            if let options = signNames[portal.id] {
+                                ForEach(options, id: \.self) { text in
+                                    Button((english ? "Use nearby sign: " : "Nahes Schild übernehmen: ") + text) { saveName(portal.id, text) }
+                                }
+                            }
                             Text(portal.bounds + " · \(portal.blocks.count) " + (english ? "saved POI blocks" : "gespeicherte POI-Blöcke")).font(.caption)
                         }.textSelection(.enabled)
                     }
@@ -94,7 +127,43 @@ struct PortalsView: View {
                 }.lineSpacing(3).padding(CompanionLayout.pageInset).frame(maxWidth: 900, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
             }
         }.trackDraft(model.drafts, id: draftID, token: draftToken, dirty: { dirty }, title: english ? "Portal connection" : "Portalverbindung", save: savePair, discard: read)
+        .alert(english ? "Portal name" : "Portalname", isPresented: Binding(get: { renameID != nil }, set: { if !$0 { renameID = nil } })) {
+            TextField(english ? "Name" : "Bezeichnung", text: $renameText)
+            Button(english ? "Save" : "Speichern") { if let id = renameID { saveName(id, renameText) }; renameID = nil }
+            Button(english ? "Cancel" : "Abbrechen", role: .cancel) { renameID = nil }
+        }
         .onAppear(perform: read).onChange(of: selectionKey) { _, _ in read() }
+    }
+    private var suggestions: [PortalSuggestion] { PortalSuggestions.make(portals, recorded: pairs) }
+    private func suggestedName(_ id: String) -> String? { let names = signNames[id] ?? []; return names.count == 1 ? names[0] : nil }
+    private func saveName(_ id: String, _ text: String) {
+        guard let save = model.selected, !fingerprint.isEmpty else { return }
+        do {
+            let store = PortalLabelStore(url: model.library.root.appendingPathComponent(".portal-labels").appendingPathComponent(save.id + ".json"))
+            try model.library.withExclusiveOperation { portalNames = try store.save(id: id, name: text, fingerprint: fingerprint) }
+        } catch { self.error = error.localizedDescription }
+    }
+    private func scanSigns() {
+        guard let save = model.selected, let engine = Bundle.main.resourceURL?.appendingPathComponent("MapEngine") else { return }
+        let token = scanToken, backend = model.library, tools = maps.tools
+        signStatus = english ? "Reading nearby portal signs…" : "Nahe Portalschilder werden gelesen …"
+        model.queue.async {
+            do {
+                guard let python = tools.readyPython(using: backend) else { throw PortalReader.ReadError.invalid }
+                let output = try backend.checked(python, ["-I", "-B", "-c", "import sys; sys.path.insert(0, sys.argv.pop(1)); from realmcraft_map.portal_signs import main; main()", engine.path, backend.worldFolder(save).path], timeout: 120)
+                let result = try JSONDecoder().decode(PortalSignIndex.self, from: Data(output.utf8))
+                DispatchQueue.main.async {
+                    guard token == scanToken else { return }
+                    signNames = result.names
+                    signStatus = result.incomplete ? (english ? "Sign scan incomplete. Names from nearby signs are suggestions; manual names take priority." : "Schilderprüfung unvollständig. Namen naher Schilder sind Vorschläge; manuelle Namen haben Vorrang.") : (english ? "A single nearby inscription supplies a suggested name. Multiple inscriptions remain selectable; manual names take priority." : "Eine einzelne nahe Beschriftung liefert einen Namensvorschlag. Mehrere Beschriftungen bleiben auswählbar; manuelle Namen haben Vorrang.")
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    guard token == scanToken else { return }
+                    signStatus = english ? "Sign suggestions unavailable. Prepare map tools or name portals manually." : "Schildvorschläge nicht verfügbar. Kartenwerkzeuge einrichten oder Portale manuell beschriften."
+                }
+            }
+        }
     }
     private func dimensionName(_ value: String) -> String { value == "o" ? (english ? "Overworld" : "Oberwelt") : "Nether" }
     private func coordinate(_ value: Double) -> String { value.formatted(.number.precision(.fractionLength(0...3)).locale(Locale(identifier: language))) }
@@ -104,9 +173,12 @@ struct PortalsView: View {
     }
     private func label(_ id: String) -> String {
         guard let p = portals.first(where: { $0.id == id }) else { return id }
-        return (p.dimension == "o" ? (english ? "Overworld" : "Oberwelt") : "Nether") + " · " + p.anchor.text
+        let title = portalNames[id] ?? suggestedName(id)
+        let prefix = title.map { $0 + (portalNames[id] == nil ? (english ? " (sign suggestion) · " : " (Schildvorschlag) · ") : " · ") } ?? ""
+        return prefix + (p.dimension == "o" ? (english ? "Overworld" : "Oberwelt") : "Nether") + " · " + p.anchor.text
     }
     private func read() {
+        scanToken = UUID(); signNames = [:]; portalNames = [:]; signStatus = ""; renameID = nil
         portals = []; pairs = []; error = nil; fingerprint = ""; start = ""; destination = ""; name = ""; note = ""
         plans = []; planError = nil; pairStorageData = nil
         guard let save = model.selected else { return }
@@ -115,6 +187,9 @@ struct PortalsView: View {
         do {
             let result = try PortalReader.read(model.library.worldFolder(save))
             portals = result.portals; fingerprint = result.fingerprint
+            do { portalNames = try PortalLabelStore(url: model.library.root.appendingPathComponent(".portal-labels").appendingPathComponent(save.id + ".json")).load(fingerprint: fingerprint) }
+            catch { self.error = error.localizedDescription }
+            scanSigns()
             if let url = storageURL, FileManager.default.fileExists(atPath: url.path) {
                 let data = try Data(contentsOf: url)
                 let document = try JSONDecoder().decode(PortalPairDocument.self, from: data)

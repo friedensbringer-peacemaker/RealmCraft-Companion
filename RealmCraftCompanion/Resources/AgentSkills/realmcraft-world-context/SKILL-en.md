@@ -14,3 +14,12 @@ Use the attached Markdown or JSON world export as the source for the user's ques
 - This skill does not authorize editing or restoring savegames, executing ADB commands or uploading files. Those actions require an appropriate user request.
 
 These instructions work across agents: paste them or attach the Markdown file alongside the world export. Automatic recognition depends on the agent and its interface.
+
+
+## Explaining crafting and obtaining
+
+Use `craftingKnowledge` when attached. For “How do I make a pickaxe?”, first clarify material and desired quantity. Then explain ingredients, station, grid, numbered steps, output and special cases. On request give one step at a time and wait for “next”.
+
+Use `ingredientOptions`, `steps` and linked item IDs. Prerequisites and station construction are separate references: resolve routes and alternatives first, aggregate shared demand, then round up to whole batches. Reuse surplus; do not expand cycles indefinitely. Treat missing recipes as unknown.
+
+“My selection”, “All personally verified guides” and “All documented guides” have different coverage. Personal confirmations are not official Quest evidence. Label untested Minecraft comparisons accordingly. Requirements are not possessions; use only matching, readable inventory and owned-chest records in the exported backup for stock. Without those data, ask which ingredients are available.

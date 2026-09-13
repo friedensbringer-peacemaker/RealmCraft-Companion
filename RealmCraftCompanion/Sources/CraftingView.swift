@@ -67,21 +67,23 @@ struct CraftingView: View {
             Divider()
             HSplitView {
                 VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 8) {
-                        TextField(english ? "Item, alias or ID" : "Gegenstand, Begriff oder ID", text: $query)
-                            .textFieldStyle(.roundedBorder)
-                            .accessibilityIdentifier("crafting.search")
-                        Button { showFilters.toggle() } label: {
-                            Image(systemName: activeFilterCount > 0 ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                                .foregroundStyle(activeFilterCount > 0 ? Color.accentColor : .secondary)
+                    CompanionSearchRow {
+                        HStack(spacing: 8) {
+                            TextField(english ? "Item, alias or ID" : "Gegenstand, Begriff oder ID", text: $query)
+                                .textFieldStyle(.roundedBorder)
+                                .accessibilityIdentifier("crafting.search")
+                            Button { showFilters.toggle() } label: {
+                                Image(systemName: activeFilterCount > 0 ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                                    .foregroundStyle(activeFilterCount > 0 ? Color.accentColor : .secondary)
+                            }
+                            .buttonStyle(.plain).font(.title3)
+                            .accessibilityLabel(english ? "Filter items" : "Gegenstände filtern")
+                            .accessibilityValue(english ? "\(activeFilterCount) active filters" : "\(activeFilterCount) aktive Filter")
+                            .accessibilityIdentifier("crafting.filters")
+                            .help(english ? "Category, station and coverage" : "Kategorie, Herstellungsort und Datenlage")
+                            .popover(isPresented: $showFilters, arrowEdge: .top) { filterPopover }
                         }
-                        .buttonStyle(.plain).font(.title3)
-                        .accessibilityLabel(english ? "Filter items" : "Gegenstände filtern")
-                        .accessibilityValue(english ? "\(activeFilterCount) active filters" : "\(activeFilterCount) aktive Filter")
-                        .accessibilityIdentifier("crafting.filters")
-                        .help(english ? "Category, station and coverage" : "Kategorie, Herstellungsort und Datenlage")
-                        .popover(isPresented: $showFilters, arrowEdge: .top) { filterPopover }
-                    }.padding(.horizontal, 12).padding(.top, 12).padding(.bottom, 8)
+                    }
                     HStack {
                         Text(english ? "\(visible.count) matches · \(activeFilterCount) filters" : "\(visible.count) Treffer · \(activeFilterCount) Filter")
                             .foregroundStyle(.secondary)
@@ -334,15 +336,16 @@ private struct CraftingItemDetail: View {
                     Text(english ? "\(recipe.count) item(s)" : "\(recipe.count) Stück").font(.headline)
                 }
             }
+            HStack {
+                Text(english ? "Desired quantity" : "Gewünschte Menge")
+                TextField("", value: $desired, format: .number.grouping(.never)).textFieldStyle(.roundedBorder).frame(width: 75)
+                    .accessibilityLabel(english ? "Desired quantity" : "Gewünschte Menge")
+                Stepper("", value: $desired, in: 1...9999).labelsHidden()
+                Spacer()
+            }
+            .onChange(of: desired) { _, value in desired = min(9999, max(1, value)) }
+            CraftingWalkthroughView(item: item, index: index, english: english, recipe: recipe, desired: desired, openItem: openItem)
             GroupBox {
-                HStack {
-                    Text(english ? "Desired quantity" : "Gewünschte Menge")
-                    TextField("", value: $desired, format: .number.grouping(.never)).textFieldStyle(.roundedBorder).frame(width: 75)
-                        .accessibilityLabel(english ? "Desired quantity" : "Gewünschte Menge")
-                    Stepper("", value: $desired, in: 1...9999).labelsHidden()
-                    Spacer()
-                }
-                .onChange(of: desired) { _, value in desired = min(9999, max(1, value)) }
                 let batches = recipe.batches(for: desired), produced = recipe.produced(for: desired)
                 Text(english ? "\(batches) batches → \(produced) items · \(produced - desired) extra" : "\(batches) Durchgänge → \(produced) Stück · \(produced - desired) übrig")
                     .font(.subheadline.weight(.semibold))
@@ -367,8 +370,6 @@ private struct CraftingItemDetail: View {
             } else if recipe.kind == "crafting_shapeless" {
                 Label(english ? "Shapeless recipe: no fixed arrangement. Use the listed ingredients." : "Formloses Rezept: keine feste Anordnung. Verwende die aufgeführten Zutaten.", systemImage: "square.grid.2x2")
             }
-            GroupBox { Text(recipe.station.instructions(english)).fixedSize(horizontal: false, vertical: true) }
-                label: { Text(english ? "Step by step" : "Schritt für Schritt").font(.headline) }
             HStack {
                 Button {
                     NSPasteboard.general.clearContents()
@@ -415,7 +416,7 @@ private struct CraftingItemDetail: View {
     }
 }
 
-private struct CraftingRecipeGrid: View {
+struct CraftingRecipeGrid: View {
     let recipe: CraftingRecipe
     let index: CraftingIndex
     let english: Bool
@@ -429,7 +430,7 @@ private struct CraftingRecipeGrid: View {
                        let id = recipe.ingredients[number - 1].options.first, let item = index.items[id] {
                         HStack(spacing: 5) {
                             Text("\(number)").font(.headline).foregroundStyle(theme.accent)
-                            CraftingItemIcon(itemID: item.itemID, english: english, size: 28)
+                            CraftingSketchIcon(id: item.id, index: index, size: 34)
                         }
                         Text(item.title.value(english)).font(.caption2).multilineTextAlignment(.center).lineLimit(2)
                     } else {
@@ -464,17 +465,7 @@ private struct CraftingAcquisitionView: View {
             GroupBox {
                 Text(guide.requirements.value(english)).frame(maxWidth: .infinity, alignment: .leading).padding(8)
             } label: { Text(english ? "You need" : "Du brauchst").font(.headline) }
-            VStack(alignment: .leading, spacing: 16) {
-                ForEach(Array(guide.steps.enumerated()), id: \.element.id) { number, step in
-                    HStack(alignment: .top, spacing: 12) {
-                        Text("\(number + 1)").font(.headline).frame(width: 28, height: 28).background(.quaternary, in: Circle())
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(step.title.value(english)).font(.headline)
-                            Text(step.text.value(english))
-                        }
-                    }
-                }
-            }
+            CraftingWalkthroughView(item: item, index: index, english: english, guide: guide, openItem: openItem)
             GroupBox {
                 VStack(alignment: .leading, spacing: 14) {
                     ForEach(guide.details) { detail in

@@ -74,3 +74,10 @@ Urheber: XSSheep; Fortführung Nova_Wostra; weitere Beiträge freejusticehere un
 Es werden nur explizit zugeordnete PNG-Dateien und `pack.txt` entpackt, keine Shader, Musik, Minecraft-Credits, verschachtelten Zusatzpacks oder anderen Bestandteile. Dateien bleiben unverändert. Die fremden Grafiken stehen nicht unter der MIT-Lizenz des Companion-Codes.
 
 Zuordnung: vorhandene englische Katalognamen wurden zur Entwicklungszeit mit exakt gleichnamigen Minecraft-Item-/Blockdateien abgeglichen und als numerische ID-Zuordnung gespeichert (`PixelItemIcons.json`). Laufzeit und Sprache verändern die Zuordnung nicht. Quadratische Einzeltexturen werden verwendet; Animationstreifen und ausgewählte Grafiken, die zusätzliche Einfärbung benötigen, sind ausgenommen. Blockgrafiken erscheinen als flache 2D-Texturen. Die 686 Zuordnungen sind keine Aussage über vollständige oder spielidentische RealmCraft-Abdeckung; Grundlage bleibt der bestehende Namenskatalog.
+
+
+## Stationsgrafiken und bestehende Installationen · 1.7.59
+
+Pixel Perfection enthält jetzt 722 explizite Zuordnungen. 36 ergänzte quadratische Blockflächen zeigen unter anderem Werkbank, Ofen, Räucherofen, Schmelzofen, Schmiedetisch und Steinsäge. Namen und technische Gegenstands-IDs bleiben maßgeblich. Die Flächen stammen unverändert aus derselben bereits geprüften Pack-Version; es sind 2D-Texturen, keine Spielscreenshots oder neu bestätigten RealmCraft-Gegenstände.
+
+Bei einer vorhandenen Installation bleiben bereits geladene Icons auch dann sichtbar, wenn eine neuere App zusätzliche Zuordnungen kennt. Unter Gegenstands-Icons → Fehlende Icons ergänzen wird das Pack auf Wunsch erneut geprüft und vervollständigt. Ein fehlgeschlagener Download ersetzt die vorhandenen Dateien nicht. Pack-Auswahl und Nur Text / Icons + Text bleiben erhalten. Rezeptanleitungen verwenden aktivierte Pack-Grafiken vorrangig und erklärende Skizzen für fehlende Bilder.

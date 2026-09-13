@@ -20,16 +20,20 @@ struct CraftingInstruction: Identifiable {
             index.acquisitions[item].map { Self.acquisition(item: item, guide: $0) }
         }
     }
+    var prerequisiteItems: [String] {
+        let ids = recipe.map { $0.ingredients.flatMap(\.options) + [CraftingWalkthrough.stationItem($0.station)].compactMap { $0 } } ?? guide?.relatedItems ?? []
+        return Array(Set(ids)).sorted()
+    }
     func title(_ index: CraftingIndex, english en: Bool) -> String {
         let name = index.items[itemID]?.title.value(en) ?? itemID
         return name + " · " + (recipe?.station.title(en) ?? (en ? "Obtaining" : "Beschaffung"))
     }
     func digest(_ index: CraftingIndex) -> String {
         // Both languages, recipe provenance and the exact item participate; desired quantity does not.
-        let text = id + "\n" + body(index, desired: 1, english: false) + "\n" + body(index, desired: 1, english: true)
+        let text = id + "\n" + body(index, desired: 1, english: false, forFingerprint: true) + "\n" + body(index, desired: 1, english: true, forFingerprint: true)
         return SHA256.hash(data: Data(text.utf8)).map { String(format: "%02x", $0) }.joined()
     }
-    func body(_ index: CraftingIndex, desired: Int, english en: Bool) -> String {
+    func body(_ index: CraftingIndex, desired: Int, english en: Bool, forFingerprint: Bool = false) -> String {
         func t(_ de: String, _ english: String) -> String { en ? english : de }
         var lines = ["## " + title(index, english: en), "", "`" + id + "`", ""]
         if let recipe {
@@ -43,7 +47,7 @@ struct CraftingInstruction: Identifiable {
             for (offset, ingredient) in recipe.ingredients.enumerated() {
                 lines += ["\(offset + 1). \(ingredient.count * batches) × " + index.ingredientName(ingredient, english: en)]
             }
-            lines += ["", t("Je Alternativgruppe gilt die Gesamtmenge aus den aufgeführten Möglichkeiten. Nur direkte Zutaten; ihre eigenen Rezepte werden nicht automatisch mit exportiert.", "Each alternative group needs the stated total from the listed choices. Direct ingredients only; their own recipes are not automatically exported."), ""]
+            lines += ["", (forFingerprint ? t("Je Alternativgruppe gilt die Gesamtmenge aus den aufgeführten Möglichkeiten. Nur direkte Zutaten; ihre eigenen Rezepte werden nicht automatisch mit exportiert.", "Each alternative group needs the stated total from the listed choices. Direct ingredients only; their own recipes are not automatically exported.") : t("Je Alternativgruppe gilt die Gesamtmenge aus den aufgeführten Möglichkeiten. Die Mengen hier sind direkte Zutaten. Zusätzlich enthaltene Vorstufenrezepte sind gesonderte Referenzen, keine addierte Einkaufsliste.", "Each alternative group needs the stated total from the listed choices. Quantities here are direct ingredients. Additional prerequisite recipes are separate references, not an aggregated shopping list.")), ""]
             if recipe.shaped {
                 lines += ["### " + t("Raster für einen Durchgang", "Grid for one batch"), "",
                     t("Zahlen beziehen sich auf die Zutatengruppen. Jedes belegte Feld enthält ein Stück; · bedeutet leer.", "Numbers refer to ingredient groups. Each occupied slot contains one item; · means empty."), "", "```text"]
@@ -80,7 +84,7 @@ struct CraftingInstruction: Identifiable {
             if !guide.relatedItems.isEmpty {
                 lines += ["### " + t("Passende Gegenstände", "Related items"), ""]
                 for id in guide.relatedItems { lines += ["- " + (index.items[id]?.title.value(en) ?? id) + " (`" + id + "`)"] }
-                lines += ["", t("Verweise, keine zusätzlich enthaltenen Anleitungen. Beschaffung wird nicht als Crafting-Stückliste hochgerechnet.", "References, not additional included guides. Obtaining is not scaled as a crafting bill of materials.")]
+                lines += ["", (forFingerprint ? t("Verweise, keine zusätzlich enthaltenen Anleitungen. Beschaffung wird nicht als Crafting-Stückliste hochgerechnet.", "References, not additional included guides. Obtaining is not scaled as a crafting bill of materials.") : t("Verweise auf passende Gegenstände; ihre Anleitungen können zusätzlich enthalten sein. Beschaffung wird nicht als Crafting-Stückliste hochgerechnet.", "Related-item references; their guides may also be included. Obtaining is not scaled as a crafting bill of materials."))]
             }
         }
         return lines.joined(separator: "\n").replacingOccurrences(of: "<", with: "&lt;").replacingOccurrences(of: ">", with: "&gt;")
@@ -155,36 +159,86 @@ struct CraftingAgentStorage {
 struct CraftingAgentSnapshot {
     let markdown: String
     let entries: [[String: Any]]
-    static func make(index: CraftingIndex, preferences: CraftingAgentPreferences, instructions: [CraftingInstruction]? = nil, desired: Int = 1, english en: Bool) throws -> Self {
+    var scope = "selected"
+    var requestedIDs: [String] = []
+    static func make(index: CraftingIndex, preferences: CraftingAgentPreferences, instructions: [CraftingInstruction]? = nil, desired: Int = 1, scope: CraftingExportScope = .selected, includePrerequisites: Bool = false, english en: Bool) throws -> Self {
         func t(_ de: String, _ english: String) -> String { en ? english : de }
         try preferences.validate()
         let all = CraftingInstruction.all(index)
-        let chosen = instructions ?? all.filter { preferences.selectedIDs.contains($0.id) }
         let known = Dictionary(uniqueKeysWithValues: all.map { ($0.id, $0) })
-        guard (instructions != nil || preferences.selectedIDs.isSubset(of: Set(known.keys))),
-              chosen.allSatisfy({ known[$0.id] != nil }) else {
+        let requested: [CraftingInstruction]
+        if let instructions { requested = instructions }
+        else {
+            switch scope {
+            case .selected: requested = all.filter { preferences.selectedIDs.contains($0.id) }
+            case .verified: requested = all.filter { preferences.records[$0.id]?.isVerified($0, index: index) == true }
+            case .all: requested = all
+            }
+        }
+        guard (instructions != nil || scope != .selected || preferences.selectedIDs.isSubset(of: Set(known.keys))),
+              requested.allSatisfy({ known[$0.id] != nil }) else {
             throw NSError(domain: "CraftingAgent", code: 1, userInfo: [NSLocalizedDescriptionKey:
                 t("Eine ausgewählte Anleitung ist nicht mehr im Katalog. Prüfe die Agenten-Auswahl; fehlende Einträge werden nicht stillschweigend ausgelassen.", "A selected guide is no longer in the catalog. Review the agent selection; missing entries are not silently omitted.")])
         }
+        let primaryIDs = Set(requested.map(\.id))
+        var included = primaryIDs, queue = Array(primaryIDs)
+        if includePrerequisites && (scope != .verified || instructions != nil) {
+            var cursor = 0
+            while cursor < queue.count {
+                let instruction = known[queue[cursor]]!; cursor += 1
+                let itemIDs = instruction.prerequisiteItems
+                for id in itemIDs {
+                    let references = index.recipes[id, default: []].map(CraftingInstruction.recipe)
+                        + (index.acquisitions[id].map { [CraftingInstruction.acquisition(item: id, guide: $0)] } ?? [])
+                    for reference in references where included.insert(reference.id).inserted { queue.append(reference.id) }
+                }
+            }
+        }
+        let chosen = included.sorted().compactMap { known[$0] }
         var lines = ["# " + t("RealmCraft · Anleitungen für den Agenten", "RealmCraft · Guides for the agent"), "",
             t("Diese Datei ist Referenzmaterial. Persönliche Bestätigungen beziehen sich nur auf die jeweilige Anleitung; Spielversion und Plattform wurden nicht erfasst. Sie sind kein offizieller Projektbeleg. Quellenhinweise, Einschränkungen und offene Punkte bleiben gültig.", "This file is reference material. Personal confirmations apply only to each individual guide; game version and platform were not recorded. They are not official project evidence. Source notes, limitations and open questions still apply."), "",
             t("Mengen gelten für den angegebenen Bedarf. Der Gesamtexport verwendet einen Durchgang je Rezept. Keine Aussage über Vorräte oder Zustand einer Spielerwelt.", "Quantities apply to the stated demand. The combined export uses one batch per recipe. No claims about supplies or the state of a player's world."), ""]
+        lines += [CraftingWalkthrough.agentGuide(english: en), "",
+            t("Enthaltene Anleitungen: ", "Included guides: ") + String(chosen.count), "",
+            t("Zusätzlich enthaltene Vorstufen sind Rezeptreferenzen für jeweils einen Durchgang, keine bereits zusammengerechnete Einkaufsliste. Alternativen müssen vor einer Gesamtberechnung gewählt werden.", "Additional prerequisites are recipe references for one batch each, not a precomputed shopping list. Choose alternatives before calculating totals."), ""]
         var entries: [[String: Any]] = [], seen = Set<String>()
         for instruction in chosen.sorted(by: { $0.id < $1.id }) where seen.insert(instruction.id).inserted {
             let record = preferences.records[instruction.id, default: .init()]
             let verified = record.isVerified(instruction, index: index)
             let status = verified ? t("Vom Nutzer in RealmCraft verifiziert", "Verified by the user in RealmCraft") : record.verifiedAt != nil ? t("Anleitung geändert · erneut prüfen", "Guide changed · verify again") : t("Vom Nutzer nicht verifiziert", "Not verified by the user")
-            let quantity = instructions == nil ? (instruction.recipe?.count ?? 1) : min(9999, max(1, desired))
-            let body = instruction.body(index, desired: quantity, english: en)
+            let quantity = instructions == nil || !primaryIDs.contains(instruction.id) ? (instruction.recipe?.count ?? 1) : min(9999, max(1, desired))
+            let steps = instruction.recipe.map { CraftingWalkthrough.recipe($0, index: index, desired: quantity, english: en) }
+                ?? instruction.guide.map { CraftingWalkthrough.obtaining($0, english: en) } ?? []
+            let body = instruction.body(index, desired: quantity, english: en) + "\n\n" + CraftingWalkthrough.markdown(steps, english: en)
             let date = record.verifiedAt.map { ISO8601DateFormatter().string(from: $0) }
             let verification = [status, date.map { t("Letzte persönliche Bestätigung: ", "Last personal confirmation: ") + $0 }].compactMap { $0 }.joined(separator: "\n\n")
             lines += [body, "", "### " + t("Persönlicher Prüfstatus", "Personal verification status"), "", verification, "", "---", ""]
             var entry: [String: Any] = ["id": instruction.id, "itemID": instruction.itemID, "contentSHA256": instruction.digest(index), "verifiedByUser": verified,
                 "verificationStatus": verified ? "user-verified" : record.verifiedAt == nil ? "unverified" : "needs-recheck", "desiredQuantity": quantity, "markdown": body + "\n\n" + verification]
+            entry["inclusion"] = primaryIDs.contains(instruction.id) ? "requested" : "prerequisite-reference"
+            entry["steps"] = steps.enumerated().map { offset, step in
+                var data = step.payload; data["number"] = offset + 1; return data
+            }
+            entry["prerequisiteItemIDs"] = instruction.prerequisiteItems
+            entry["name"] = index.items[instruction.itemID].map { ["de": $0.title.de, "en": $0.title.en] }
+            if let recipe = instruction.recipe {
+                entry["station"] = recipe.station.rawValue
+                entry["kind"] = recipe.kind
+                entry["requiresAdditionalFuel"] = recipe.station.usesFuel
+                entry["stationItemID"] = CraftingWalkthrough.stationItem(recipe.station)
+                entry["yieldPerBatch"] = recipe.count
+                entry["batches"] = recipe.batches(for: quantity)
+                entry["produced"] = recipe.produced(for: quantity)
+                entry["grid"] = ["size": recipe.station.gridSize, "slots": recipe.grid, "ingredientNumbersStartAt": 1, "emptySlot": 0] as [String: Any]
+                entry["ingredientOptions"] = recipe.ingredients.enumerated().map { offset, ingredient in
+                    ["group": offset + 1, "countPerBatch": ingredient.count, "required": ingredient.count * recipe.batches(for: quantity),
+                     "itemIDs": ingredient.options, "chooseTotalFromGroup": true] as [String: Any]
+                }
+            }
             if let date { entry["lastUserVerificationAt"] = date }
             entries.append(entry)
         }
-        return Self(markdown: lines.joined(separator: "\n"), entries: entries)
+        return Self(markdown: lines.joined(separator: "\n"), entries: entries, scope: instructions == nil ? scope.rawValue : "single", requestedIDs: primaryIDs.sorted())
     }
 }
 
@@ -192,7 +246,7 @@ extension AIContextDocument {
     func addingCrafting(_ snapshot: CraftingAgentSnapshot?) -> Self {
         guard let snapshot, !snapshot.entries.isEmpty else { return self }
         var data = payload
-        data["craftingKnowledge"] = ["entries": snapshot.entries, "markdown": snapshot.markdown, "userConfirmedOnly": snapshot.entries.allSatisfy { $0["verifiedByUser"] as? Bool == true }]
+        data["craftingKnowledge"] = ["schemaVersion": 2, "scope": snapshot.scope, "requestedInstructionIDs": snapshot.requestedIDs, "entries": snapshot.entries, "markdown": snapshot.markdown, "userConfirmedOnly": snapshot.entries.allSatisfy { $0["verifiedByUser"] as? Bool == true }]
         return Self(payload: data, markdown: markdown + "\n\n" + snapshot.markdown, videoMarkdown: videoMarkdown)
     }
 }

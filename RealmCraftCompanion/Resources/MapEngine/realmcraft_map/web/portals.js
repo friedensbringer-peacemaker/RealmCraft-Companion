@@ -84,7 +84,7 @@
    for(const m of this.items()){
     const p=screen(m.x+.5,m.z+.5);if(p.x<-20||p.y<-20||p.x>width+20||p.y>height+20)continue;
     ctx.save();ctx.strokeStyle=m.kind==='saved'?'#ce8bff':m.kind==='plan'?'#55e7e7':'#ffda70';ctx.fillStyle='#19162de6';ctx.lineWidth=2.5;ctx.setLineDash(m.kind==='saved'?[]:[4,3]);
-    ctx.fillRect(p.x-7,p.y-10,14,20);ctx.strokeRect(p.x-7,p.y-10,14,20);ctx.restore();
+    ctx.fillRect(p.x-7,p.y-10,14,20);ctx.strokeRect(p.x-7,p.y-10,14,20);if(m.name){ctx.font='12px system-ui';ctx.fillStyle='#19162de6';ctx.fillRect(p.x+10,p.y-11,ctx.measureText(m.name).width+8,18);ctx.fillStyle='#fff';ctx.fillText(m.name,p.x+14,p.y+2);}ctx.restore();
    }
   }
   pick(x,y,screen){
@@ -93,7 +93,7 @@
    if(!found)return false;
    root.dispatchEvent(new CustomEvent('atlas-portal-picked',{detail:found}));
    if(found.kind==='saved'){
-    this.plan(found);this.line(this.t('Gespeichertes Portal · ','Saved portal · ')+(found.bounds||''));
+    this.plan(found);if(found.name)this.line(found.name);this.line(this.t('Gespeichertes Portal · ','Saved portal · ')+(found.bounds||''));
    }else{
     const plan=this.plans.find(p=>p.id===found.id);if(!plan)return false;
     this.draft=null;this.describe(plan);this.line(plan.name);this.name.parentElement.hidden=true;this.save.hidden=true;this.status.textContent='';this.details.open=true;this.section.scrollIntoView({block:'nearest'});

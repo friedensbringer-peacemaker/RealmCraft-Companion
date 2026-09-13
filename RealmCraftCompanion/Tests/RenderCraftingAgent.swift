@@ -18,16 +18,30 @@ import SwiftUI
         for en in [false, true] {
             defaults.set(en ? "en" : "de", forKey: "appLanguage")
             defaults.set("block", forKey: "companionSkin")
-            for item in ["lava_bucket", "bucket"] {
-                let view = CraftingView(language: en ? "en" : "de", catalog: catalog, initialItem: item, initialQuery: item == "lava_bucket" ? "lava" : "bucket", planURL: output.appendingPathComponent("unused-plan.json"), agentLibrary: library)
+            if CommandLine.arguments.contains("--installed-icons") {
+                precondition(ItemIconStore.shared.installed.contains(.pixel), "Pixel pack must already be installed; this test never downloads it")
+                defaults.set(true, forKey: "companionItemIcons")
+                defaults.set("pixel", forKey: "companionIconPack")
+                for id in ["diamond_pickaxe", "diamond", "stick", "crafting_table", "arrow", "flint", "feather"] {
+                    precondition(ItemIconStore.shared.image(for: index.items[id]!.itemID!, pack: .pixel) != nil, "Missing mapped image: " + id)
+                }
+            }
+            for item in ["lava_bucket", "bucket", "diamond_pickaxe"] {
+                let view = CraftingView(language: en ? "en" : "de", catalog: catalog, initialItem: item, initialQuery: item == "lava_bucket" ? "lava" : item == "diamond_pickaxe" ? "pickaxe" : "bucket", planURL: output.appendingPathComponent("unused-plan.json"), agentLibrary: library)
                     .defaultAppStorage(defaults).companionAppearance().environment(\.colorScheme, .dark)
                 try render(view, size: NSSize(width: 1080, height: 800), to: output.appendingPathComponent(item + (en ? "-en.png" : "-de.png")))
+            }
+            let recipe = index.recipes["diamond_pickaxe"]!.first!
+            for step in 0..<5 {
+                let walkthrough = CraftingWalkthroughView(item: index.items["diamond_pickaxe"]!, index: index, english: en, recipe: recipe, desired: 2, initialStep: step)
+                    .padding(18).defaultAppStorage(defaults).companionAppearance().environment(\.colorScheme, .dark)
+                try render(walkthrough, size: NSSize(width: 690, height: 660), to: output.appendingPathComponent("pickaxe-step-\(step + 1)-\(en ? "en" : "de").png"))
             }
             let view = CraftingAgentSelectionView(library: library, index: index, english: en)
                 .defaultAppStorage(defaults).companionAppearance().environment(\.colorScheme, .dark)
             try render(view, size: NSSize(width: 720, height: 580), to: output.appendingPathComponent(en ? "selection-en.png" : "selection-de.png"))
         }
-        print("PASS: 6 native recipe/obtaining/selection captures with synthetic confirmation")
+        print("PASS: 18 native recipe/obtaining/selection captures with synthetic confirmation")
     }
     @MainActor static func render<V: View>(_ view: V, size: NSSize, to url: URL) throws {
         let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height))

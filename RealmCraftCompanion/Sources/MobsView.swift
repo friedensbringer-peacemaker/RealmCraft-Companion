@@ -60,8 +60,10 @@ struct MobsView: View {
             } else {
                 HStack(spacing: 0) {
                     VStack(spacing: 0) {
-                    TextField(english ? "Search name, dimension, biome or update…" : "Name, Dimension, Biom oder Update suchen …", text: $query)
-                        .textFieldStyle(.roundedBorder).padding(16)
+                    CompanionSearchRow {
+                        TextField(english ? "Search name, dimension, biome or update…" : "Name, Dimension, Biom oder Update suchen …", text: $query)
+                            .textFieldStyle(.roundedBorder)
+                    }
                     List(selection: $selection) {
                         ForEach(entries) { entry in
                             HStack(alignment: .center, spacing: 10) {

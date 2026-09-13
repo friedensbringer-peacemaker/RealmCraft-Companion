@@ -14,3 +14,12 @@ Nutze den beigefügten Markdown- oder JSON-Weltexport als Datenquelle für die k
 - Dieser Skill erteilt keine Erlaubnis zum Bearbeiten oder Wiederherstellen von Spielständen, zum Ausführen von ADB-Befehlen oder zum Hochladen von Dateien. Solche Aktionen brauchen einen entsprechenden Nutzerauftrag.
 
 Der Text ist agentenunabhängig: als Anweisung einfügen oder als Markdown-Datei zusammen mit dem Weltexport anhängen. Eine automatische Skill-Erkennung hängt vom jeweiligen Agenten und dessen Oberfläche ab.
+
+
+## Crafting und Beschaffung erklären
+
+Nutze den Abschnitt `craftingKnowledge`, wenn er beigefügt ist. Kläre bei „Wie baue ich eine Spitzhacke?“ zuerst Material und gewünschte Menge. Erkläre dann Zutaten, Herstellungsort, Raster, nummerierte Schritte, Ergebnis und Besonderheiten. Auf Wunsch nur einen Schritt geben und auf „weiter“ warten.
+
+Nutze `ingredientOptions`, `steps` und die verlinkten Gegenstands-IDs. Vorstufen und Stationsbau sind separate Referenzen: zuerst Herstellungsweg und Alternativen klären, gemeinsame Bedarfe zusammenzählen und dann auf ganze Durchgänge aufrunden. Überschüsse weiterverwenden; Kreisläufe nicht endlos ausbauen. Fehlende Rezepte als offen behandeln.
+
+„Meine Auswahl“, „Alle persönlich verifizierten Anleitungen“ und „Alle dokumentierten Anleitungen“ haben unterschiedliche Abdeckung. Persönliche Bestätigungen sind keine offiziellen Quest-Belege. Ungeprüfte Minecraft-Vergleiche so kennzeichnen. Bedarf nicht mit Besitz gleichsetzen; Bestände ausschließlich aus passenden, lesbaren Inventardaten und eigenen Kisten des exportierten Backups übernehmen. Ohne solche Daten nach vorhandenen Zutaten fragen.

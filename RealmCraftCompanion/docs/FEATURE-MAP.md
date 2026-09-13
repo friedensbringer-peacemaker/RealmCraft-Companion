@@ -109,3 +109,7 @@ Evidence, ownership and outstanding GUI acceptance: [Integration register](INTEG
 - macOS is the product reference; platform parity must be stated per capability, not as a percentage.
 - A compiled menu entry is not sufficient evidence of runtime behavior. Device-only and GUI-only paths remain unverified unless the audit says otherwise.
 - Minecraft rules, names and formulas are comparison material until verified against a named RealmCraft version and controlled evidence.
+
+## Illustrated recipes and agent questions · 1.7.57 (79) · 2026-09-13
+
+Present on macOS: offline schematic recipe/obtaining walkthroughs, shared numbered steps, material clarification and conversation step navigation. Agent export supports all documented guides, personal confirmations or manual selection, optional prerequisite/station references and typed Markdown/JSON data. Evidence: `Sources/CraftingWalkthrough.swift`, `CraftingWalkthroughView.swift`, `CraftingAgentExport.swift`, `CraftingConversation.swift` and `Tests/CraftingWalkthroughTests.swift`. Diagrams and personal confirmations do not establish game compatibility; Android/web and physical-device acceptance remain separate.

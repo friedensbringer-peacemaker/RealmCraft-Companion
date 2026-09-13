@@ -296,7 +296,9 @@ struct MainView: View {
             }
             HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
-                TextField("Spielstände suchen", text: $model.query).textFieldStyle(.roundedBorder).padding(CompanionLayout.panelInset)
+                CompanionSearchRow {
+                    TextField("Spielstände suchen", text: $model.query).textFieldStyle(.roundedBorder)
+                }
                 List(selection: $model.selection) {
                     ForEach(model.saveGroups) { group in
                         Section {

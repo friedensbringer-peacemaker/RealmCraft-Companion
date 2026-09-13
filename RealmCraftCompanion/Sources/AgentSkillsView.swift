@@ -41,8 +41,10 @@ struct AgentSkillsView: View {
             if let error = library.error { Text(error).foregroundStyle(.red).textSelection(.enabled).padding(16) }
             HStack(spacing: 0) {
                 VStack(spacing: 12) {
-                    TextField(en ? "Search skills" : "Skills suchen", text: $query)
-                        .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
+                    CompanionSearchRow {
+                        TextField(en ? "Search skills" : "Skills suchen", text: $query)
+                            .textFieldStyle(.roundedBorder)
+                    }
                     Picker(en ? "Collection" : "Sammlung", selection: $archived) {
                         Text(en ? "Active" : "Aktiv").tag(false); Text(en ? "Archive" : "Archiv").tag(true)
                     }.pickerStyle(.segmented).labelsHidden().padding(.horizontal, 16)

@@ -63,8 +63,10 @@ struct OfflineBuildGuidesView: View {
     }
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 12) {
-            TextField(english ? "Find build or material" : "Aufbau oder Material suchen", text: $query)
-                .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
+            CompanionSearchRow {
+                TextField(english ? "Find build or material" : "Aufbau oder Material suchen", text: $query)
+                    .textFieldStyle(.roundedBorder)
+            }
             Picker(english ? "Topic" : "Thema", selection: $category) {
                 ForEach(["all"] + BuildGuideTopic.ids, id: \.self) { Text(buildCategory($0, english)).tag($0) }
             }.labelsHidden().padding(.horizontal, 16)
@@ -632,6 +634,10 @@ struct VideoTipsView: View {
     @State private var coverage = "all"
     @State private var sourceGame = "all"
     @State private var sortOrder: VideoSortOrder = .newest
+    @State private var showFilters = false
+    private var hasFilterOptions: Bool {
+        category != "all" || sourceGame != "all" || coverage != "all" || sortOrder != .newest
+    }
     private let tips = VideoTip.bundled
     private var english: Bool { language == "en" }
     private var filtered: [VideoTip] { sortOrder.sorted((tips ?? []).filter {
@@ -641,6 +647,28 @@ struct VideoTipsView: View {
         && $0.matches(query)
     }) }
     private var visible: VideoTip? { filtered.first { $0.id == selected } ?? filtered.first }
+    private var filterOptions: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(english ? "Filters & sorting" : "Filter & Sortierung").font(.headline)
+            CompanionPopup(title: english ? "Topic" : "Thema", selection: $category,
+                options: ["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].map { ($0, buildCategory($0, english)) }).companionField(english ? "Topic" : "Thema")
+            CompanionPopup(title: english ? "Source game" : "Spiel der Quelle", selection: $sourceGame,
+                options: [("all", english ? "All games" : "Alle Spiele"), ("realmcraft", "RealmCraft"), ("minecraft", "Minecraft")]).companionField(english ? "Source game" : "Spiel der Quelle")
+            CompanionPopup(title: english ? "Content" : "Inhalt", selection: $coverage, options: [
+                ("all", english ? "All videos" : "Alle Videos"),
+                ("curated", english ? "Reviewed contributions" : "Aufbereitete Beiträge"),
+                ("visual", english ? "Visual notes only" : "Nur Bildauswertung"),
+                ("pending", english ? "Review pending" : "Auswertung noch offen"),
+                ("transcript", english ? "With transcript index" : "Mit Transkriptindex"), ("short", "Shorts")
+            ]).companionField(english ? "Content" : "Inhalt")
+            CompanionPopup(title: english ? "Sort by" : "Sortierung", selection: $sortOrder,
+                options: VideoSortOrder.allCases.map { ($0, $0.label(english)) }).companionField(english ? "Sort by" : "Sortierung")
+            Button(english ? "Reset filters & sorting" : "Filter & Sortierung zurücksetzen") {
+                category = "all"; sourceGame = "all"; coverage = "all"; sortOrder = .newest
+            }.disabled(!hasFilterOptions)
+        }.padding(18).frame(width: 300)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Video tips & guides" : "Video-Tipps & Anleitungen") {
@@ -649,21 +677,20 @@ struct VideoTipsView: View {
             Divider()
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 12) {
-                    TextField(english ? "Search topic, material or tip" : "Thema, Material oder Tipp suchen", text: $query)
-                        .textFieldStyle(.roundedBorder).padding(.top, 16)
-                    CompanionPopup(title: english ? "Topic" : "Thema", selection: $category,
-                        options: ["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].map { ($0, buildCategory($0, english)) }).companionField(english ? "Topic" : "Thema")
-                    CompanionPopup(title: english ? "Source game" : "Spiel der Quelle", selection: $sourceGame,
-                        options: [("all", english ? "All games" : "Alle Spiele"), ("realmcraft", "RealmCraft"), ("minecraft", "Minecraft")]).companionField(english ? "Source game" : "Spiel der Quelle")
-                    CompanionPopup(title: english ? "Content" : "Inhalt", selection: $coverage, options: [
-                        ("all", english ? "All videos" : "Alle Videos"),
-                        ("curated", english ? "Reviewed contributions" : "Aufbereitete Beiträge"),
-                        ("visual", english ? "Visual notes only" : "Nur Bildauswertung"),
-                        ("pending", english ? "Review pending" : "Auswertung noch offen"),
-                        ("transcript", english ? "With transcript index" : "Mit Transkriptindex"), ("short", "Shorts")
-                    ]).companionField(english ? "Content" : "Inhalt")
-                    CompanionPopup(title: english ? "Sort by" : "Sortierung", selection: $sortOrder,
-                        options: VideoSortOrder.allCases.map { ($0, $0.label(english)) }).companionField(english ? "Sort by" : "Sortierung")
+                    CompanionSearchRow(horizontalInset: 0) {
+                        HStack(spacing: 6) {
+                            TextField(english ? "Search topic, material or tip" : "Thema, Material oder Tipp suchen", text: $query)
+                                .textFieldStyle(.roundedBorder)
+                            Button { showFilters.toggle() } label: {
+                                Image(systemName: hasFilterOptions ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                            }
+                            .buttonStyle(.plain).frame(width: 28, height: 28)
+                            .accessibilityIdentifier("videoTips.filters")
+                            .accessibilityLabel(english ? "Filters & sorting" : "Filter & Sortierung")
+                            .help(english ? "Filters & sorting" : "Filter & Sortierung")
+                            .popover(isPresented: $showFilters) { filterOptions }
+                        }
+                    }
                     HStack {
                         Text(english ? "\(filtered.count) of \(tips?.count ?? 0) videos" : "\(filtered.count) von \(tips?.count ?? 0) Videos")
                             .font(.caption).foregroundStyle(.secondary)
@@ -684,7 +711,7 @@ struct VideoTipsView: View {
                     }
                     Text(english ? "\((tips ?? []).filter(\.isCurated).count) of \(tips?.count ?? 0) contributions reviewed\n\((tips ?? []).filter { !$0.isCurated }.count) reviews pending\n\((tips ?? []).filter(\.hasTranscript).count) transcripts indexed" : "\((tips ?? []).filter(\.isCurated).count) von \(tips?.count ?? 0) Beiträgen aufbereitet\n\((tips ?? []).filter { !$0.isCurated }.count) Auswertungen noch offen\n\((tips ?? []).filter(\.hasTranscript).count) Transkripte durchsuchbar")
                         .font(.caption).foregroundStyle(.secondary).padding(.bottom, 16)
-                }.padding(.horizontal, 16).frame(width: CompanionLayout.illustratedSidebarWidth).background(theme.surface.opacity(0.4))
+                }.padding(.horizontal, CompanionLayout.panelInset).frame(width: CompanionLayout.illustratedSidebarWidth).background(theme.surface.opacity(0.4))
                 Divider()
                 if let tip = visible {
                     VideoTipDetail(tip: tip, english: english, query: query).id(tip.id)

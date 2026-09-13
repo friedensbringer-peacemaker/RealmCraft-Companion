@@ -1,3 +1,29 @@
+# 1.7.59 · Recipe icon coverage · 2026-09-13
+
+- Extend Pixel Perfection from 686 to 722 explicit item mappings with 36 unchanged block-face textures, including crafting and processing stations. Keep existing images visible when an app update adds mappings; offer an explicit refresh for missing files. Preserve the selected pack and text-only preference.
+- Integrate illustrated walkthroughs and complete step-by-step AI exports from 1.7.57 with the latest source, including the shared search rows from 1.7.58.
+
+
+# 1.7.58 · Consistent list searches · 2026-09-13
+
+Local search rows in builds, videos, recipes, mobs, chests, skills, help and links now reuse the shared 32-point control height with 12-point vertical and 20-point panel insets. Filters and search scope remain unchanged. Single-column links use the page inset; views with source controls retain their content hierarchy.
+
+# 1.7.57 · Illustrated recipe walkthroughs · 2026-09-13
+
+- Add offline schematic walkthroughs for every documented recipe variant and obtaining entry, reusing optional installed artwork. Share data-derived steps across the screen, conversation and Markdown/JSON; keep source limitations and personal recipe confirmations intact.
+- Add full-catalog, personally verified and manual export scopes, with optional prerequisite and station references. Include typed ingredient groups, quantities, yields, grids, step objects and guidance for material clarification, batch rounding and stock separation. Keep referenced alternatives distinct from a resolved shopping list.
+- Support ambiguous pickaxe questions, material-only answers and next/previous/numbered conversation steps. Integrate the latest source baseline and update bilingual help, agent instructions and the central translation catalog.
+
+# 1.7.56 · Portal counterpart candidates and names · 2026-09-13
+
+- Automatically list directional nearest-counterpart candidates using the explicitly assumed 8:1 X/Z scale, with coordinates and horizontal deviation in the destination dimension. Preserve recorded observations, expose ties and never promote proximity into verified travel evidence.
+- Read nearby signs from the selected snapshot with the existing block/sign decoder. A unique inscription supplies a suggested name; multiple inscriptions remain selectable. Manual names are stored separately and displayed in portal lists, connections and the map layer.
+- Keep the two-dimension 2D connection diagram in the backlog. No savegame files are modified.
+
+# 1.7.55 · Search-row alignment · 2026-09-13
+
+- Align global Quick find and the Worlds & backups search using a shared 32-point control row with 12-point vertical insets. Keep the Home navigation entry below global search and preserve existing search scopes and bindings.
+
 # 1.7.54 · Public documentation workflow · 2026-09-13
 
 - Add a bilingual public-documentation skill to Assistant instructions and a project-wiki link. Generate the English wiki from existing help with stable topic links, version/source manifests and a versioned screenshot gallery. Keep screenshot capture isolated to the approved demo; capture provenance and exact image checksums are reviewed separately.

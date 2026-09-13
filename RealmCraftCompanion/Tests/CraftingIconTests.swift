@@ -28,7 +28,19 @@ import AppKit
         }
         let store = ItemIconStore(root: assets, resources: resources, defaults: defaults)
         precondition(store.installed.count == 2)
-        var checks = 0
+        // A new app mapping must not make an older verified pack disappear.
+        for pack in IconPack.allCases {
+            try JSONEncoder().encode([String(torchID): "PNG/synthetic.png", "99999": "PNG/new-mapping.png"]).write(to: resources.appendingPathComponent(pack.manifest + ".json"))
+        }
+        let expanded = ItemIconStore(root: assets, resources: resources, defaults: defaults)
+        precondition(expanded.installed.count == 2 && expanded.incomplete.count == 2)
+        precondition(expanded.image(for: torchID, pack: .pixel) != nil && expanded.image(for: 99999, pack: .pixel) == nil)
+        for pack in IconPack.allCases {
+            try bitmap.representation(using: .png, properties: [:])!.write(to: expanded.directory(pack).appendingPathComponent("PNG/new-mapping.png"))
+        }
+        expanded.refresh()
+        precondition(expanded.incomplete.isEmpty && expanded.image(for: 99999, pack: .pixel) != nil)
+        var checks = 3
         for english in [false, true] {
             for pack in IconPack.allCases {
                 defaults.set(pack.rawValue, forKey: "companionIconPack")

@@ -61,14 +61,16 @@ struct HelpView: View {
             case .success:
                 HStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 0) {
-                        HStack {
-                            TextField(english ? "Search all help · DE / EN" : "Gesamte Hilfe suchen · DE / EN", text: $search)
-                                .textFieldStyle(.roundedBorder).accessibilityIdentifier("help.search")
-                            if !search.isEmpty {
-                                Button { search = "" } label: { Image(systemName: "xmark.circle") }
-                                    .buttonStyle(.plain).accessibilityLabel(english ? "Clear search" : "Suche zurücksetzen")
+                        CompanionSearchRow {
+                            HStack {
+                                TextField(english ? "Search all help · DE / EN" : "Gesamte Hilfe suchen · DE / EN", text: $search)
+                                    .textFieldStyle(.roundedBorder).accessibilityIdentifier("help.search")
+                                if !search.isEmpty {
+                                    Button { search = "" } label: { Image(systemName: "xmark.circle") }
+                                        .buttonStyle(.plain).accessibilityLabel(english ? "Clear search" : "Suche zurücksetzen")
+                                }
                             }
-                        }.padding(16)
+                        }
                         Text(english ? "\(articles.count) topics" : "\(articles.count) Themen")
                             .font(.caption).foregroundStyle(.secondary).padding(12)
                         List(selection: $selected) {

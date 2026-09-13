@@ -38,6 +38,18 @@ import Foundation
         let combined = try CraftingAgentSnapshot.make(index: index, preferences: prefs, english: true)
         check(combined.entries.count == 3 && combined.markdown.contains("3 ×"), "Combined export includes all selected entries, one batch per recipe")
         check(!combined.markdown.contains("12 ×"), "Combined export does not reuse a transient detail quantity")
+        var recipeCatalogJSON = try JSONSerialization.jsonObject(with: Data(contentsOf: source)) as! [String: Any]
+        var recipeRows = recipeCatalogJSON["recipes"] as! [[String: Any]]
+        let bucketPosition = recipeRows.firstIndex { $0["id"] as? String == bucket.recipe!.id }!
+        recipeRows[bucketPosition]["sourceSHA256"] = String(repeating: "a", count: 64)
+        recipeCatalogJSON["recipes"] = recipeRows
+        let changedRecipeCatalog = try JSONDecoder().decode(CraftingCatalog.self, from: JSONSerialization.data(withJSONObject: recipeCatalogJSON))
+        let changedBucket = CraftingInstruction.all(changedRecipeCatalog.index()).first { $0.id == bucket.id }!
+        check(changedBucket.digest(changedRecipeCatalog.index()) != bucket.digest(index), "Recipe provenance changes invalidate confirmation")
+        var allSelected = CraftingAgentPreferences()
+        for instruction in all { allSelected.records[instruction.id] = .init(selected: true) }
+        let complete = try CraftingAgentSnapshot.make(index: index, preferences: allSelected, english: true)
+        check(complete.entries.count == all.count && complete.markdown.contains("lava_bucket"), "Full catalog selection has no truncation or lost instructions")
         var modified = catalog
         var guideRows = try JSONSerialization.jsonObject(with: Data(contentsOf: source.deletingLastPathComponent().appendingPathComponent("CraftingAcquisition.json"))) as! [[String: Any]]
         let position = guideRows.firstIndex { ($0["items"] as? [String])?.contains("lava_bucket") == true }!

@@ -113,6 +113,21 @@ class ExtractionTests(unittest.TestCase):
                 self.assertNotIn("Synthetic private", item["source"]["en"])
                 self.assertEqual(item["source"]["de"], "")
 
+    def test_german_icon_section_preserves_source_language(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            (base / "Resources").mkdir()
+            (base / "Sources").mkdir()
+            (base / "translations.txt").write_text("")
+            heading = "## Stationsgrafiken und bestehende Installationen · 1.7.59"
+            (base / "Resources/ITEM-ICONS.md").write_text(heading + "\n\nVorhandene Bilder bleiben verfügbar.\n\n## Historisch\nNicht übernehmen.\n")
+            entries, pending = tc.discover(base)
+            self.assertEqual(len(entries), 1)
+            self.assertFalse(pending)
+            self.assertIn("Vorhandene Bilder", entries[0]["source"]["de"])
+            self.assertEqual(entries[0]["source"]["en"], "")
+            self.assertNotIn("Nicht übernehmen", entries[0]["source"]["de"])
+
     def test_metro_assistant_sections_and_ui_are_inventoried(self):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)

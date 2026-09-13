@@ -7,15 +7,28 @@ struct CraftingConversation {
     var lastItem: String?
     var lastQuantity = 1
     var lastRecipeID: String?
+    var pendingItems: [String] = []
+    var stepPosition: Int?
     struct Reply { let text: String; let spoken: String }
     static func tokens(_ text: String) -> [String] {
         CraftingCatalog.normalized(text).components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
     }
-    static let filler = Set("bekomme bekommen beschaffe beschaffen erhalte erhalten sammeln get obtain collect wie was welche welchen welches wird werden ich mir man du ein eine einen einer eines der die das den dem des fur von bitte brauche benotige braucht benotigt crafte craften crafting rezept rezepte herstellen herstelle stelle her mache machen mach baue bauen erklare erklar erklaren kannst konntest erstelle erstellen suche such zeige finde how what which do does i you a an the for of please need needs craft recipe recipes make making build explain find search show me to can could would is are it ingredients materials zutaten materialien stuck items und and davon dafur dazu noch einmal".split(separator: " ").map(String.init))
+    static let filler = Set("aus out schritt step by bekomme bekommen beschaffe beschaffen erhalte erhalten sammeln get obtain collect wie was welche welchen welches wird werden ich mir man du ein eine einen einer eines der die das den dem des fur von bitte brauche benotige braucht benotigt crafte craften crafting rezept rezepte herstellen herstelle stelle her mache machen mach baue bauen erklare erklar erklaren kannst konntest erstelle erstellen suche such zeige finde how what which do does i you a an the for of please need needs craft recipe recipes make making build explain find search show me to can could would is are it ingredients materials zutaten materialien stuck items und and davon dafur dazu noch einmal".split(separator: " ").map(String.init))
     mutating func answer(_ question: String, english: Bool) -> Reply? {
         let words = Self.tokens(question), q = words.joined(separator: " ")
         let stock = ["habe ich", "kann ich", "fehlt mir", "in meinen kisten", "do i have", "can i", "my chests", "am i missing"].contains { q.contains($0) }
-        guard !stock else { lastItem = nil; return nil }
+        guard !stock else { lastItem = nil; pendingItems = []; stepPosition = nil; return nil }
+        let next = ["weiter", "nachster schritt", "nachsten schritt", "next", "next step"].contains(q)
+        let previous = ["zuruck", "vorheriger schritt", "previous", "previous step"].contains(q)
+        let requestedStep = words.count == 2 && ["schritt", "step"].contains(words[0]) ? Int(words[1]) : nil
+        if next || previous || requestedStep != nil, let itemID = lastItem, let item = index.items[itemID] {
+            let recipe = index.recipes[itemID, default: []].first { $0.id == lastRecipeID }
+            let steps = recipe.map { CraftingWalkthrough.recipe($0, index: index, desired: lastQuantity, english: english) }
+                ?? index.acquisitions[itemID].map { CraftingWalkthrough.obtaining($0, english: english) } ?? []
+            guard !steps.isEmpty else { return nil }
+            let position = requestedStep.map { $0 - 1 } ?? (stepPosition.map { $0 + (previous ? -1 : 1) } ?? 0)
+            return stepReply(item: item, steps: steps, position: position, english: english)
+        }
         if question.range(of: #"-\s*\d"#, options: .regularExpression) != nil {
             let text = english ? "Use a positive quantity between 1 and 9999." : "Verwende eine positive Menge von 1 bis 9999."
             return Reply(text: text, spoken: text)
@@ -42,14 +55,18 @@ struct CraftingConversation {
             let exact = candidates.filter { item in
                 [Self.tokens(item.title.de).joined(separator: " "), Self.tokens(item.title.en).joined(separator: " "), item.itemID.map(String.init) ?? ""].contains { exactQueries.contains($0) }
             }
-            matches = exact.isEmpty ? candidates : exact
+            let narrowed = candidates.filter { pendingItems.contains($0.id) }
+            matches = !narrowed.isEmpty ? narrowed : exact.isEmpty ? candidates : exact
         }
-        guard !matches.isEmpty else { lastItem = nil; return nil }
+        guard !matches.isEmpty else { lastItem = nil; pendingItems = []; stepPosition = nil; return nil }
         func reply(_ value: String) -> Reply { Reply(text: value, spoken: value) }
         guard matches.count == 1 else {
-            lastItem = nil
+            lastItem = nil; pendingItems = matches.map(\.id); stepPosition = nil
             return reply((english ? "Which item? " : "Welchen Gegenstand meinst du? ") + matches.prefix(8).map { $0.title.value(english) }.joined(separator: ", ") + (matches.count > 8 ? (english ? ". Refine the search in Crafting / Recipes." : ". Grenze die Suche unter Crafting / Rezepte ein.") : "."))
         }
+        pendingItems = []
+        let stepMode = words.contains("schritt") || words.contains("step")
+        if !stepMode { stepPosition = nil }
         let item = matches[0], desired = variantRequest || (generic && numeric.isEmpty) ? lastQuantity : quantity
         guard (1...9999).contains(desired), numeric.count <= 1 else {
             return reply(english ? "Use one target quantity between 1 and 9999; numeric catalog IDs are searched on their own." : "Verwende eine Zielmenge von 1 bis 9999; numerische Katalog-IDs bitte einzeln suchen.")
@@ -61,6 +78,8 @@ struct CraftingConversation {
         let obtainingRequest = words.contains { ["bekomme", "bekommen", "beschaffe", "beschaffen", "erhalte", "erhalten", "sammeln", "get", "obtain", "collect"].contains($0) }
         if recipes.isEmpty || obtainingRequest, let guide = index.acquisitions[item.id] {
             let quantityNote = desired > 1 ? (english ? "Requested quantity: \(desired). This guide describes obtaining the item; it does not calculate a crafting bill of materials.\n\n" : "Gewünschte Menge: \(desired). Diese Anleitung beschreibt die Beschaffung; sie berechnet dafür keine Crafting-Stückliste.\n\n") : ""
+            lastRecipeID = nil
+            if stepMode { return stepReply(item: item, steps: CraftingWalkthrough.obtaining(guide, english: english), position: 0, english: english) }
             let text = quantityNote + guide.report(item: item, english: english)
             let spoken = item.title.value(english) + ". " + guide.evidence.value(english) + " " + guide.requirements.value(english) + " " + guide.steps.map { $0.text.value(english) }.joined(separator: " ")
                 + (english ? " Things to know and sources are included in the written guide." : " Besonderheiten und Quellen stehen in der Textanleitung.")
@@ -80,6 +99,9 @@ struct CraftingConversation {
             let text = caveat + item.title.value(english) + (english ? " has \(recipes.count) reference variants. Reply ‘Variant 1’ or select a route under Crafting / Recipes.\n" : " hat \(recipes.count) Rezeptvarianten. Antworte ‚Variante 1‘ oder wähle einen Weg unter Crafting / Rezepte.\n") + options + (recipes.count > 6 ? (english ? "\nFurther variants in Crafting / Recipes." : "\nWeitere Varianten unter Crafting / Rezepte.") : "")
             return Reply(text: text, spoken: String(text.prefix(1800)))
         }
+        lastRecipeID = recipe.id
+        let steps = CraftingWalkthrough.recipe(recipe, index: index, desired: desired, english: english)
+        if stepMode { return stepReply(item: item, steps: steps, position: 0, english: english) }
         let batches = recipe.batches(for: desired)
         let ingredients = recipe.ingredients.map { ingredient -> String in
             let names = ingredient.options.prefix(4).map { index.items[$0]?.title.value(english) ?? $0 }
@@ -89,7 +111,20 @@ struct CraftingConversation {
         let spoken = caveat + item.title.value(english) + ". " + (english ? "For \(desired) items: \(batches) batches at \(recipe.station.title(true)), yielding \(recipe.produced(for: desired)). Direct ingredients: " : "Für \(desired) Stück: \(batches) Durchgänge an \(recipe.station.title(false)), Ergebnis \(recipe.produced(for: desired)) Stück. Direkte Zutaten: ") + ingredients + ". "
             + (english ? "Alternatives are choices, not additional quantities. Use Material plan for intermediate products. " : "Alternativen sind Wahlmöglichkeiten, keine zusätzlichen Mengen. Für Zwischenprodukte verwende den Materialplan. ")
             + (recipe.station.usesFuel ? (english ? "Additional fuel is required; amount unverified." : "Zusätzlicher Brennstoff ist nötig; Menge ungeprüft.") : "")
-        return Reply(text: index.summary(recipe, desired: desired, english: english), spoken: spoken)
+        return Reply(text: index.summary(recipe, desired: desired, english: english) + "\n\n" + CraftingWalkthrough.markdown(steps, english: english), spoken: spoken)
+    }
+    private mutating func stepReply(item: CraftingItem, steps: [CraftingWalkthroughStep], position: Int, english: Bool) -> Reply {
+        guard steps.indices.contains(position) else {
+            let text = english ? "Choose a step from 1 to \(steps.count). You can go back or start again with ‘Step 1’." : "Wähle einen Schritt von 1 bis \(steps.count). Du kannst zurückgehen oder mit ‚Schritt 1‘ neu beginnen."
+            return Reply(text: text, spoken: text)
+        }
+        stepPosition = position
+        let step = steps[position]
+        let prefix = english ? "Minecraft comparison, unverified in RealmCraft VR. " : "Minecraft-Vergleich, in RealmCraft VR ungeprüft. "
+        let header = english ? "Step \(position + 1) of \(steps.count)" : "Schritt \(position + 1) von \(steps.count)"
+        let next = position + 1 < steps.count ? (english ? "Say ‘next’ when you are ready." : "Sage ‚weiter‘, wenn du bereit bist.") : (english ? "This is the last documented step." : "Dies ist der letzte dokumentierte Schritt.")
+        let text = item.title.value(english) + " · " + header + "\n\n" + prefix + "\n\n" + step.title + "\n\n" + step.text + "\n\n" + next
+        return Reply(text: text, spoken: text)
     }
     static func planAnswer(_ plan: CraftingPlan, index: CraftingIndex, english: Bool) -> Reply {
         let result = CraftingPlanCalculator.calculate(plan, index: index, english: english)

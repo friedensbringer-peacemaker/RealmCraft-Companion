@@ -17,7 +17,7 @@ import AppKit
         let names = try JSONSerialization.jsonObject(with: Data(contentsOf: resources.appendingPathComponent("MapEngine/realmcraft_map/item_names.json"))) as! [String: Any]
         for (index, pack) in IconPack.allCases.enumerated() {
             let mapping = pack.mapping(at: resources.appendingPathComponent(pack.manifest + ".json"))
-            precondition(mapping.count == (pack == .kenney ? 49 : 686))
+            precondition(mapping.count == (pack == .kenney ? 49 : 722))
             precondition(mapping.keys.allSatisfy { names[$0] != nil })
             let archive = URL(fileURLWithPath: CommandLine.arguments[index + 2])
             let destination = store.directory(pack)
@@ -61,7 +61,7 @@ import AppKit
             precondition(store.installed.count == 2)
             print("PASS: both native downloads, verification and activation")
         }
-        print("PASS: 49/686 mappings, install/reinstall, corrupt ZIP preservation, independent removal, persistent switching, fallback, DE/EN and both skins")
+        print("PASS: 49/722 mappings, install/reinstall, corrupt ZIP preservation, independent removal, persistent switching, fallback, DE/EN and both skins")
     }
     @MainActor static func render<V: View>(_ view: V, path: URL) throws {
         let host = NSHostingView(rootView: view)

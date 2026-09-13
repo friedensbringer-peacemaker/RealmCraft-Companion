@@ -24,6 +24,7 @@ struct CompanionSearchSidebar<Navigation: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            CompanionSearchRow(horizontalInset: 10) {
             HStack(spacing: 6) {
                 Button { focused = true } label: { Image(systemName: "magnifyingglass") }
                     .buttonStyle(.plain).frame(width: 24, height: 28)
@@ -57,7 +58,8 @@ struct CompanionSearchSidebar<Navigation: View>: View {
                                 .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         }.padding(18).frame(width: 290)
                     }
-            }.padding(.horizontal, 10).padding(.bottom, 8)
+            }
+            }
             if kinds.count != QuickFindKind.allCases.count {
                 HStack {
                     Text(english ? "\(kinds.count) of 4 categories" : "\(kinds.count) von 4 Kategorien").font(.caption)

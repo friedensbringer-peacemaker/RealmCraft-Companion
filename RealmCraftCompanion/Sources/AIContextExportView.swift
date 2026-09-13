@@ -13,6 +13,8 @@ struct AIContextExportView: View {
     @ObservedObject private var skills = AgentSkillLibrary.shared
     @ObservedObject private var craftingLibrary = CraftingAgentLibrary.shared
     @AppStorage("craftingAgent.include") private var includeCrafting = true
+    @AppStorage("craftingAgent.exportScope") private var craftingExportScope = CraftingExportScope.all.rawValue
+    @AppStorage("craftingAgent.includePrerequisites") private var includeCraftingPrerequisites = true
     @State private var showCraftingSelection = false
     private let craftingIndex = Result { try CraftingCatalog.load().index() }
     @AppStorage("agentSkill.selectedID") private var selectedSkillID = "realmcraft-world-context"
@@ -54,6 +56,8 @@ struct AIContextExportView: View {
         exportSelectionEvents
         .onChange(of: craftingLibrary.state) { _, _ in clear() }
         .onChange(of: includeCrafting) { _, _ in clear() }
+        .onChange(of: craftingExportScope) { _, _ in clear() }
+        .onChange(of: includeCraftingPrerequisites) { _, _ in clear() }
         .sheet(isPresented: $showCraftingSelection) {
             if case .success(let index) = craftingIndex { CraftingAgentSelectionView(library: craftingLibrary, index: index, english: en) }
         }
@@ -223,10 +227,25 @@ struct AIContextExportView: View {
         .onChange(of: model.selection) { _, _ in clear() }
         .onChange(of: model.library.root) { _, _ in clear() }
     }
+    private var craftingGuideCount: Int {
+        guard case .success(let index) = craftingIndex else { return 0 }
+        switch CraftingExportScope(rawValue: craftingExportScope) ?? .all {
+        case .all: return index.catalog.recipes.count + index.acquisitions.count
+        case .selected: return craftingLibrary.state.selectedIDs.count
+        case .verified: return CraftingInstruction.all(index).filter { craftingLibrary.state.records[$0.id]?.isVerified($0, index: index) == true }.count
+        }
+    }
     private var craftingOptions: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Toggle(en ? "Include selected crafting and obtaining guides" : "Ausgewählte Rezepte und Beschaffungsanleitungen einbeziehen", isOn: $includeCrafting).toggleStyle(.checkbox)
-            Text(en ? "\(craftingLibrary.state.selectedIDs.count) guides selected. Complete Markdown and JSON include quantities, steps, sources and personal verification status." : "\(craftingLibrary.state.selectedIDs.count) Anleitungen ausgewählt. Vollständiges Markdown und JSON enthalten Mengen, Schritte, Quellen und persönlichen Prüfstatus.")
+            Toggle(en ? "Include crafting and obtaining guides" : "Rezepte und Beschaffungsanleitungen einbeziehen", isOn: $includeCrafting).toggleStyle(.checkbox)
+            Picker(en ? "Guide scope" : "Umfang der Anleitungen", selection: $craftingExportScope) {
+                ForEach(CraftingExportScope.allCases, id: \.rawValue) { Text($0.title(en)).tag($0.rawValue) }
+            }.disabled(!includeCrafting)
+            Toggle(en ? "Include ingredient and station recipes" : "Zutaten- und Stationsrezepte mitnehmen", isOn: $includeCraftingPrerequisites)
+                .toggleStyle(.checkbox).disabled(!includeCrafting || craftingExportScope != CraftingExportScope.selected.rawValue)
+            Text(en ? "All documented guides supports questions across the catalog, including pickaxe materials. Unverified comparisons remain labeled; personally verified scope stays limited to current confirmations." : "Alle dokumentierten Anleitungen ermöglicht Fragen zum gesamten Katalog, etwa zu Spitzhacken-Materialien. Ungeprüfte Vergleiche bleiben gekennzeichnet; der persönlich verifizierte Umfang bleibt auf aktuelle Bestätigungen begrenzt.")
+                .font(.caption).foregroundStyle(.secondary)
+            Text(en ? "\(craftingGuideCount) guides in the chosen scope; prerequisites may be added by the option above. Markdown and JSON include quantities, steps, sources and personal verification status." : "\(craftingGuideCount) Anleitungen im gewählten Umfang; Vorstufen kommen nach obiger Option hinzu. Markdown und JSON enthalten Mengen, Schritte, Quellen und persönlichen Prüfstatus.")
                 .font(.caption).foregroundStyle(.secondary)
             switch craftingIndex {
             case .success:
@@ -296,7 +315,7 @@ struct AIContextExportView: View {
         let videos = includeVideos ? VideoKnowledgeExport.selected(videoTips, value: videoSelection) : []
         let splitVideos = separateVideos
         let crafting: CraftingAgentSnapshot?
-        do { crafting = includeCrafting ? try craftingLibrary.snapshot(index: craftingIndex.get(), english: english) : nil }
+        do { crafting = includeCrafting ? try craftingLibrary.snapshot(index: craftingIndex.get(), scope: CraftingExportScope(rawValue: craftingExportScope) ?? .all, includePrerequisites: includeCraftingPrerequisites, english: english) : nil }
         catch { failure = error.localizedDescription; return }
         let navigation = includeNavigation ? navigationPack?.selectingPOIs(includeNavigationPOIs) : nil
         if includeNavigation && navigation == nil { failure = english ? "Load a route from Maps first." : "Zuerst eine Route aus Karten laden."; return }

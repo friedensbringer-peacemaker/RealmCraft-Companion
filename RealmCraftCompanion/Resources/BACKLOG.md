@@ -1,5 +1,10 @@
 BACKLOG
 
+## Illustrated recipe walkthroughs · 1.7.57 (79) · 2026-09-13
+
+Implemented: offline sketches and numbered walkthroughs for documented recipes/obtaining guides; full/manual/verified export scopes; typed agent data and prerequisite references; material clarification and conversational step navigation. Sketches are explanatory, not captured RealmCraft graphics. Markdown carries text grids, not image attachments. Remaining: in-game Quest verification, missing recipe/obtaining evidence, physical keyboard/VoiceOver acceptance, and Android/web parity.
+
+
 ## Public documentation workflow · 1.7.54 (76) · 2026-09-13
 
 Implemented: help-derived English wiki generation, source manifests, bilingual documentation skill and versioned screenshot records. Grow tutorials and screenshots from verified app workflows. Preserve independently written wiki pages; review regenerated files before publishing. Android/Quest and browser parity remain separate work.
@@ -280,6 +285,12 @@ Shipped in 1.7.38: linked layer inspection, shared multi-material line/heatmap/b
 - Add a version-verified Bedrock reference profile; do not silently apply Java counts to Bedrock.
 - Consider population-weighted spatial estimates and cluster-based uncertainty intervals after the sampling design and effective independent units have been validated. Current spatial samples and trial rates remain explicitly descriptive.
 - Port the new ore research workflow to Android/Quest and the web demo in a separate platform-sync update.
+
+## Portal pairs · automatic candidates and 2D follow-up · 2026-09-13
+
+Implemented in 1.7.56: nearest saved counterpart candidates in both directions with an assumed 8:1 transform, destination-space horizontal deviation and explicit tie handling. Recorded outgoing observations override suggestions for that direction. No one-to-one pairing, verified search radius or automatic confirmation is asserted. Nearby readable signs supply provisional names; manual names override them and persist per snapshot/fingerprint.
+
+Planned: a dedicated 2D view with separate Overworld and Nether panels, portal names and X/Y/Z, selectable directional connection lines, distinct observed/candidate styles and filters. Show unknown destinations and competing candidates explicitly; reuse shared Atlas coordinates and portal metadata. This is a connection overview, not a traversable route planner. Verify RealmCraft mechanics before claiming actual destination prediction.
 
 ## Planned · Nether Portal & Travel Planner · 2026-09-07
 

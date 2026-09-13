@@ -15,12 +15,12 @@ final class CraftingAgentLibrary: ObservableObject {
     func update(_ change: (inout CraftingAgentPreferences) -> Void) {
         do { accept(try storage.update(change)) } catch { failure = error.localizedDescription }
     }
-    func snapshot(index: CraftingIndex, instructions: [CraftingInstruction]? = nil, desired: Int = 1, english: Bool) throws -> CraftingAgentSnapshot {
+    func snapshot(index: CraftingIndex, instructions: [CraftingInstruction]? = nil, desired: Int = 1, scope: CraftingExportScope = .selected, includePrerequisites: Bool = false, english: Bool) throws -> CraftingAgentSnapshot {
         let latest: CraftingAgentPreferences
         do { latest = try storage.load(); failure = "" }
         catch { failure = error.localizedDescription; throw error }
         // Capturing a document must not publish a deferred selection change that cancels its generation.
-        return try .make(index: index, preferences: latest, instructions: instructions, desired: desired, english: english)
+        return try .make(index: index, preferences: latest, instructions: instructions, desired: desired, scope: scope, includePrerequisites: includePrerequisites, english: english)
     }
 }
 
@@ -84,7 +84,7 @@ struct CraftingAgentControls: View {
     }
     private func export(copy: Bool) {
         do {
-            let snapshot = try library.snapshot(index: index, instructions: [instruction], desired: desired, english: english)
+            let snapshot = try library.snapshot(index: index, instructions: [instruction], desired: desired, includePrerequisites: true, english: english)
             if copy { try CraftingAgentFile.copy(snapshot.markdown, english: english) }
             else if !CraftingAgentFile.save(snapshot.markdown, name: "RealmCraft-" + instruction.itemID + ".md", english: english) { return }
             notice = copy ? (english ? "Markdown copied. Paste it into your agent." : "Markdown kopiert. Bei deinem Agenten einfügen.") : (english ? "Markdown saved. Attach the file to your agent." : "Markdown gespeichert. Die Datei bei deinem Agenten anhängen.")
@@ -121,7 +121,13 @@ struct CraftingAgentSelectionView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var notice = ""
     @State private var failure = ""
+    @AppStorage("craftingAgent.exportScope") private var exportScope = CraftingExportScope.all.rawValue
+    @AppStorage("craftingAgent.includePrerequisites") private var includePrerequisites = true
+    private var scope: CraftingExportScope { CraftingExportScope(rawValue: exportScope) ?? .all }
     private var instructions: [CraftingInstruction] { CraftingInstruction.all(index) }
+    private var visible: [CraftingInstruction] {
+        switch scope { case .all: return instructions; case .verified: return verified; case .selected: return selected }
+    }
     private var verified: [CraftingInstruction] { instructions.filter { library.state.records[$0.id]?.isVerified($0, index: index) == true } }
     private var selected: [CraftingInstruction] { instructions.filter { library.state.selectedIDs.contains($0.id) } }
     var body: some View {
@@ -131,29 +137,38 @@ struct CraftingAgentSelectionView: View {
                 Spacer()
                 Button(english ? "Done" : "Fertig") { dismiss() }.keyboardShortcut(.cancelAction)
             }
-            Text(english ? "\(verified.count) personally verified · \(library.state.selectedIDs.count) selected" : "\(verified.count) persönlich verifiziert · \(library.state.selectedIDs.count) ausgewählt")
+            Picker(english ? "Export scope" : "Exportumfang", selection: $exportScope) {
+                ForEach(CraftingExportScope.allCases, id: \.rawValue) { Text($0.title(english)).tag($0.rawValue) }
+            }
+            Text(english ? "\(visible.count) guides in scope · \(verified.count) personally verified" : "\(visible.count) Anleitungen im Umfang · \(verified.count) persönlich verifiziert")
+            Toggle(english ? "Include ingredient and station recipes" : "Zutaten- und Stationsrezepte mitnehmen", isOn: $includePrerequisites)
+                .toggleStyle(.checkbox).disabled(scope != .selected)
+            Text(english ? "All documented guides includes unverified references. Verified scope includes only your current confirmations. In My selection, prerequisites can add unverified references with their own status." : "Alle dokumentierten Anleitungen enthält auch ungeprüfte Referenzen. Der verifizierte Umfang enthält nur deine aktuellen Bestätigungen. Bei Meine Auswahl können Vorstufen ungeprüfte Referenzen mit eigenem Status ergänzen.")
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             Text(english ? "Select guides in their details or add all current personal confirmations here. The selection also appears in AI export. Markdown includes steps, quantities, sources and verification status; combined exports use one batch per recipe." : "Wähle Anleitungen in ihren Details oder füge hier alle aktuellen persönlichen Bestätigungen hinzu. Die Auswahl steht auch im KI-Export bereit. Markdown enthält Schritte, Mengen, Quellen und Prüfstatus; Gesamtexporte verwenden einen Durchgang je Rezept.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             HStack {
-                Button(english ? "Add all verified guides" : "Alle verifizierten hinzufügen") { library.update { $0.selectVerified(index) } }
+                Button(english ? "Add all verified guides" : "Alle verifizierten hinzufügen") { library.update { $0.selectVerified(index) }; exportScope = CraftingExportScope.selected.rawValue }
                     .disabled(verified.isEmpty || !library.failure.isEmpty)
                 Button(english ? "Clear selection" : "Auswahl leeren") {
-                    library.update { state in for key in Array(state.records.keys) { state.records[key]?.selected = false } }
+                    library.update { state in for key in Array(state.records.keys) { state.records[key]?.selected = false } }; exportScope = CraftingExportScope.selected.rawValue
                 }.disabled(library.state.selectedIDs.isEmpty || !library.failure.isEmpty)
             }
-            if library.state.selectedIDs.count > selected.count {
+            if scope == .selected && library.state.selectedIDs.count > selected.count {
                 Label(english ? "Selected guides are missing. Clear the selection and select the available guides again." : "Ausgewählte Anleitungen fehlen. Auswahl leeren und verfügbare Anleitungen erneut auswählen.", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
             }
-            if selected.isEmpty {
+            if visible.isEmpty {
                 Text(english ? "No guides selected yet. Use the checkbox in a recipe or obtaining guide." : "Noch keine Anleitungen ausgewählt. Nutze die Checkbox in einem Rezept oder einer Beschaffungsanleitung.")
                     .foregroundStyle(.secondary).frame(maxWidth: .infinity, minHeight: 160)
             } else {
-                List(selected) { instruction in
+                List(visible) { instruction in
                     VStack(alignment: .leading, spacing: 5) {
+                        if scope == .selected {
                         Toggle(instruction.title(index, english: english), isOn: Binding(
                             get: { library.state.records[instruction.id]?.selected == true },
                             set: { value in library.update { $0.records[instruction.id]?.selected = value } }
                         )).toggleStyle(.checkbox)
+                        } else { Text(instruction.title(index, english: english)).font(.headline) }
                         if let recipe = instruction.recipe {
                             Text(recipe.ingredients.map { "\($0.count) × " + index.ingredientName($0, english: english) }.joined(separator: " + "))
                                 .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -168,15 +183,15 @@ struct CraftingAgentSelectionView: View {
             if !failure.isEmpty { Text(failure).foregroundStyle(.red).textSelection(.enabled) }
             if !notice.isEmpty { Text(notice).font(.caption) }
             HStack {
-                Button(english ? "Save selection as Markdown…" : "Auswahl als Markdown speichern …") { export(copy: false) }
+                Button(english ? "Save guides as Markdown…" : "Anleitungen als Markdown speichern …") { export(copy: false) }
                 Button(english ? "Copy Markdown" : "Markdown kopieren") { export(copy: true) }
-            }.disabled(library.state.selectedIDs.isEmpty || !library.failure.isEmpty || library.state.selectedIDs.count != selected.count)
+            }.disabled(visible.isEmpty || !library.failure.isEmpty || (scope == .selected && library.state.selectedIDs.count != selected.count))
         }.padding(24).frame(minWidth: 620, idealWidth: 700, minHeight: 490, idealHeight: 600)
         .onAppear { library.reload() }
     }
     private func export(copy: Bool) {
         do {
-            let snapshot = try library.snapshot(index: index, english: english)
+            let snapshot = try library.snapshot(index: index, scope: scope, includePrerequisites: includePrerequisites, english: english)
             if copy { try CraftingAgentFile.copy(snapshot.markdown, english: english) }
             else if !CraftingAgentFile.save(snapshot.markdown, name: "RealmCraft-Agent-Guides.md", english: english) { return }
             notice = copy ? (english ? "Markdown copied." : "Markdown kopiert.") : (english ? "Markdown saved. Attach the file to your agent." : "Markdown gespeichert. Die Datei bei deinem Agenten anhängen.")

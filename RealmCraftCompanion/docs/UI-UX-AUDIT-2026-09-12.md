@@ -1,5 +1,14 @@
 # Companion UI/UX and integration audit · 2026-09-12
 
+## Consistent list searches · 1.7.58 (80) · 2026-09-13
+
+UX-012 follow-up: migrated comparable list searches in builds, videos, recipes, mobs, chests, skills, help and comparison topics to CompanionSearchRow. The video pane supplies its shared horizontal inset externally. Single-column Links/Checklist uses the page inset. Map overlays, inline inventory filters and editable forms retain contextual placement. Equal row geometry does not imply an identical window Y position when tabs, source selectors or wrapped headers precede a list. Search/filter bindings and draft protection are preserved. Validation uses the native search-row geometry regression and application build; this is not a full navigation or VoiceOver audit.
+
+
+## Search-row alignment · 1.7.55 (77) · 2026-09-13
+
+UX-012 follow-up: the global search had no top inset, while the backup-list search used 20 points. Both now reuse CompanionSearchRow: 32-point control height and symmetric 12-point vertical insets. Their native fields share a horizontal baseline when the standard single-row page header matches the 74-point brand region. Compact headers may still wrap to preserve accessible actions; this intentionally moves their content below the wrapped header. Search scope, query bindings, keyboard shortcuts and list selection remain unchanged. Evidence: supplied screenshot, source inspection and isolated production-component geometry checks; this is not a full navigation or VoiceOver audit.
+
 ## Tectonicus map space and mirroring · 1.7.52 (74) · 2026-09-13
 
 Tectonicus-specific follow-up: the large always-visible form left little space for the actual map, and camera angle alone did not reproduce the requested mirrored Atlas view. The implementation keeps source selection, primary action, Help, consent and progress in view. Render settings and source/result details use accessible popovers following the Maps information pattern. Saved/not-live and next-render state remain visible. Actual rendered perspective stays separate from pending settings.
