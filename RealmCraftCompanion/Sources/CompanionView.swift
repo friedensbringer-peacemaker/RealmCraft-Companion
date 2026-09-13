@@ -1,40 +1,5 @@
 import SwiftUI
 
-// Add a feature here, then provide its view in CompanionView. Storage and ADB remain shared.
-enum CompanionFeature: String, CaseIterable, Identifiable {
-    case editor, home, saves, maps, chests, resources, builds, videos, guide, player, conversation, mobs, aiExport, statistics, skills
-    static let worldFeatures: [Self] = [.saves, .player, .maps, .chests, .statistics, .editor]
-    static let aiFeatures: [Self] = [.aiExport, .conversation, .skills]
-    static let knowledgeFeatures: [Self] = [.videos, .builds, .mobs, .resources, .guide]
-    static var navigationOrder: [Self] { [.home] + worldFeatures + aiFeatures + knowledgeFeatures }
-    var id: String { rawValue }
-    var icon: String {
-        switch self { case .skills: return "text.book.closed"; case .videos: return "play.rectangle"; case .statistics: return "chart.bar.xaxis"; case .editor: return "slider.horizontal.3"; case .aiExport: return "doc.text.magnifyingglass"; case .mobs: return "pawprint"; case .conversation: return "bubble.left.and.bubble.right"; case .player: return "person.crop.rectangle"; case .home: return "square.grid.2x2"; case .saves: return "archivebox"; case .maps: return "map"; case .chests: return "shippingbox"; case .resources: return "globe"; case .builds: return "square.grid.3x3"; case .guide: return "questionmark.circle" }
-    }
-    func title(_ english: Bool) -> String {
-        switch self { case .skills: return "Skills"; case .videos: return english ? "Videos & tips" : "Videos & Tipps"; case .statistics: return english ? "Statistics · Beta" : "Statistiken · Beta"; case .editor: return "Editor · Beta"; case .aiExport: return english ? "AI export" : "KI-Export"; case .mobs: return "Mobs & Animals"; case .conversation: return english ? "Conversation · Beta" : "Gespräch · Beta"; case .player: return english ? "Player" : "Spieler"; case .home: return english ? "Home" : "Start"; case .saves: return "Savegames"; case .maps: return english ? "Maps" : "Karten"; case .chests: return english ? "Chests" : "Kisten"; case .resources: return english ? "Links & Knowledge" : "Links & Wissen"; case .builds: return english ? "Build guides" : "Bauanleitungen"; case .guide: return english ? "Help" : "Hilfe" }
-    }
-    func detail(_ english: Bool) -> String {
-        switch self {
-        case .skills: return english ? "Manage reusable instructions and personal context for agents." : "Wiederverwendbare Anweisungen und eigene Angaben für Agenten verwalten."
-        case .videos: return english ? "Search video topics and jump to timestamped tips." : "Videothemen durchsuchen und direkt zu passenden Tipps springen."
-        case .statistics: return english ? "Read the saved build/dig counter from a backup." : "Gespeicherten Bau-/Abbauzähler einer Sicherung auslesen."
-        case .editor: return english ? "Patch savegames · Beta / Preview" : "Spielstände bearbeiten · Beta / Preview"
-        case .aiExport: return english ? "Export a world snapshot for external agents." : "Weltkontext für externe Agenten exportieren."
-        case .mobs: return english ? "AI-generated mob catalog with sources." : "KI-generiertes Kreaturenregister mit Quellen."
-        case .conversation: return english ? "Ask about named places and crafting." : "Nach benannten Orten und Crafting fragen."
-        case .player: return english ? "Read level, inventory and equipped armor." : "Level, Inventar und angelegte Rüstung auslesen."
-        case .home: return english ? "Your RealmCraft companion" : "Dein Begleiter für RealmCraft"
-        case .saves: return english ? "Back up, restore and organize your Quest worlds." : "Quest-Welten sichern, wiederherstellen und verwalten."
-        case .maps: return english ? "Generate and explore maps from your saved worlds." : "Karten aus deinen gespeicherten Welten erzeugen und erkunden."
-        case .chests: return english ? "Find stored items, quantities and chest coordinates." : "Gelagerte Gegenstände, Mengen und Kistenkoordinaten finden."
-        case .resources: return english ? "Minecraft comparison, wikis, official links and community." : "Minecraft-Vergleich, Wikis, offizielle Links und Community."
-        case .builds: return english ? "Build machines and farms with offline grid plans." : "Maschinen und Farmen mit Offline-Blockplänen bauen."
-        case .guide: return english ? "Step-by-step setup, agent help and release notes." : "Einrichtung, Agent-Hilfe und Versionshinweise."
-        }
-    }
-}
-
 enum CompanionKeyboardFocus: Hashable {
     case sidebar, editorStorage
 }
@@ -43,6 +8,9 @@ struct CompanionView: View {
     @FocusState private var keyboardFocus: CompanionKeyboardFocus?
     @ObservedObject var model: Model
     @ObservedObject private var lifecycle = CompanionLifecycle.shared
+    @State private var searchFocusRequest = UUID()
+    @AppStorage("companionSpecialistToolsExpanded") private var specialistExpanded = false
+    @State private var lookup: QuickFindTarget?
     @State private var feedback: FeedbackRequest?
     @State private var openLatestExport = false
     @State private var exportRequest: UUID?
@@ -54,12 +22,17 @@ struct CompanionView: View {
     @AppStorage("homeIntroductionExpanded") private var introductionExpanded = false
     @AppStorage("lastHelpTopic") private var helpTopic = "start"
     @StateObject private var maps = MapController()
+    @StateObject private var tectonicus = TectonicusController()
     @StateObject private var chests = ChestController()
     @StateObject private var player = PlayerController()
     @Environment(\.companionTheme) private var theme
     @AppStorage("appLanguage") private var language = "en"
     @AppStorage("companionSkin") private var skin = "block"
-    @AppStorage("companionFeature") private var selected = CompanionFeature.home.rawValue
+    @AppStorage("companionFeature") private var storedFeature = CompanionFeature.home.rawValue
+    private var selected: String {
+        get { storedFeature }
+        nonmutating set { if newValue != storedFeature { model.drafts.perform { storedFeature = newValue } } }
+    }
     private var english: Bool { language == "en" }
     private var feature: CompanionFeature { CompanionFeature(rawValue: selected) ?? .home }
     private let poll = Timer.publish(every: 8, on: .main, in: .common).autoconnect()
@@ -75,22 +48,17 @@ struct CompanionView: View {
                             .textSelection(.enabled)
                     }
                 }.padding(.horizontal, 18).frame(height: 74)
-                List(selection: $selected) {
+                CompanionSearchSidebar(english: english, focusRequest: $searchFocusRequest, open: openLookup) {
+                  List(selection: Binding(get: { selected }, set: { selected = $0 })) {
                     Label(CompanionFeature.home.title(english), systemImage: CompanionFeature.home.icon)
                         .padding(.vertical, 5).tag(CompanionFeature.home.rawValue)
-                    Section(english ? "Your world" : "Deine Welt") {
-                        ForEach(CompanionFeature.worldFeatures) { item in
-                            Label(item.title(english), systemImage: item.icon).padding(.vertical, 5).tag(item.rawValue)
-                        }
-                    }
-                    Section(english ? "AI tools" : "KI-Werkzeuge") {
-                        ForEach(CompanionFeature.aiFeatures) { item in
-                            Label(item.title(english), systemImage: item.icon).padding(.vertical, 5).tag(item.rawValue)
-                        }
-                    }
-                    Section(english ? "Knowledge & help" : "Wissen & Hilfe") {
-                        ForEach(CompanionFeature.knowledgeFeatures) { item in
-                            Label(item.title(english), systemImage: item.icon).padding(.vertical, 5).tag(item.rawValue)
+                    ForEach(CompanionNavigationGroup.allCases) { group in
+                        if group == .specialist {
+                            DisclosureGroup(group.title(english), isExpanded: $specialistExpanded) {
+                                navigationRows(group)
+                            }
+                        } else {
+                            Section(group.title(english)) { navigationRows(group) }
                         }
                     }
                 }.listStyle(.sidebar).scrollContentBackground(.hidden).disabled(model.busy)
@@ -100,25 +68,29 @@ struct CompanionView: View {
                         keyboardFocus = .editorStorage
                         return .handled
                     }
+                }.disabled(model.busy)
                 VStack(alignment: .leading, spacing: 14) {
                     Button { openFeedback(FeedbackContext(area: feature.rawValue)) } label: {
                         Label(english ? "Report data / bug" : "Daten / Bug melden", systemImage: "flag")
                     }
-                    Label(model.setup.package.isEmpty ? (english ? "Quest not connected" : "Quest nicht verbunden") : (english ? "Quest connected" : "Quest verbunden"), systemImage: model.setup.package.isEmpty ? "circle" : "circle.fill")
+                    Label(model.setup.package.isEmpty ? (english ? "Device not connected" : "Gerät nicht verbunden") : (english ? "Device connected" : "Gerät verbunden"), systemImage: model.setup.package.isEmpty ? "circle" : "circle.fill")
                         .font(.caption).foregroundStyle(.secondary).help(tr(model.setup.message))
                     Menu {
                         settingsMenuItems
                     } label: { Label(english ? "Settings" : "Einstellungen", systemImage: "gearshape") }
                         .menuStyle(.borderlessButton).fixedSize().disabled(model.busy)
                 }.padding(18)
-            }.frame(width: 212).background(theme.surface)
+            }.frame(width: 250).background(theme.surface)
             Divider()
             Group {
                 switch feature {
+                case .portals: PortalsView(model: model, language: language)
+                case .metro: MetroView(model: model, maps: maps, language: language)
                 case .editor: SaveEditorView(model: model, maps: maps, chests: chests, language: language, keyboardFocus: $keyboardFocus)
                 case .home: home
                 case .saves: MainView(model: model, onMap: { selected = CompanionFeature.maps.rawValue })
-                case .maps: MapsView(model: model, maps: maps, language: language, requestedRadius: requestedMapRadius)
+                case .tectonicus: TectonicusView(model: model, tectonicus: tectonicus, language: language)
+                case .maps: MapsView(model: model, maps: maps, language: language, requestedRadius: requestedMapRadius, openPortals: { selected = CompanionFeature.portals.rawValue }, openOreAnalysis: { selected = CompanionFeature.ores.rawValue })
                 case .chests: ChestsView(model: model, maps: maps, chests: chests, language: language, openMaps: { selected = CompanionFeature.maps.rawValue })
                 case .statistics: StatisticsView(model: model, maps: maps, chests: chests, openMaps: { selected = CompanionFeature.maps.rawValue }, language: language)
                 case .player: PlayerView(model: model, player: player, names: chests, language: language)
@@ -126,14 +98,45 @@ struct CompanionView: View {
                 case .mobs: MobsView(language: language, report: openFeedback)
                 case .aiExport: AIContextExportView(model: model, maps: maps, chests: chests, language: language, generateRequest: $exportRequest, openLatest: $openLatestExport, openSkills: { selected = CompanionFeature.skills.rawValue })
                 case .skills: AgentSkillsView(language: language, saveLibrary: model.library.root) { id in selectedSkillID = id; selected = CompanionFeature.aiExport.rawValue }
+                case .ores: OreResearchView(model: model, maps: maps, language: language, openMaps: { selected = CompanionFeature.maps.rawValue })
                 case .resources: ResourcesView(language: language)
+                case .crafting: CraftingView(language: language)
                 case .builds: OfflineBuildGuidesView(language: language)
                 case .videos: VideoTipsView(language: language)
                 case .guide: HelpView(embedded: true)
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                .companionActionAlignmentScope()
+                .environment(\.companionPageGuidance, feature == .home ? nil : CompanionPageGuidance(purpose: feature.detail(english), openHelp: {
+                    _ = openLookup(QuickFindTarget(kind: .guide, item: feature.helpID))
+                }))
         }
         .environment(\.companionSettingsItems, AnyView(settingsMenuItems))
+        .environment(\.companionLookup, lookup)
+        .environment(\.draftTransitions, model.drafts)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if !maps.backgroundStatus.isEmpty {
+                HStack(spacing: 12) {
+                    if maps.generating { ProgressView().controlSize(.small) }
+                    else { Image(systemName: maps.finishedMap == nil ? "info.circle" : "checkmark.circle") }
+                    Text(maps.backgroundStatus).font(.callout).textSelection(.enabled).lineLimit(3)
+                    Spacer()
+                    if maps.generating {
+                        Button(english ? "Cancel map" : "Karte abbrechen") { maps.cancelGeneration() }.disabled(!maps.cancellable)
+                    } else {
+                        if let done = maps.finishedMap {
+                            Button(english ? "Open map" : "Karte öffnen") {
+                                guard model.drafts.authorize(), !model.busy, done.root == model.library.root, let save = model.saves.first(where: { $0.id == done.saveID }) else { return }
+                                model.selection = save.id; requestedMapRadius = done.radius; selected = CompanionFeature.maps.rawValue
+                                maps.restoreLast(save, radius: done.radius, language: language)
+                                maps.backgroundStatus = ""; maps.finishedMap = nil
+                            }.disabled(model.busy || done.root != model.library.root || !model.saves.contains { $0.id == done.saveID })
+                        }
+                        Button(english ? "Dismiss" : "Schließen") { maps.backgroundStatus = ""; maps.finishedMap = nil }
+                    }
+                }.padding(12).background(.regularMaterial)
+            }
+        }
         .frame(minWidth: 1080, minHeight: 700)
         .disabled(lifecycle.isWorking)
         .overlay(alignment: .bottomTrailing) {
@@ -155,12 +158,19 @@ struct CompanionView: View {
         .alert(english ? "Action incomplete" : "Aktion nicht abgeschlossen", isPresented: Binding(get: { model.error != nil && feature != .saves && !model.showSetup }, set: { if !$0 { model.error = nil } })) {
             Button("OK") { model.error = nil }
         } message: { Text(tr(model.error ?? "")) }
-        .onAppear { model.connect() }
+        .onChange(of: selected) { _, value in
+            if lookup?.kind.rawValue != value { lookup = nil }
+            if CompanionFeature.specialistFeatures.contains(feature) { specialistExpanded = true }
+        }
+        .onAppear {
+            if CompanionFeature.specialistFeatures.contains(feature) { specialistExpanded = true }
+            model.connect()
+        }
         .onReceive(poll) { _ in model.connect(force: false) }
     }
     private var settingsMenuItems: some View {
         Group {
-            Button(english ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }
+            Button(english ? "Device setup…" : "Gerät einrichten …") { model.showSetup = true }
             Divider()
             Picker(english ? "Appearance" : "Optik", selection: $skin) {
                 Text(english ? "Block world" : "Blockwelt").tag("block")
@@ -174,8 +184,18 @@ struct CompanionView: View {
             CompanionLifecycleActions(model: model, english: english)
         }.disabled(model.busy)
     }
+    private func navigationRows(_ group: CompanionNavigationGroup) -> some View {
+        ForEach(group.features) { item in
+            Label(item.title(english), systemImage: item.icon).padding(.vertical, 5).tag(item.rawValue)
+        }
+    }
     private func openFeedback(_ context: FeedbackContext) {
         feedback = FeedbackRequest(context: context, window: NSApp.keyWindow ?? NSApp.mainWindow)
+    }
+    private func openLookup(_ target: QuickFindTarget) -> Bool {
+        guard !model.busy, model.drafts.authorize() else { return false }
+        lookup = target; storedFeature = target.kind.rawValue
+        return true
     }
     private var home: some View {
         VStack(spacing: 0) {
@@ -183,6 +203,7 @@ struct CompanionView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
+                    homeTasks
                     VStack(alignment: .leading, spacing: 8) {
                         Text(english ? "Your worlds, safely kept on this Mac." : "Deine Welten, sicher auf diesem Mac.").font(.title3).foregroundStyle(.secondary)
                     }
@@ -209,14 +230,14 @@ struct CompanionView: View {
                             .accessibilityLabel(english ? "Preview of your latest saved world" : "Vorschau deiner zuletzt gesicherten Welt")
                     }
                     HStack(spacing: 36) {
-                        summary(english ? "Savegames" : "Spielstände", value: "\(model.saves.count)")
+                        summary(english ? "Backups" : "Sicherungen", value: "\(model.saves.count)")
                         summary(english ? "Storage" : "Speicher", value: displayBytes(model.saves.reduce(0) { $0 + $1.bytes }))
                         Spacer()
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         Text(english ? "Recently saved" : "Zuletzt gesichert").font(.headline)
                         if model.saves.isEmpty {
-                            Text(english ? "Your library is empty. Import or back up a world in Savegames." : "Deine Bibliothek ist leer. Importiere oder sichere eine Welt unter Savegames.").foregroundStyle(.secondary)
+                            Text(english ? "Your library is empty. Import or back up a world under Worlds & backups." : "Deine Bibliothek ist leer. Importiere oder sichere eine Welt unter Welten & Sicherungen.").foregroundStyle(.secondary)
                         }
                         ForEach(Array(model.saves.prefix(5))) { save in
                             Button {
@@ -242,24 +263,74 @@ struct CompanionView: View {
             }
         }
     }
+    private var homeTasks: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(english ? "What would you like to do?" : "Was möchtest du tun?").font(.title2.bold())
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 12) {
+                taskCard(english ? "Look something up" : "Etwas nachschlagen", detail: english ? "Recipes, materials and help · no headset needed" : "Rezepte, Materialien und Hilfe · ohne Headset", icon: "magnifyingglass") {
+                    searchFocusRequest = UUID()
+                }
+                taskCard(english ? "Explore a world" : "Eine Welt erkunden", detail: english ? "Choose a backup, then create or open its map" : "Sicherung wählen, dann Karte erstellen oder öffnen", icon: "map") {
+                    selected = CompanionFeature.maps.rawValue
+                }
+                taskCard(english ? "Plan & build" : "Planen & bauen", detail: english ? "Step-by-step guides and reviewed material plans" : "Schrittweise Anleitungen und geprüfte Materialauswahl", icon: "hammer") {
+                    selected = CompanionFeature.builds.rawValue
+                }
+                taskCard(english ? "Manage backups" : "Sicherungen verwalten", detail: english ? "Import, back up and organize saved worlds" : "Gespeicherte Welten importieren, sichern und ordnen", icon: "archivebox") {
+                    selected = CompanionFeature.saves.rawValue
+                }
+            }
+            if model.saves.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(english ? "No backup yet? You can use recipes, guides and help offline right away. World tools need an imported backup; a headset is only needed for device transfers." : "Noch keine Sicherung? Rezepte, Anleitungen und Hilfe kannst du sofort offline nutzen. Welt-Werkzeuge benötigen eine importierte Sicherung; ein Headset brauchst du nur für Geräteübertragungen.")
+                        .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                    ViewThatFits(in: .horizontal) {
+                        HStack { onboardingActions }
+                        VStack(alignment: .leading, spacing: 8) { onboardingActions }
+                    }
+                }
+            }
+        }
+    }
+    @ViewBuilder private var onboardingActions: some View {
+        Button(english ? "Use offline" : "Offline nutzen") { selected = CompanionFeature.crafting.rawValue }
+        Button(english ? "Import a backup" : "Sicherung importieren") { selected = CompanionFeature.saves.rawValue }
+        Button(english ? "Set up Quest" : "Quest einrichten") { model.showSetup = true }
+    }
+    private func taskCard(_ title: String, detail: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: icon).font(.title2).foregroundStyle(theme.accent).frame(width: 28)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title).font(.headline)
+                    Text(detail).font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }.padding(16).frame(maxWidth: .infinity, minHeight: 106, alignment: .topLeading).companionPanel()
+                .contentShape(Rectangle())
+        }.buttonStyle(.plain).disabled(model.busy)
+    }
     private var homeIntroduction: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text(english ? "A quick guide to your Companion" : "Dein Companion, kurz erklärt")
                 .font(.headline)
             Text(english
-                ? "Start in Savegames: back up a world from your device or import an existing backup. Then inspect your player’s inventory and equipment, explore the map and find items in chests. These views show saved data, not live gameplay."
-                : "Starte unter Savegames: Sichere eine Welt von deinem Gerät oder importiere eine vorhandene Sicherung. Danach kannst du das Inventar und die Ausrüstung deines Spielers ansehen, die Karte erkunden und Gegenstände in Kisten finden. Die Ansichten zeigen gespeicherte Daten, keine Live-Spielwerte.")
+                ? "Look up recipes and guides without a headset. For world tools, import or create a backup under Worlds & backups, then inspect inventory, maps and chests. These views show saved data, not live gameplay."
+                : "Schlage Rezepte und Anleitungen ohne Headset nach. Für Welt-Werkzeuge importiere oder erstelle unter Welten & Sicherungen eine Sicherung und erkunde danach Inventar, Karten und Kisten. Diese Ansichten zeigen gespeicherte Daten, keine Live-Spielwerte.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             DisclosureGroup(isExpanded: $introductionExpanded) {
                 VStack(alignment: .leading, spacing: 14) {
-                    ForEach(CompanionFeature.navigationOrder.filter { $0 != .home && $0 != .guide }) { item in
-                        HStack(alignment: .top, spacing: 12) {
-                            Image(systemName: item.icon).foregroundStyle(.secondary).frame(width: 20)
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(item.title(english)).font(.callout.weight(.medium))
-                                Text(item.detail(english)).font(.callout).foregroundStyle(.secondary)
-                            }
-                        }.fixedSize(horizontal: false, vertical: true)
+                    ForEach(CompanionNavigationGroup.allCases) { group in
+                        Text(group.title(english)).font(.headline).padding(.top, 6)
+                        ForEach(group.features) { item in
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: item.icon).foregroundStyle(.secondary).frame(width: 20)
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(item.title(english)).font(.callout.weight(.medium))
+                                    Text(item.detail(english)).font(.callout).foregroundStyle(.secondary)
+                                }
+                            }.fixedSize(horizontal: false, vertical: true)
+                        }
                     }
                 }.padding(.top, 12).padding(.bottom, 4)
             } label: {
@@ -304,11 +375,11 @@ struct CompanionNavigationCommands: Commands {
                 // Keep existing shortcuts while matching the sidebar's display order.
                 let index = CompanionFeature.allCases.firstIndex(of: item)!
                 Button(item.title(language == "en")) {
-                    selected = item.rawValue
+                    model.drafts.perform { selected = item.rawValue }
                 }.keyboardShortcut(index < 10 ? KeyEquivalent(Character(String((index + 1) % 10))) : (item == .statistics ? "s" : item == .skills ? "k" : "e"), modifiers: index < 10 ? .command : [.command, .shift]).disabled(model.busy)
             }
             Divider()
-            Button(language == "en" ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }.disabled(model.busy)
+            Button(language == "en" ? "Device setup…" : "Gerät einrichten …") { model.showSetup = true }.disabled(model.busy)
         }
     }
 }

@@ -35,6 +35,15 @@ struct AIContextExportView: View {
     private var en: Bool { language == "en" }
     private var chosenSkill: AgentSkill? { skills.state.skills.first { $0.id == selectedSkillID && !$0.archived }.map { $0.localized(en ? "en" : "de") } }
     private var canGenerate: Bool { model.selected != nil && !model.busy && !generating && (!includeChests || (maps.ready && !maps.checking)) && (!includeSkill || chosenSkill != nil) }
+    private var generationBlockedReason: String? {
+        if model.selected == nil { return en ? "Choose a backup first. Import one under Worlds & backups if your library is empty." : "Wähle zuerst eine Sicherung. Bei leerer Bibliothek unter Welten & Sicherungen importieren." }
+        if generating { return en ? "Document creation is running. Wait for the result below." : "Das Dokument wird erstellt. Warte auf das Ergebnis unten." }
+        if model.busy { return en ? "Another library operation is running. Wait for it to finish." : "Eine andere Bibliotheksaktion läuft. Warte, bis sie abgeschlossen ist." }
+        if includeChests && maps.checking { return en ? "Map tools are being checked for chest reading." : "Die Kartenwerkzeuge zum Lesen der Kisten werden geprüft." }
+        if includeChests && !maps.ready { return en ? "Set up map tools below, or turn off chest inclusion." : "Richte unten die Kartenwerkzeuge ein oder deaktiviere die Kisten-Beigabe." }
+        if includeSkill && chosenSkill == nil { return en ? "Choose an assistant instruction below, or turn off skill inclusion." : "Wähle unten eine Assistenten-Anweisung oder deaktiviere die Skill-Beigabe." }
+        return nil
+    }
 
 
     var body: some View {
@@ -55,16 +64,18 @@ struct AIContextExportView: View {
                     .disabled(!canGenerate)
             }
             HStack {
-                    Picker(en ? "Savegame" : "Spielstand", selection: $model.selection) {
-                        Text(en ? "Select a savegame" : "Spielstand auswählen").tag(nil as String?)
-                        ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy || generating)
-                Spacer(minLength: 0)
+                    SourceContextBar(saves: model.saves, selection: $model.selection, language: language).frame(maxWidth: .infinity).disabled(model.busy || generating)
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
+            if let reason = generationBlockedReason {
+                CompanionNotice(message: reason, kind: .information)
+                    .padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 10)
+            }
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     Text(en ? "Your world as a document for GPT, Claude and other agents." : "Deine Welt als Dokument für GPT, Claude und andere Agenten.").font(.title2.bold())
+                    Label(en ? "Choose contents → create document → review → save or share" : "Inhalte wählen → Dokument erstellen → prüfen → speichern oder teilen", systemImage: "list.number")
+                        .font(.callout)
                     Text(en ? "Choose a backup and generate a self-contained snapshot. Save Markdown to discuss it with an agent, or JSON for structured processing. Creation is local; you choose where to upload the file."
                          : "Wähle eine Sicherung und erzeuge ein eigenständig verständliches Abbild. Speichere Markdown für das Gespräch mit einem Agenten oder JSON zur strukturierten Verarbeitung. Die Erstellung erfolgt lokal; du entscheidest, wo du die Datei hochlädst.")
                         .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -85,7 +96,7 @@ struct AIContextExportView: View {
                         }
                         Toggle(en ? "Include my personal context" : "Meine persönlichen Angaben beifügen", isOn: $includeProfile).toggleStyle(.checkbox)
                         if includeProfile {
-                            Text(skills.state.profile.isEmpty ? (en ? "No personal context saved yet. Add it in Skills." : "Noch keine persönlichen Angaben gespeichert. Ergänze sie unter Skills.") : skills.state.profile)
+                            Text(skills.state.profile.isEmpty ? (en ? "No personal context saved yet. Add it under More tools → Assistant instructions." : "Noch keine persönlichen Angaben gespeichert. Ergänze sie unter Weitere Werkzeuge → Assistenten-Anweisungen.") : skills.state.profile)
                                 .font(.callout).foregroundStyle(.secondary).textSelection(.enabled)
                         }
                         Text(en ? "The selected instructions and additions are copied into both formats. Files stay local until you save or share them with an agent." : "Die gewählten Anweisungen und Ergänzungen werden in beide Formate kopiert. Dateien bleiben lokal, bis du sie einem Agenten übergibst.")
@@ -176,7 +187,7 @@ struct AIContextExportView: View {
                         Text(en ? "Player position, health, hunger, terrain resources and live mobs are currently unavailable. The document labels these as unknown."
                              : "Spielerposition, Gesundheit, Hunger, Rohstoffe im Gelände und lebende Mobs sind derzeit nicht verfügbar. Das Dokument kennzeichnet diese als unbekannt.").font(.caption).foregroundStyle(.secondary)
                     }
-                }.padding(CompanionLayout.pageInset).frame(maxWidth: .infinity, alignment: .leading)
+                }.padding(CompanionLayout.pageInset).frame(maxWidth: 960, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

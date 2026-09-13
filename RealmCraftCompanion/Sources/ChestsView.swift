@@ -311,11 +311,11 @@ struct ChestsView: View {
                 .disabled(model.busy || chests.index == nil)
             }
             VStack(alignment: .leading, spacing: 12) {
+                SourceContextBar(saves: model.saves, selection: $model.selection, language: language).disabled(model.busy)
                 HStack(spacing: CompanionLayout.actionSpacing) {
-                    Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
-                        if model.saves.isEmpty { Text(english ? "No savegames" : "Keine Spielstände").tag(nil as String?) }
-                        ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: .infinity).disabled(model.busy)
+                    searchField
+                    filterButton
+                    sortingMenu
                     Button { showInfo.toggle() } label: {
                         Image(systemName: "info.circle")
                             .frame(width: CompanionLayout.actionHeight, height: CompanionLayout.actionHeight)
@@ -323,11 +323,6 @@ struct ChestsView: View {
                     }.buttonStyle(.plain).foregroundStyle(.secondary)
                         .accessibilityLabel(english ? "About the chest index" : "Informationen zum Kistenindex")
                         .popover(isPresented: $showInfo) { indexInformation }
-                }
-                HStack(spacing: CompanionLayout.actionSpacing) {
-                    searchField
-                    filterButton
-                    sortingMenu
                 }
                 if sortOrder != .origin {
                     HStack {

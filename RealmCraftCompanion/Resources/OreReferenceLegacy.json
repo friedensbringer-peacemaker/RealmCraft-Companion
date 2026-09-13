@@ -1,0 +1,417 @@
+{
+  "schema": 1,
+  "version": "Minecraft Java 1.17.1",
+  "reviewed": "2026-09-07",
+  "entries": [
+    {
+      "id": "coal",
+      "de": "Kohle",
+      "en": "Coal",
+      "dimension": "o",
+      "blockIDs": [
+        35,
+        36
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Coal_Ore",
+      "batches": [
+        {
+          "id": "ore_coal",
+          "low": 0,
+          "high": 127,
+          "shape": "uniform",
+          "attempts": 20,
+          "size": 17,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_coal.json"
+          ],
+          "sha256": [
+            "341b8d25049b53c3773f7955a8fc4cdac96b423af1083c0330aa38198a9b3639"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iron",
+      "de": "Eisen",
+      "en": "Iron",
+      "dimension": "o",
+      "blockIDs": [
+        33,
+        34
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Iron_Ore",
+      "batches": [
+        {
+          "id": "ore_iron",
+          "low": 0,
+          "high": 63,
+          "shape": "uniform",
+          "attempts": 20,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_iron.json"
+          ],
+          "sha256": [
+            "319ed10215d28d458251a1020595717a3a0fbd590e97c1850f86269ec9c0043f"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copper",
+      "de": "Kupfer",
+      "en": "Copper",
+      "dimension": "o",
+      "blockIDs": [
+        826,
+        827
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Copper_Ore",
+      "batches": [
+        {
+          "id": "ore_copper",
+          "low": 0,
+          "high": 96,
+          "shape": "triangle",
+          "attempts": 6,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_copper.json"
+          ],
+          "sha256": [
+            "024f919b681efaf9f3ce970ce0939af6dd0b6c81e8faecf06ce7c59f2f5b1308"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gold",
+      "de": "Gold",
+      "en": "Gold",
+      "dimension": "o",
+      "blockIDs": [
+        31,
+        32
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Gold_Ore",
+      "batches": [
+        {
+          "id": "ore_gold",
+          "low": 0,
+          "high": 31,
+          "shape": "uniform",
+          "attempts": 2,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_gold.json"
+          ],
+          "sha256": [
+            "22c6fc3f1776cd1c311b1526349ada0516dc0c1a0c9620ec62a54814a68d1762"
+          ]
+        },
+        {
+          "id": "ore_gold_extra",
+          "low": 32,
+          "high": 79,
+          "shape": "uniform",
+          "attempts": 20,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "badlands",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_gold_extra.json"
+          ],
+          "sha256": [
+            "e565b9fb0774e06342b62ebb92da6baeec601cb769218697bd7603453a28af78"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lapis",
+      "de": "Lapislazuli",
+      "en": "Lapis lazuli",
+      "dimension": "o",
+      "blockIDs": [
+        73,
+        74
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Lapis_Lazuli_Ore",
+      "batches": [
+        {
+          "id": "ore_lapis",
+          "low": 0,
+          "high": 30,
+          "shape": "triangle",
+          "attempts": 1,
+          "size": 7,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_lapis.json"
+          ],
+          "sha256": [
+            "53303295081aa223cd67a850b2f18ea590eac3cbf9d1267f9e619203e722e78b"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redstone",
+      "de": "Redstone",
+      "en": "Redstone",
+      "dimension": "o",
+      "blockIDs": [
+        187,
+        188
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Redstone_Ore",
+      "batches": [
+        {
+          "id": "ore_redstone",
+          "low": 0,
+          "high": 15,
+          "shape": "uniform",
+          "attempts": 8,
+          "size": 8,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_redstone.json"
+          ],
+          "sha256": [
+            "b03b41a6a1b4aa6335259a8f26b76cf78fc8824ee7f8336dea052bb2dd4a79ac"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diamond",
+      "de": "Diamant",
+      "en": "Diamond",
+      "dimension": "o",
+      "blockIDs": [
+        155,
+        156
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Diamond_Ore",
+      "batches": [
+        {
+          "id": "ore_diamond",
+          "low": 0,
+          "high": 15,
+          "shape": "uniform",
+          "attempts": 1,
+          "size": 8,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_diamond.json"
+          ],
+          "sha256": [
+            "e934f809150fdd38a78ede0f3ee794bb9a5b2173a03626fbf868b7011f4476ca"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emerald",
+      "de": "Smaragd",
+      "en": "Emerald",
+      "dimension": "o",
+      "blockIDs": [
+        281,
+        282
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Emerald_Ore",
+      "batches": [
+        {
+          "id": "ore_emerald",
+          "low": 4,
+          "high": 31,
+          "shape": "uniform",
+          "attempts": 5.5,
+          "size": 1,
+          "airSkip": 0,
+          "condition": "mountains",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_emerald.json"
+          ],
+          "sha256": [
+            "70dcdbf0f9a46cf9ae7c9da5753f650178b1237ce19b4a623d2593d31a481faf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quartz",
+      "de": "Netherquarz",
+      "en": "Nether quartz",
+      "dimension": "n",
+      "blockIDs": [
+        348
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Nether_Quartz_Ore",
+      "batches": [
+        {
+          "id": "ore_quartz_nether",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 16,
+          "size": 14,
+          "airSkip": 0.0,
+          "condition": "other",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_quartz_nether.json"
+          ],
+          "sha256": [
+            "2f4bd269d6cec895578aa4a49f7fc8489c328f852ef276394106f4fb526870ff"
+          ]
+        },
+        {
+          "id": "ore_quartz_deltas",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 32,
+          "size": 14,
+          "airSkip": 0.0,
+          "condition": "deltas",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_quartz_deltas.json"
+          ],
+          "sha256": [
+            "47290faba37fb09c23aeb93066d23de6bd45a4dc93c40749b1990ed80d9543c3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nether_gold",
+      "de": "Nethergold",
+      "en": "Nether gold",
+      "dimension": "n",
+      "blockIDs": [
+        37
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Nether_Gold_Ore",
+      "batches": [
+        {
+          "id": "ore_gold_nether",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 10,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "other",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_gold_nether.json"
+          ],
+          "sha256": [
+            "3b07e06165122e9d7a06a20b4f76a513f2deb4a05f8073d5c73e3e1dd070ba89"
+          ]
+        },
+        {
+          "id": "ore_gold_deltas",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 20,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "deltas",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_gold_deltas.json"
+          ],
+          "sha256": [
+            "9dfdd9759726421186d63811a02539a8528fb7b712eb0e04e6e437701f91d945"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debris",
+      "de": "Antiker Schrott",
+      "en": "Ancient debris",
+      "dimension": "n",
+      "blockIDs": [
+        749
+      ],
+      "notesDE": "Historische Java-Referenz 1.17.1, Oberwelt Y 0–255. Die Höhe lässt sich ohne Verschiebung darstellen; gleiche Koordinaten beweisen keinen identischen RealmCraft-Generator. Die Größe ist ein Konfigurationsparameter, keine garantierte Blockzahl. Normale und Tiefenschiefer-Erze werden gemeinsam betrachtet.",
+      "notesEN": "Historical Java 1.17.1 reference, Overworld Y 0–255. Heights can be displayed without shifting; matching coordinates do not prove identical RealmCraft generation. Size is a configuration parameter, not a guaranteed block count. Regular and deepslate ores are grouped together.",
+      "wiki": "https://minecraft.wiki/w/Ancient_Debris",
+      "batches": [
+        {
+          "id": "ore_debris_large",
+          "low": 8,
+          "high": 24,
+          "shape": "triangle",
+          "attempts": 1,
+          "size": 3,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_debris_large.json"
+          ],
+          "sha256": [
+            "3a60b4c8d78cc0f0a39caa9176f939ecdcb58f44d3a327f9650a8e154bde402a"
+          ]
+        },
+        {
+          "id": "ore_debris_small",
+          "low": 8,
+          "high": 119,
+          "shape": "uniform",
+          "attempts": 1,
+          "size": 2,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.17.1-data/data/minecraft/worldgen/configured_feature/ore_debris_small.json"
+          ],
+          "sha256": [
+            "fe23f369567bb77fcaa3216ebc28d2bfe2cd93b69d200ccccea3b889ac3c7116"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    "https://minecraft.fandom.com/de/wiki/Erz",
+    "https://de.minecraft.wiki/w/Erz",
+    "https://feedback.minecraft.net/hc/en-us/articles/4415128577293-Minecraft-Java-Edition-1-18",
+    "https://www.minecraft.net/en-us/article/minecraft-java-edition-1-20-2",
+    "https://minecraft.wiki/w/Ancient_debris",
+    "https://realmcraftgame.fandom.com/wiki/Blocks"
+  ]
+}

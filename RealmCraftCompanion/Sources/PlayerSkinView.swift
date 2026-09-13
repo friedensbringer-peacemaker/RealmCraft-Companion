@@ -8,6 +8,7 @@ struct PlayerSkinEditor: View {
     @State private var draft = PlayerSkinProfile()
     @State private var showArmor = false
     @State private var hands = false
+    @State private var resetToken = 0
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
@@ -22,13 +23,16 @@ struct PlayerSkinEditor: View {
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             HStack(alignment: .top, spacing: 24) {
                 VStack(spacing: 12) {
-                    PlayerSkinScene(profile: draft, armor: showArmor ? armor : [], hands: hands)
+                    PlayerSkinScene(profile: draft, armor: showArmor ? armor : [], hands: hands, resetToken: resetToken)
                         .frame(width: 290, height: 380)
                     Picker(english ? "Preview" : "Vorschau", selection: $hands) {
                         Text(english ? "Character" : "Charakter").tag(false)
                         Text(english ? "VR hand" : "VR-Hand").tag(true)
                     }.pickerStyle(.segmented)
                     Text(english ? "Drag to rotate · scroll to zoom" : "Ziehen zum Drehen · Scrollen zum Zoomen").font(.caption).foregroundStyle(.secondary)
+                    Button { resetToken += 1 } label: {
+                        Label(english ? "Reset view" : "Ansicht zurücksetzen", systemImage: "arrow.counterclockwise")
+                    }
                     Toggle(english ? "Show saved armor" : "Gespeicherte Rüstung anzeigen", isOn: $showArmor)
                         .disabled(armor.isEmpty || hands)
                 }

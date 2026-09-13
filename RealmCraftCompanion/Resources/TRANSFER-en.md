@@ -1,6 +1,6 @@
 TRANSFER WITHOUT ADB · UNTESTED ALTERNATIVES
 
-Open Settings → Quest setup → Alternative: transfer without ADB. The page provides a local receiving-folder button, a mounted Quest-folder selector, path copying, local import and ZIP export. A raw MTP device has no normal Finder path. ADB remains the recommended, tested route with SHA-256 verification. No assurance of accuracy, completeness, compatibility or success is provided for external apps; use at your own risk. Other headsets may differ.
+Open Settings → Device setup → Alternative: transfer without ADB. The page provides a local receiving-folder button, a mounted Quest-folder selector, path copying, local import and ZIP export. A raw MTP device has no normal Finder path. ADB remains the recommended, tested route with SHA-256 verification. No assurance of accuracy, completeness, compatibility or success is provided for external apps; use at your own risk. Other headsets may differ.
 
 
 USB TRANSFER WITH AN MTP APP · QUEST → MAC
@@ -41,7 +41,7 @@ ADB restore is strongly recommended. Manual copying does not provide Companion's
 
 1. Save in RealmCraft and quit it before any change. First make an independent, complete backup of the current destination world on the Quest, and retain a ZIP on the Mac. If you cannot make a usable backup, do not continue.
 
-2. Select the intended backup in Savegames and use Export this backup as ZIP below. Extract it on the Mac. Find the numeric world folder containing world_data, player_data and chunk files. Do not edit files inside Companion's library or copy its UUID wrapper/metadata folder to the Quest.
+2. Select the intended backup under Worlds & backups and use Export this backup as ZIP below. Extract it on the Mac. Find the numeric world folder containing world_data, player_data and chunk files. Do not edit files inside Companion's library or copy its UUID wrapper/metadata folder to the Quest.
 
 3. In your MTP app or headset file manager, open the local path shown below and confirm the destination world ID. Choose explicitly which world to replace. A working download from the Quest does not prove that writing back is supported. Do not proceed if the tool cannot access and write the entire destination.
 

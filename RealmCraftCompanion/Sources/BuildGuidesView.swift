@@ -24,6 +24,11 @@ private func buildCategory(_ id: String, _ english: Bool) -> String {
 }
 
 struct OfflineBuildGuidesView: View {
+    @Environment(\.companionLookup) private var lookup
+    private func applyLookup() {
+        guard let lookup, lookup.kind == .builds, catalog?.guides.contains(where: { $0.id == lookup.item }) == true else { return }
+        query = ""; category = "all"; selected = lookup.item
+    }
     let language: String
     @Environment(\.companionTheme) private var theme
     @State private var query = ""
@@ -43,7 +48,7 @@ struct OfflineBuildGuidesView: View {
             }
             Divider()
             HStack(spacing: 0) {
-                sidebar.frame(width: CompanionTheme.sidebarWidth)
+                sidebar.frame(width: CompanionLayout.illustratedSidebarWidth)
                 Divider()
                 if let catalog, let guide = visibleGuide {
                     BuildGuideDetail(guide: guide, blocks: catalog.blocks, english: english).id(guide.id)
@@ -55,7 +60,7 @@ struct OfflineBuildGuidesView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-        }
+        }.onAppear(perform: applyLookup).onChange(of: lookup) { _, _ in applyLookup() }
     }
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -71,10 +76,11 @@ struct OfflineBuildGuidesView: View {
                                 Text(buildCategory(topic, english).uppercased()).font(.system(size: 10, weight: .bold)).tracking(1).foregroundStyle(.secondary)
                                 ForEach(items) { guide in
                                     Button { selected = guide.id } label: {
-                                        VStack(alignment: .leading, spacing: 6) {
+                                        HStack(spacing: 10) {
+                                            BuildGuideThumbnail(guideID: guide.id, blocks: catalog?.blocks ?? [:]).frame(width: 48, height: 48)
+                                            VStack(alignment: .leading, spacing: 6) {
                                             Text(guide.title.value(english)).font(.headline)
-                                            if visibleGuide?.id == guide.id {
-                                                Text(guide.summary.value(english)).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                                            Text(english ? "\(guide.steps.count) steps" : "\(guide.steps.count) Schritte").font(.caption2).foregroundStyle(.secondary)
                                             }
                                         }.padding(12).frame(maxWidth: .infinity, alignment: .leading)
                                             .background(visibleGuide?.id == guide.id ? theme.accent.opacity(0.13) : theme.surface)
@@ -101,6 +107,8 @@ struct BuildGuideDetail: View {
     @AppStorage("companionIconPack") private var selectedIconPack = "kenney"
     @ObservedObject private var iconStore = ItemIconStore.shared
     @State private var showIconSettings = false
+    @State private var showCoach = false
+    @State private var showMaterialReview = false
     @State private var planeID = ""
     @AppStorage("buildGuide3DDisplay") private var show3D = false
     @State private var stepIndex = 0
@@ -114,6 +122,7 @@ struct BuildGuideDetail: View {
     private var plane: BuildPlane { guide.planes.first { $0.id == planeID } ?? guide.planes[0] }
     init(guide: BuildGuide, blocks: [String: BuildBlock], english: Bool) {
         self.guide = guide; self.blocks = blocks; self.english = english
+        _stepIndex = State(initialValue: BuildCoach.restore(guide: guide))
         _collected = State(initialValue: Set(UserDefaults.standard.array(forKey: "buildMaterials.\(guide.id)") as? [Int] ?? []))
         _planeID = State(initialValue: guide.id == "flush" ? "crop" : guide.planes[0].id)
         _testResult = State(initialValue: UserDefaults.standard.string(forKey: "buildTest.\(guide.id)") ?? "untested")
@@ -125,9 +134,14 @@ struct BuildGuideDetail: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(buildCategory(guide.category, english).uppercased()).font(.caption.bold()).tracking(1.5).foregroundStyle(theme.accent)
                     Text(guide.title.value(english)).font(CompanionLayout.detailTitle)
-                    Text(guide.summary.value(english)).font(.title3).foregroundStyle(.secondary)
+                    Text(guide.summary.value(english)).font(.body).foregroundStyle(.secondary)
                     Label(guide.footprint.value(english), systemImage: "ruler").font(.callout.monospaced())
                     Label(english ? "Untested · AI-generated" : "Ungetestet · KI-generiert", systemImage: "testtube.2").font(.caption.bold()).foregroundStyle(.orange)
+                }
+                HStack(spacing: 12) {
+                    Button { showCoach = true } label: { Label(english ? "Open build coach" : "Bau-Coach öffnen", systemImage: "headphones") }.buttonStyle(CompanionButtonStyle(prominent: true))
+                        .help(english ? "Read, repeat, resume · with 2D / 3D preview" : "Vorlesen, wiederholen, fortsetzen · mit 2D-/3D-Vorschau")
+                    Button { showMaterialReview = true } label: { Label(english ? "Add materials to plan…" : "Materialien in Plan übernehmen …", systemImage: "list.clipboard") }
                 }
                 DisclosureGroup(english ? "Materials · \(collected.count)/\(guide.materials.count) ready" : "Materialien · \(collected.count)/\(guide.materials.count) bereit") { materials.padding(.top, 12) }
                 instructionBook
@@ -151,7 +165,10 @@ struct BuildGuideDetail: View {
                 }.padding(20).companionPanel()
                 }
             }.padding(CompanionLayout.pageInset).frame(maxWidth: 1100, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
-        }.onChange(of: planeID) { _, _ in selectedCell = nil; selectedCoordinate = "" }
+        }.sheet(isPresented: $showCoach) { BuildCoachView(guide: guide, blocks: blocks, english: english, step: $stepIndex) }
+        .sheet(isPresented: $showMaterialReview) { BuildMaterialHandoffView(guide: guide, blocks: blocks, english: english).companionAppearance() }
+        .onChange(of: stepIndex) { _, value in BuildCoach.save(guide: guide, step: value) }
+        .onChange(of: planeID) { _, _ in selectedCell = nil; selectedCoordinate = "" }
     }
     private var iconDisplay: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -557,7 +574,7 @@ private struct VideoThumbnail: View {
             }
         }
         .overlay(alignment: .bottomTrailing) {
-            Text(VideoTip.time(tip.duration)).font(.caption.monospacedDigit().bold())
+            Text(tip.durationLabel(english)).font(.caption.monospacedDigit().bold())
                 .padding(4).foregroundStyle(.white).background(.black.opacity(0.8))
                 .padding(6)
         }
@@ -577,7 +594,7 @@ private struct VideoOriginalMetadata: View {
                     Text(english ? "Original YouTube title" : "Originaltitel auf YouTube").font(.caption).foregroundStyle(.secondary)
                     Link(tip.originalTitle, destination: tip.videoURL).font(.title3).fixedSize(horizontal: false, vertical: true)
                     Text((english ? "Channel: " : "Kanal: ") + tip.channel).font(.callout)
-                    Text((english ? "Uploaded: " : "Hochgeladen: ") + tip.published + " · " + (english ? "Duration: " : "Dauer: ") + VideoTip.time(tip.duration))
+                    Text((english ? "Uploaded: " : "Hochgeladen: ") + tip.published + " · " + (english ? "Duration: " : "Dauer: ") + tip.durationLabel(english))
                         .font(.callout.monospacedDigit()).foregroundStyle(.secondary)
         }
     }
@@ -590,30 +607,35 @@ private struct VideoCatalogRow: View {
     @Environment(\.companionTheme) private var theme
     var body: some View {
                                     VStack(alignment: .leading, spacing: 7) {
-                                        VideoThumbnail(tip: tip, english: english)
-                                        Text(tip.originalTitle).font(.headline).fixedSize(horizontal: false, vertical: true)
-                                        Text(tip.title.value(english)).font(.caption).foregroundStyle(.secondary)
-                                        Text(tip.channel).font(.caption).foregroundStyle(.secondary)
+                                        Text(tip.isMinecraft ? (english ? "MINECRAFT · transfer not verified" : "MINECRAFT · Übertragung nicht bestätigt") : "REALMCRAFT").font(.caption.bold())
+                                        Text(tip.title.value(english)).font(.headline).fixedSize(horizontal: false, vertical: true)
                                         Text((tip.isShort ? "Short · " : "") + tip.coverageLabel(english)).font(.caption).foregroundStyle(theme.accent)
-                                        Text("\(tip.published) · \(VideoTip.time(tip.duration))").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                                    }.padding(12).frame(maxWidth: .infinity, alignment: .leading)
+                                        Text("\(tip.published) · \(tip.durationLabel(english))").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                                    }.help(tip.originalTitle + " · " + tip.channel).padding(12).frame(maxWidth: .infinity, alignment: .leading)
                                         .background(selected ? theme.accent.opacity(0.15) : theme.surface)
                                         .overlay(alignment: .leading) { Rectangle().fill(selected ? theme.accent : .clear).frame(width: 3) }
     }
 }
 
 struct VideoTipsView: View {
+    @Environment(\.companionLookup) private var lookup
+    private func applyLookup() {
+        guard let lookup, lookup.kind == .videos, tips?.contains(where: { $0.id == lookup.item }) == true else { return }
+        query = ""; category = "all"; coverage = "all"; sourceGame = "all"; selected = lookup.item
+    }
     let language: String
     @Environment(\.companionTheme) private var theme
     @State private var query = ""
     @State private var category = "all"
     @State private var selected: String? = nil
     @State private var coverage = "all"
+    @State private var sourceGame = "all"
     @State private var sortOrder: VideoSortOrder = .newest
     private let tips = VideoTip.bundled
     private var english: Bool { language == "en" }
     private var filtered: [VideoTip] { sortOrder.sorted((tips ?? []).filter {
-        (category == "all" || $0.category == category)
+        (sourceGame == "all" || (sourceGame == "minecraft" ? $0.isMinecraft : !$0.isMinecraft))
+        && (category == "all" || $0.category == category)
         && (coverage == "all" || (coverage == "curated" && $0.isCurated) || (coverage == "pending" && !$0.isCurated) || (coverage == "visual" && $0.isVisualReviewOnly) || (coverage == "transcript" && $0.hasTranscript) || (coverage == "short" && $0.isShort))
         && $0.matches(query)
     }) }
@@ -627,28 +649,25 @@ struct VideoTipsView: View {
             Divider()
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 12) {
-                    Picker(english ? "Topic" : "Thema", selection: $category) {
-                        ForEach(["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"], id: \.self) { Text(buildCategory($0, english)).tag($0) }
-                    }.padding(.top, 16)
-                    Picker(english ? "Content" : "Inhalt", selection: $coverage) {
-                        Text(english ? "All videos" : "Alle Videos").tag("all")
-                        Text(english ? "Reviewed contributions" : "Aufbereitete Beiträge").tag("curated")
-                        Text(english ? "Visual notes only" : "Nur Bildauswertung").tag("visual")
-                        Text(english ? "Review pending" : "Auswertung noch offen").tag("pending")
-                        Text(english ? "With transcript index" : "Mit Transkriptindex").tag("transcript")
-                        Text("Shorts").tag("short")
-                    }
-                    Picker(english ? "Sort by" : "Sortierung", selection: $sortOrder) {
-                        ForEach(VideoSortOrder.allCases, id: \.self) { order in
-                            Text(order.label(english)).tag(order)
-                        }
-                    }
+                    CompanionPopup(title: english ? "Topic" : "Thema", selection: $category,
+                        options: ["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].map { ($0, buildCategory($0, english)) }).companionField(english ? "Topic" : "Thema").padding(.top, 16)
+                    CompanionPopup(title: english ? "Source game" : "Spiel der Quelle", selection: $sourceGame,
+                        options: [("all", english ? "All games" : "Alle Spiele"), ("realmcraft", "RealmCraft"), ("minecraft", "Minecraft")]).companionField(english ? "Source game" : "Spiel der Quelle")
+                    CompanionPopup(title: english ? "Content" : "Inhalt", selection: $coverage, options: [
+                        ("all", english ? "All videos" : "Alle Videos"),
+                        ("curated", english ? "Reviewed contributions" : "Aufbereitete Beiträge"),
+                        ("visual", english ? "Visual notes only" : "Nur Bildauswertung"),
+                        ("pending", english ? "Review pending" : "Auswertung noch offen"),
+                        ("transcript", english ? "With transcript index" : "Mit Transkriptindex"), ("short", "Shorts")
+                    ]).companionField(english ? "Content" : "Inhalt")
+                    CompanionPopup(title: english ? "Sort by" : "Sortierung", selection: $sortOrder,
+                        options: VideoSortOrder.allCases.map { ($0, $0.label(english)) }).companionField(english ? "Sort by" : "Sortierung")
                     HStack {
                         Text(english ? "\(filtered.count) of \(tips?.count ?? 0) videos" : "\(filtered.count) von \(tips?.count ?? 0) Videos")
                             .font(.caption).foregroundStyle(.secondary)
                         Spacer()
-                        if !query.isEmpty || category != "all" || coverage != "all" || sortOrder != .newest {
-                            Button(english ? "Reset" : "Zurücksetzen") { query = ""; category = "all"; coverage = "all"; sortOrder = .newest; selected = nil }
+                        if !query.isEmpty || sourceGame != "all" || category != "all" || coverage != "all" || sortOrder != .newest {
+                            Button(english ? "Reset" : "Zurücksetzen") { query = ""; sourceGame = "all"; category = "all"; coverage = "all"; sortOrder = .newest; selected = nil }
                                 .font(.caption).buttonStyle(.borderless)
                         }
                     }
@@ -663,7 +682,7 @@ struct VideoTipsView: View {
                     }
                     Text(english ? "\((tips ?? []).filter(\.isCurated).count) of \(tips?.count ?? 0) contributions reviewed\n\((tips ?? []).filter { !$0.isCurated }.count) reviews pending\n\((tips ?? []).filter(\.hasTranscript).count) transcripts indexed" : "\((tips ?? []).filter(\.isCurated).count) von \(tips?.count ?? 0) Beiträgen aufbereitet\n\((tips ?? []).filter { !$0.isCurated }.count) Auswertungen noch offen\n\((tips ?? []).filter(\.hasTranscript).count) Transkripte durchsuchbar")
                         .font(.caption).foregroundStyle(.secondary).padding(.bottom, 16)
-                }.padding(.horizontal, 16).frame(width: CompanionTheme.sidebarWidth).background(theme.surface.opacity(0.4))
+                }.padding(.horizontal, 16).frame(width: CompanionLayout.illustratedSidebarWidth).background(theme.surface.opacity(0.4))
                 Divider()
                 if let tip = visible {
                     VideoTipDetail(tip: tip, english: english, query: query).id(tip.id)
@@ -673,7 +692,7 @@ struct VideoTipsView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-        }
+        }.onAppear(perform: applyLookup).onChange(of: lookup) { _, _ in applyLookup() }
     }
 }
 
@@ -695,14 +714,23 @@ struct VideoTipDetail: View {
                     Label(buildCategory(tip.category, english).uppercased(), systemImage: "play.rectangle.fill")
                         .font(.caption.bold()).foregroundStyle(theme.accent)
                     Text(tip.title.value(english)).font(CompanionLayout.detailTitle)
-                    VideoOriginalMetadata(tip: tip, english: english)
+                    Text(tip.gameLabel).font(.headline)
+                    if let assessment = tip.transferAssessment {
+                        GroupBox(english ? "Transfer to RealmCraft" : "Übertragung auf RealmCraft") {
+                            Text(assessment.value(english)).frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
                     Text(english ? "Short summary" : "Kurzfassung").font(.headline)
-                    Text(tip.summary.value(english)).font(.title3).foregroundStyle(.secondary)
+                    Text(tip.summary.value(english)).font(.body).foregroundStyle(.secondary).lineSpacing(3)
                     Text(tip.coverageLabel(english) + (tip.isShort ? " · Short" : "")).font(.caption.bold()).foregroundStyle(theme.accent)
                     Label(tip.sourceScope?.value(english) ?? (english ? "PCVR / Steam · Quest untested" : "PCVR / Steam · Quest ungetestet"), systemImage: "info.circle")
                         .font(.caption.bold()).foregroundStyle(.orange)
                     Link(english ? "Open original video ↗" : "Originalvideo öffnen ↗", destination: tip.videoURL)
+                    CompanionDetails(english ? "Preview, original title & channel" : "Vorschau, Originaltitel & Kanal") {
+                        VideoOriginalMetadata(tip: tip, english: english)
+                    }
                 }
+                CompanionDetails(english ? "Export for an agent" : "Für einen Agenten exportieren") {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(english ? "Export for an agent" : "Für einen Agenten exportieren").font(.headline)
                     Toggle(english ? "Include this video in the overall AI export" : "Dieses Video in den KI-Gesamtexport aufnehmen", isOn: Binding(
@@ -713,6 +741,8 @@ struct VideoTipDetail: View {
                     Text(english ? "Includes summary, authored steps, timestamp links and review status. No full transcript or audio. Your selection is remembered; AI export can place video notes in a second file." : "Enthält Kurzfassung, aufbereitete Schritte, Sprungmarken und Prüfstatus. Kein Volltranskript oder Audio. Die Auswahl bleibt gespeichert; der KI-Export kann Videonotizen in einer zweiten Datei ablegen.").font(.caption).foregroundStyle(.secondary)
                     if !exportNotice.isEmpty { Text(exportNotice).font(.caption).textSelection(.enabled) }
                 }.padding(CompanionLayout.panelInset).companionPanel()
+                }
+                CompanionDetails(english ? "Listen" : "Anhören") {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(english ? "Listen" : "Anhören").font(.headline)
                     Picker(english ? "Reading language" : "Vorlesesprache", selection: $audioLanguage) {
@@ -730,6 +760,11 @@ struct VideoTipDetail: View {
                         .font(.caption).foregroundStyle(.secondary)
                     if !speech.notice.isEmpty { Text(speech.notice).foregroundStyle(.orange) }
                 }.padding(CompanionLayout.panelInset).companionPanel()
+                }
+                if speech.speaking {
+                    Button(english ? "Stop" : "Stopp") { speech.stop() }
+                }
+                if !exportNotice.isEmpty { Text(exportNotice).font(.caption).textSelection(.enabled) }
                 if tip.isCurated { note(english ? "What you need" : "Was du brauchst", tip.prerequisites.value(english)) }
                 if !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !tip.steps.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
@@ -770,7 +805,7 @@ struct VideoTipDetail: View {
                 }
                 if !tip.steps.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(english ? "Steps & practical tips" : "Schritte & praktische Tipps").font(.title2.bold())
+                    Text(tip.isMinecraft ? (english ? "Minecraft source notes · transfer pending" : "Minecraft-Quellnotizen · Übertragung offen") : (english ? "Steps & practical tips" : "Schritte & praktische Tipps")).font(.title2.bold())
                     ForEach(tip.steps.indices, id: \.self) { index in
                         let step = tip.steps[index]
                         VStack(alignment: .leading, spacing: 10) {
@@ -791,7 +826,7 @@ struct VideoTipDetail: View {
                 note(english ? "Scope & open questions" : "Grenzen & offene Punkte", tip.limitations.value(english))
                 DisclosureGroup(english ? "Evidence & source" : "Belege & Quelle") {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(tip.isCurated ? (english ? "The review method and inspected sections are documented below. Visual samples are not a complete motion review or an independent in-game test." : "Prüfmethode und gesichtete Abschnitte sind unten dokumentiert. Bildstichproben ersetzen keine vollständige Bewegungsanalyse und keinen unabhängigen Spieltest.") : (english ? "Channel entry from public title and description. Available captions are indexed automatically; content review is still pending." : "Kanaleintrag aus öffentlichem Titel und Beschreibung. Verfügbare Untertitel sind automatisch indexiert; die inhaltliche Auswertung steht noch aus."))
+                        Text((tip.isCurated || tip.reviewMethod == "transcript-only") ? (english ? "The review method and inspected sections are documented below. Visual samples are not a complete motion review or an independent in-game test." : "Prüfmethode und gesichtete Abschnitte sind unten dokumentiert. Bildstichproben ersetzen keine vollständige Bewegungsanalyse und keinen unabhängigen Spieltest.") : (english ? "Channel entry from public title and description. Available captions are indexed automatically; content review is still pending." : "Kanaleintrag aus öffentlichem Titel und Beschreibung. Verfügbare Untertitel sind automatisch indexiert; die inhaltliche Auswertung steht noch aus."))
                         Text(tip.visualReview.value(english))
                         Link(tip.originalTitle, destination: tip.videoURL)
                         ForEach(tip.relatedSources.indices, id: \.self) { i in Link(tip.relatedSources[i].title, destination: tip.relatedSources[i].url) }

@@ -1,6 +1,6 @@
 TRANSFER OHNE ADB · UNGETESTETE ALTERNATIVEN
 
-Öffne Einstellungen → Quest einrichten → Alternative: ohne ADB übertragen. Dort gibt es einen Empfangsordner-Button, eine Auswahl für eingebundene Quest-Ordner, Pfadkopie, lokalen Import und ZIP-Export. Ein reines MTP-Gerät hat keinen normalen Finder-Pfad. ADB bleibt der empfohlene, getestete Weg mit SHA-256-Prüfung. Für Richtigkeit, Vollständigkeit, Kompatibilität und Erfolg externer Apps wird keine Gewähr übernommen; Nutzung auf eigenes Risiko. Andere Brillen können abweichen.
+Öffne Einstellungen → Gerät einrichten → Alternative: ohne ADB übertragen. Dort gibt es einen Empfangsordner-Button, eine Auswahl für eingebundene Quest-Ordner, Pfadkopie, lokalen Import und ZIP-Export. Ein reines MTP-Gerät hat keinen normalen Finder-Pfad. ADB bleibt der empfohlene, getestete Weg mit SHA-256-Prüfung. Für Richtigkeit, Vollständigkeit, Kompatibilität und Erfolg externer Apps wird keine Gewähr übernommen; Nutzung auf eigenes Risiko. Andere Brillen können abweichen.
 
 
 USB-TRANSFER MIT EINER MTP-APP · QUEST → MAC
@@ -41,7 +41,7 @@ Die ADB-Wiederherstellung wird ausdrücklich empfohlen. Manuelles Kopieren biete
 
 1. Speichere in RealmCraft und beende es vor jeder Änderung. Erstelle zuerst eine unabhängige vollständige Sicherung der aktuellen Zielwelt auf der Quest und behalte ein ZIP auf dem Mac. Kannst du kein rückspielbares Backup erstellen, fahre nicht fort.
 
-2. Wähle unter Savegames das gewünschte Backup und nutze unten Dieses Backup als ZIP exportieren. Entpacke es am Mac. Suche den numerischen Weltordner mit world_data, player_data und Chunk-Dateien. Bearbeite keine Dateien innerhalb der Companion-Library und kopiere nicht deren UUID-Hüllordner oder Metadatenordner auf die Quest.
+2. Wähle unter Welten & Sicherungen das gewünschte Backup und nutze unten Dieses Backup als ZIP exportieren. Entpacke es am Mac. Suche den numerischen Weltordner mit world_data, player_data und Chunk-Dateien. Bearbeite keine Dateien innerhalb der Companion-Library und kopiere nicht deren UUID-Hüllordner oder Metadatenordner auf die Quest.
 
 3. Öffne in der MTP-App oder dem Brillen-Dateimanager den unten gezeigten local-Pfad und prüfe die Ziel-Welt-ID. Wähle ausdrücklich, welche Welt ersetzt werden soll. Ein funktionierender Download von der Quest beweist nicht, dass Zurückschreiben möglich ist. Ohne Zugriff und Schreibmöglichkeit auf das vollständige Ziel nicht fortfahren.
 

@@ -34,13 +34,16 @@ struct ResourcesView: View {
             HStack {
                 Picker(english ? "Section" : "Bereich", selection: $section) {
                     Text(english ? "Minecraft comparison" : "Minecraft-Vergleich").tag("knowledge")
+                    Text(english ? "Content checklist" : "Inhalte-Checkliste").tag("checklist")
                     Text(english ? "Links & community" : "Links & Community").tag("links")
-                }.pickerStyle(.segmented).labelsHidden().frame(width: 360)
+                }.pickerStyle(.segmented).labelsHidden().frame(maxWidth: 640)
                 Spacer()
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             if section == "knowledge" {
                 MinecraftComparisonView(english: english, query: query)
+            } else if section == "checklist" {
+                MinecraftChecklistView(english: english, query: query)
             } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {

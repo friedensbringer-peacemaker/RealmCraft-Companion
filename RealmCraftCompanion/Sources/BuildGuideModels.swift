@@ -45,12 +45,21 @@ struct VideoTip: Decodable, Identifiable {
     let transcriptIndex: [VideoTranscriptWindow]?
     let topics: [BuildText]?
     let sourceScope: BuildText?
+    let sourceGame: String?
+    let transferAssessment: BuildText?
+
+    var isMinecraft: Bool { sourceGame == "minecraft" }
+    var gameLabel: String { isMinecraft ? "Minecraft" : "RealmCraft" }
+    func durationLabel(_ english: Bool) -> String {
+        duration > 0 ? Self.time(duration) : (english ? "Duration unknown" : "Dauer unbekannt")
+    }
 
     var isCurated: Bool { (coverage ?? "curated") == "curated" }
     var hasTranscript: Bool { !(transcriptIndex ?? []).isEmpty }
     var isShort: Bool { kind == "short" }
     var isVisualReviewOnly: Bool { reviewMethod == "visual-samples" }
     func coverageLabel(_ english: Bool) -> String {
+        if reviewMethod == "transcript-only" { return english ? "Transcript reviewed · no visual review" : "Transkript ausgewertet · keine Bildprüfung" }
         if isVisualReviewOnly { return english ? "Visual notes · no transcript review" : "Bildauswertung · ohne Transkriptprüfung" }
         if isCurated { return english ? "Transcript read · visual samples" : "Transkript gelesen · Bildstichproben" }
         return hasTranscript ? (english ? "Transcript indexed" : "Transkript durchsuchbar") : (english ? "Topic entry" : "Themeneintrag")
@@ -75,7 +84,7 @@ struct VideoTip: Decodable, Identifiable {
     func matches(_ query: String) -> Bool {
         let requested = Self.searchWords(query)
         if requested.isEmpty { return true }
-        let text = ([title.de, title.en, originalTitle, summary.de, summary.en, channel, prerequisites.de, prerequisites.en] + aliases + steps.flatMap { [$0.title.de, $0.title.en, $0.text.de, $0.text.en] }).joined(separator: " ")
+        let text = ([gameLabel, title.de, title.en, originalTitle, summary.de, summary.en, channel, prerequisites.de, prerequisites.en] + aliases + steps.flatMap { [$0.title.de, $0.title.en, $0.text.de, $0.text.en] }).joined(separator: " ")
         let words = Self.searchWords(text)
         return requested.allSatisfy { word in
             words.contains { $0.hasPrefix(word) } || (transcriptIndex ?? []).contains { $0.terms.contains { $0.hasPrefix(word) } }
@@ -87,13 +96,15 @@ struct VideoTip: Decodable, Identifiable {
         guard !tips.isEmpty, Set(tips.map(\.id)).count == tips.count, Set(tips.map(\.videoID)).count == tips.count else { throw BuildCatalog.CatalogError.invalid }
         for tip in tips {
             guard tip.videoID.range(of: "^[A-Za-z0-9_-]{11}$", options: .regularExpression) != nil,
-                  tip.duration > 0, (!tip.isCurated || !tip.steps.isEmpty), !tip.aliases.isEmpty,
+                  (tip.duration > 0 || (tip.duration == 0 && !tip.isCurated)),
+                  (tip.sourceGame == nil || ["minecraft", "realmcraft"].contains(tip.sourceGame!)),
+                  (!tip.isMinecraft || tip.transferAssessment != nil), (!tip.isCurated || !tip.steps.isEmpty), !tip.aliases.isEmpty,
                   ["curated", "transcript", "metadata"].contains(tip.coverage ?? "curated"),
-                  (tip.reviewMethod == nil || (tip.isCurated && ["transcript-and-samples", "visual-samples"].contains(tip.reviewMethod!))),
+                  (tip.reviewMethod == nil || ((tip.isCurated && ["transcript-and-samples", "visual-samples"].contains(tip.reviewMethod!)) || (tip.coverage == "transcript" && tip.reviewMethod == "transcript-only"))),
                   ["video", "short"].contains(tip.kind ?? "video"),
                   ["farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].contains(tip.category),
-                  tip.steps.allSatisfy({ $0.seconds >= 0 && $0.seconds < tip.duration }),
-                  (tip.transcriptIndex ?? []).allSatisfy({ $0.seconds >= 0 && $0.seconds < tip.duration && !$0.terms.isEmpty }),
+                  tip.steps.allSatisfy({ $0.seconds >= 0 && (tip.duration == 0 || $0.seconds < tip.duration) }),
+                  (tip.transcriptIndex ?? []).allSatisfy({ $0.seconds >= 0 && (tip.duration == 0 || $0.seconds < tip.duration) && !$0.terms.isEmpty }),
                   ((tip.coverage != "transcript") || tip.hasTranscript),
                   tip.relatedSources.allSatisfy({ $0.url.scheme == "https" }) else { throw BuildCatalog.CatalogError.invalid }
             let texts = [tip.title, tip.summary, tip.prerequisites, tip.limitations, tip.visualReview] + tip.steps.flatMap { [$0.title, $0.text] }

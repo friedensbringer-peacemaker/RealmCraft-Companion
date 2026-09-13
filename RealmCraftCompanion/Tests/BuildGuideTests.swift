@@ -5,7 +5,7 @@ import Foundation
         let data = try Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
         let catalog = try JSONDecoder().decode(BuildCatalog.self, from: data)
         try catalog.validate()
-        precondition(catalog.guides.count == 91)
+        precondition(catalog.guides.count == 95)
         precondition(Set(catalog.guides.filter { $0.matches("Trichter") }.map(\.id)) == Set(["furnace", "compost", "collector", "feedline", "waterline", "egg_station", "furnace_pair"]))
         precondition(catalog.guides.filter { $0.matches("sugar cane") }.count == 2)
         let flush = catalog.guides.first { $0.id == "flush" }!
@@ -102,6 +102,6 @@ import Foundation
         guides[0]["planes"] = planes; object["guides"] = guides
         let broken = try JSONDecoder().decode(BuildCatalog.self, from: JSONSerialization.data(withJSONObject: object))
         do { try broken.validate(); fatalError("Invalid grid accepted") } catch BuildCatalog.CatalogError.invalid {}
-        print("PASS: 91 guides, bilingual search, material counts, matching sections, hopper layout, invalid grid rejection")
+        print("PASS: 95 guides, bilingual search, material counts, matching sections, hopper layout, invalid grid rejection")
     }
 }

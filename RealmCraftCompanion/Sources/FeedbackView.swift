@@ -47,6 +47,10 @@ struct FeedbackView: View {
     let english: Bool
     var sourceWindow: NSWindow? = nil
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.draftTransitions) private var sharedDrafts
+    @State private var localDrafts = DraftTransitions()
+    @State private var draftID = UUID()
+    @State private var savedToken: String?
     @AppStorage("companionSkin") private var skin = "block"
     @StateObject private var mail = FeedbackMail()
     @State private var kind = "data"
@@ -71,6 +75,14 @@ struct FeedbackView: View {
                        catalogNotice: context.area == "mobs" ? MobCatalog.disclaimer(english) : nil)
     }
     private var ready: Bool { !summary.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !details.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+    private var draftToken: String {
+        DraftTransitions.fingerprint([kind, summary, details, steps, expected, actual, recipient] + images.map { $0.id.uuidString })
+    }
+    private var dirty: Bool {
+        if let savedToken { return savedToken != draftToken }
+        return kind != "data" || ![summary, details, steps, expected, actual, recipient].allSatisfy(\.isEmpty) || !images.isEmpty
+    }
+    private var drafts: DraftTransitions { sharedDrafts ?? localDrafts }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -78,7 +90,7 @@ struct FeedbackView: View {
                 Label(english ? "Report data / bug" : "Daten / Bug melden", systemImage: "bubble.left.and.exclamationmark.bubble.right")
                     .font(.title2.bold())
                 Spacer()
-                Button(english ? "Close" : "Schließen") { dismiss() }.keyboardShortcut(.cancelAction)
+                Button(english ? "Close" : "Schließen") { drafts.perform { dismiss() } }.keyboardShortcut(.cancelAction)
             }
             Text(english ? "Area: \(context.area)\(context.entryName.map { " · " + $0 } ?? "")" : "Bereich: \(context.area)\(context.entryName.map { " · " + $0 } ?? "")")
                 .foregroundStyle(.secondary)
@@ -135,7 +147,13 @@ struct FeedbackView: View {
                     perform { mail.english = english; try mail.compose(report: report, images: images, recipient: recipient) }
                 }.buttonStyle(CompanionButtonStyle(prominent: true))
             }.disabled(!ready)
-        }.padding(24).frame(width: 760, height: 740)
+        }.padding(24).frame(minWidth: 620, idealWidth: 760, maxWidth: .infinity, minHeight: 480, idealHeight: 640, maxHeight: .infinity)
+        .trackDraft(drafts, id: draftID, token: draftToken, dirty: { dirty },
+                    title: english ? "Feedback · Save exports a ZIP of the report and images, not the mail recipient." : "Meldung · Speichern exportiert Meldung und Bilder als ZIP, nicht den Mail-Empfänger.",
+                    save: { export() }, discard: {
+                        kind = "data"; summary = ""; details = ""; steps = ""; expected = ""; actual = ""; recipient = ""; images = []; savedToken = nil
+                    })
+        .interactiveDismissDisabled(dirty)
     }
 
     private func perform(_ action: () throws -> Void) {
@@ -171,15 +189,21 @@ struct FeedbackView: View {
     private func imageError() -> NSError {
         NSError(domain: "Feedback", code: 1, userInfo: [NSLocalizedDescriptionKey: english ? "Use up to five PNG, JPEG or HEIC images, at most 10 MB each. The app window must be available for capture." : "Bis zu fünf PNG-, JPEG- oder HEIC-Bilder mit je höchstens 10 MB. Für eine Aufnahme muss das App-Fenster verfügbar sein."])
     }
-    private func export() {
+    @discardableResult private func export() -> Bool {
+        guard ready else {
+            message = english ? "Enter a summary and description before exporting, or explicitly discard the draft." : "Vor dem Export Kurztitel und Beschreibung ergänzen oder den Entwurf ausdrücklich verwerfen."
+            return false
+        }
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.zip]
         panel.nameFieldStringValue = "RealmCraft-Report.zip"
-        guard panel.runModal() == .OK, let destination = panel.url else { return }
-        perform {
+        guard panel.runModal() == .OK, let destination = panel.url else { return false }
+        do {
             try report.writeArchive(to: destination, images: images)
+            savedToken = draftToken
             message = english ? "ZIP exported with report.hjson and \(images.count) image(s)." : "ZIP mit report.hjson und \(images.count) Bild(ern) exportiert."
-        }
+            return true
+        } catch { message = error.localizedDescription; return false }
     }
 }
 

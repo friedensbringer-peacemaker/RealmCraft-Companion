@@ -1,0 +1,19 @@
+/* Specialized instance of the same map: no duplicate tiles or column data. */
+.metro-workspace #sidebar { position:absolute;left:0;top:0;bottom:0;width:260px!important;z-index:30;transform:translateX(-110%);box-shadow:8px 0 32px #0005; }
+.metro-workspace body.sidebar-open #sidebar { transform:translateX(0); }
+.metro-workspace #expand,.metro-workspace #collapse { display:inline-flex;pointer-events:auto; }
+.metro-workspace #sidebar header { display:flex!important;padding:8px 12px;justify-content:flex-end; }
+.metro-workspace #sidebar header > :not(#collapse) { display:none; }
+.metro-workspace #sidebar .world,.metro-workspace #sidebar footer,
+.metro-workspace #portal-layers,.metro-workspace #sign-section,.metro-workspace .poi-section,
+.metro-workspace .places,.metro-workspace .ownership-toolbar,.metro-workspace #quick-controls,
+.metro-workspace #resource-note,.metro-workspace #auto-tag-notice,.metro-workspace #marker-legend,
+.metro-workspace #selection,.metro-workspace .help { display:none!important; }
+.metro-workspace #sidebar section { padding:12px!important; }
+.metro-workspace .coords-input { grid-template-columns:minmax(0,1fr)!important; }
+.metro-workspace .coords-input .go { width:100%; }
+.metro-workspace .map-top { right:12px;left:12px; }
+.metro-workspace .local-pill { display:none; }
+.metro-workspace #metro-layers { border-top:1px solid var(--border); }
+.metro-status { position:absolute;left:12px;top:98px;max-width:calc(100% - 90px);z-index:4;font-size:12px;pointer-events:none; }
+.metro-status:empty { display:none; }

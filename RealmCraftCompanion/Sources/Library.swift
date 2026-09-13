@@ -282,9 +282,11 @@ final class Library: @unchecked Sendable {
             let hash = String(line.prefix(64))
             let rest = String(line.dropFirst(64))
             guard rest.hasPrefix("  ./"), hash.allSatisfy({ $0.isHexDigit }) else { throw LibraryError("Ungültige Quest-Prüfsumme.") }
-            result[String(rest.dropFirst(4))] = hash
+            let name = String(rest.dropFirst(4))
+            guard Self.safeRelativeFile(name), result[name] == nil else { throw LibraryError("Invalid or duplicate remote file path / Ungültiger oder doppelter Gerätepfad.") }
+            result[name] = hash
         }
-        guard !result.isEmpty else { throw LibraryError("Auf der Quest wurden keine Savegame-Dateien gefunden.") }
+        guard result["world_data"] != nil, result["player_data"] != nil else { throw LibraryError("Auf der Quest wurde kein vollständiges Savegame gefunden.") }
         return result
     }
     func assertSame(_ a: [String:String], _ b: [String:String]) throws {
@@ -319,12 +321,13 @@ final class Library: @unchecked Sendable {
         progress("Quest-Dateien prüfen …")
         let before = try remoteManifest(serial, path: remote + "/" + world)
         progress("Savegame von der Quest kopieren …")
-        _ = try command(serial, ["pull", "-a", remote + "/" + world, staging.path + "/"])
+        let transfer = try transferBackup(serial, world: world, manifest: before, staging: staging)
         progress("Kopie auf Vollständigkeit prüfen …")
         let local = try localManifest(staging.appendingPathComponent(world))
         try assertSame(before, local)
         try assertSame(local, remoteManifest(serial, path: remote + "/" + world))
         try requireClosed(serial)
+        try write(transfer, to: staging.appendingPathComponent("backup-transfer.json"))
         return try finish(staging, world: world, title: title, source: source, manifest: local)
     }
     func verify(_ save: Savegame) throws -> [String:String] {
@@ -348,12 +351,34 @@ final class Library: @unchecked Sendable {
             original = try verify(safety)
         }
         let token = UUID().uuidString
-        let stage = remote + "/../.library-stage-" + token
-        let previous = remote + "/../.library-previous-" + token
+        let remoteParent = (remote as NSString).deletingLastPathComponent
+        let stage = remoteParent + "/.library-stage-" + token
+        let previous = remoteParent + "/.library-previous-" + token
         progress("Savegame auf die Quest übertragen …")
         _ = try command(serial, ["shell", "mkdir -p \(quote(remote)) && mkdir \(quote(stage))"])
+        // adbd's recursive mkdir is rejected by Quest scoped storage. Prepare every
+        // payload directory through the authorized shell before sending any file.
+        let stagedWorld = stage + "/" + save.world
+        var directories: Set<String> = [stagedWorld]
+        for name in expected.keys {
+            let parent = (name as NSString).deletingLastPathComponent
+            if !parent.isEmpty { directories.insert(stagedWorld + "/" + parent) }
+        }
+        let orderedDirectories = directories.sorted()
+        for start in stride(from: 0, to: orderedDirectories.count, by: 32) {
+            let batch = orderedDirectories[start..<min(start + 32, orderedDirectories.count)]
+            _ = try command(serial, ["shell", "mkdir -p " + batch.map(quote).joined(separator: " ")])
+        }
         // Retain the stage on failure; never delete device data after an uncertain command result.
         _ = try command(serial, ["push", worldFolder(save).path, stage + "/"])
+        // Local deduplicated files are read-only. RealmCraft needs group write access
+        // after ADB creates files owned by shell:ext_data_rw.
+        _ = try command(serial, ["shell", "cd \(quote(stagedWorld)) && find . -type f -print0 | xargs -0 -n 64 chmod 660"])
+        _ = try command(serial, ["shell", "cd \(quote(stagedWorld)) && find . -type d -print0 | xargs -0 -n 64 chmod 2770"])
+        let invalidModes = try command(serial, ["shell", "find \(quote(stagedWorld)) -type f ! -perm 0660 -print && find \(quote(stagedWorld)) -type d ! -perm 02770 -print"])
+        guard invalidModes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw LibraryError("Quest write permissions could not be verified. The existing world was not replaced / Quest-Schreibrechte konnten nicht bestätigt werden. Die bestehende Welt wurde nicht ersetzt.")
+        }
         progress("Übertragung auf der Quest prüfen …")
         try assertSame(expected, remoteManifest(serial, path: stage + "/" + save.world))
         try requireClosed(serial)

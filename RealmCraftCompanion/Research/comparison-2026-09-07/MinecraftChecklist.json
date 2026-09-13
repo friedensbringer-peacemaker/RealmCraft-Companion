@@ -1,0 +1,1559 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-07",
+  "realmcraftVersion": "1.0.3",
+  "minecraftScope": "Vanilla Java / Bedrock",
+  "entries": [
+    {
+      "id": "bamboo",
+      "category": "blocks",
+      "title": {
+        "de": "Bambusblöcke und -bretter",
+        "en": "Bamboo blocks and planks"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.72",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Bambusblock"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "bamboo"
+    },
+    {
+      "id": "bell",
+      "category": "blocks",
+      "title": {
+        "de": "Glocke",
+        "en": "Bell"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Glocke"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "interactive"
+    },
+    {
+      "id": "signs",
+      "category": "blocks",
+      "title": {
+        "de": "Beschreibbare Schilder",
+        "en": "Writable signs"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://minecraft.wiki/w/Sign"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "interactive"
+    },
+    {
+      "id": "frames",
+      "category": "blocks",
+      "title": {
+        "de": "Gegenstandsrahmen",
+        "en": "Item frames"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Rahmen"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "interactive"
+    },
+    {
+      "id": "composter",
+      "category": "blocks",
+      "title": {
+        "de": "Komposter",
+        "en": "Composter"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Komposter"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "interactive"
+    },
+    {
+      "id": "hives",
+      "category": "blocks",
+      "title": {
+        "de": "Bienenstöcke und Bienennester",
+        "en": "Beehives and bee nests"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.2",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Bienenstock"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "bees"
+    },
+    {
+      "id": "shears",
+      "category": "items",
+      "title": {
+        "de": "Schere",
+        "en": "Shears"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.8",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Schere"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "clay",
+      "category": "items",
+      "title": {
+        "de": "Tonklumpen",
+        "en": "Clay balls"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.8",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Tonklumpen"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "shield",
+      "category": "items",
+      "title": {
+        "de": "Schild zum Blocken",
+        "en": "Shield"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.95",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://minecraft.wiki/w/Shield"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "turtle-shell",
+      "category": "items",
+      "title": {
+        "de": "Schildkrötenpanzer",
+        "en": "Turtle shell"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.0",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://minecraft.wiki/w/Turtle_Shell"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "panda",
+      "category": "mobs",
+      "title": {
+        "de": "Panda",
+        "en": "Panda"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.8",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Panda"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "animals"
+    },
+    {
+      "id": "parrot",
+      "category": "mobs",
+      "title": {
+        "de": "Papagei (zähmbar)",
+        "en": "Parrot (tameable)"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.0",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Papagei"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "animals"
+    },
+    {
+      "id": "wolf",
+      "category": "mobs",
+      "title": {
+        "de": "Wolf (zähmbar)",
+        "en": "Wolf (tameable)"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.95",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Wolf"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "animals"
+    },
+    {
+      "id": "llama",
+      "category": "mobs",
+      "title": {
+        "de": "Lama (zähmbar und reitbar)",
+        "en": "Llama (tameable and rideable)"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.0",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Lama"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "animals"
+    },
+    {
+      "id": "cat",
+      "category": "mobs",
+      "title": {
+        "de": "Katze (zähmbar)",
+        "en": "Cat (tameable)"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.2",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Katze"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "bees"
+    },
+    {
+      "id": "bee",
+      "category": "mobs",
+      "title": {
+        "de": "Biene",
+        "en": "Bee"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.2",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Biene"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "bees"
+    },
+    {
+      "id": "villager",
+      "category": "mobs",
+      "title": {
+        "de": "Dorfbewohner",
+        "en": "Villager"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.0",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Dorfbewohner"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "villagers"
+    },
+    {
+      "id": "golem",
+      "category": "mobs",
+      "title": {
+        "de": "Eisengolem",
+        "en": "Iron golem"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Eisengolem"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "villagers"
+    },
+    {
+      "id": "piglin-brute",
+      "category": "mobs",
+      "title": {
+        "de": "Piglin-Barbar",
+        "en": "Piglin brute"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.3",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Piglin-Barbar"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+          "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "nethermobs"
+    },
+    {
+      "id": "zoglin",
+      "category": "mobs",
+      "title": {
+        "de": "Zoglin",
+        "en": "Zoglin"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.3",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Zoglin"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+          "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "nethermobs"
+    },
+    {
+      "id": "zombie-piglin",
+      "category": "mobs",
+      "title": {
+        "de": "Zombifizierter Piglin",
+        "en": "Zombified piglin"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.3",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Zombifizierter_Piglin"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+          "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "nethermobs"
+    },
+    {
+      "id": "crafting",
+      "category": "mechanics",
+      "title": {
+        "de": "Crafting",
+        "en": "Crafting"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "VR-Grundspiel / VR base game",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Crafting"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Handwerk"
+        },
+        {
+          "title": "RealmCraft VR · Quelle / source",
+          "url": "https://store.steampowered.com/app/2943620/Realmcraft_VR/"
+        },
+        {
+          "title": "RealmCraft VR · 0.8 · 2025-07-30",
+          "url": "https://www.youtube.com/watch?v=2UgZLQZ4kHQ"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "building"
+    },
+    {
+      "id": "enchanting",
+      "category": "mechanics",
+      "title": {
+        "de": "Verzaubern an Tisch und Amboss",
+        "en": "Enchanting at table and anvil"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.1",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Enchanting"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Verzauberung"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.3 · 2026-08-20",
+          "url": "https://steamcommunity.com/app/2943620/?curator_clanid=4777282"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "enchanting"
+    },
+    {
+      "id": "trading",
+      "category": "mechanics",
+      "title": {
+        "de": "Handel mit Dorfbewohnern",
+        "en": "Villager trading"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.2",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Village"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Handel"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.2 · 2026-07-03",
+          "url": "https://www.youtube.com/watch?v=PUJMeq_IiqQ"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.0 · 2026-04-06",
+          "url": "https://www.youtube.com/watch?v=uSh9_PDoj2I"
+        },
+        {
+          "title": "RealmCraft VR · 1.0.1 · 2026-05-20",
+          "url": "https://www.youtube.com/watch?v=peONrV6ZQ0o"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "villagers"
+    },
+    {
+      "id": "fishing",
+      "category": "mechanics",
+      "title": {
+        "de": "Angeln",
+        "en": "Fishing"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.80 / 0.9.85",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Fishing"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Angeln"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "travel"
+    },
+    {
+      "id": "minecart",
+      "category": "mechanics",
+      "title": {
+        "de": "Normale Lore",
+        "en": "Regular minecart"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.72",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Lore"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "travel"
+    },
+    {
+      "id": "dropper",
+      "category": "mechanics",
+      "title": {
+        "de": "Spender und Werfer",
+        "en": "Dispensers and droppers"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.90",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Spender"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "redstone"
+    },
+    {
+      "id": "redstone",
+      "category": "mechanics",
+      "title": {
+        "de": "Redstone: vollständiger Funktionsumfang",
+        "en": "Redstone: full feature coverage"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "partial",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.72 / 0.9.90",
+      "note": {
+        "de": "Erste Komponenten und Spender/Werfer sind enthalten. Die zweite Ausbaustufe steht in der Roadmap noch in Arbeit; keine vollständige Minecraft-Kompatibilität belegt.",
+        "en": "Initial components and dispensers/droppers are included. The second iteration is still in progress on the roadmap; full Minecraft parity is not established."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Blocks"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Redstone"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "redstone"
+    },
+    {
+      "id": "nether",
+      "category": "world",
+      "title": {
+        "de": "Nether",
+        "en": "Nether"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "Nether-Promo / promo 2025-06-04",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Nether"
+        },
+        {
+          "title": "RealmCraft VR · Quelle / source",
+          "url": "https://www.youtube.com/watch?v=YoYweTA26Go"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "dimensions"
+    },
+    {
+      "id": "mansion",
+      "category": "world",
+      "title": {
+        "de": "Waldanwesen",
+        "en": "Woodland mansion"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "1.0.0",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Village"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Waldanwesen"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "structures"
+    },
+    {
+      "id": "shipwreck",
+      "category": "world",
+      "title": {
+        "de": "Schiffswrack",
+        "en": "Shipwreck"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "included",
+      "checkedAt": "2026-09-07",
+      "version": "0.9.90",
+      "note": {
+        "de": "In den genannten VR-Updates belegt. Details und Rezepte können von Minecraft abweichen.",
+        "en": "Documented in the listed VR updates. Details and recipes may differ from Minecraft."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Village"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Schiffswrack"
+        },
+        {
+          "title": "RealmCraft VR · Update Log",
+          "url": "https://steamcommunity.com/app/2943620/allnews/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "structures"
+    },
+    {
+      "id": "end",
+      "category": "world",
+      "title": {
+        "de": "Ende-Dimension",
+        "en": "End dimension"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "planned",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap geplant; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: planned; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Ende"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "dimensions"
+    },
+    {
+      "id": "brewing",
+      "category": "mechanics",
+      "title": {
+        "de": "Brauen von Tränken",
+        "en": "Potion brewing"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "planned",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap geplant; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: planned; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Brewing"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Brauen"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "enchanting"
+    },
+    {
+      "id": "crossbow",
+      "category": "items",
+      "title": {
+        "de": "Armbrust",
+        "en": "Crossbow"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "planned",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap geplant; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: planned; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Armbrust"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "nametag",
+      "category": "items",
+      "title": {
+        "de": "Namensschild",
+        "en": "Name tag"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "planned",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap geplant; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: planned; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Namensschild"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "tools"
+    },
+    {
+      "id": "special-carts",
+      "category": "mechanics",
+      "title": {
+        "de": "Trichter-, TNT- und Güterlore",
+        "en": "Hopper, TNT and chest minecarts"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "planned",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap geplant; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: planned; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Item"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Lore"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "travel"
+    },
+    {
+      "id": "multiplayer",
+      "category": "mechanics",
+      "title": {
+        "de": "Gleichzeitiger Multiplayer",
+        "en": "Simultaneous multiplayer"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "inProgress",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap in Arbeit; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: in progress; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Mehrspieler"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "sharing"
+    },
+    {
+      "id": "frog-horse",
+      "category": "mobs",
+      "title": {
+        "de": "Frosch, Pferd und Zombiepferd",
+        "en": "Frog, horse and zombie horse"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "inProgress",
+      "checkedAt": "2026-09-07",
+      "version": "Roadmap 2026-09-07",
+      "note": {
+        "de": "Laut Roadmap in Arbeit; keine Veröffentlichung in den geprüften VR-Updates belegt. Wiki-Inhalte der mobilen Version sind kein VR-Nachweis.",
+        "en": "Roadmap: in progress; no release established in the reviewed VR updates. Mobile-edition wiki content is not VR evidence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/Entities"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Kreatur"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "animals"
+    },
+    {
+      "id": "crafter",
+      "category": "blocks",
+      "title": {
+        "de": "Automatischer Crafter",
+        "en": "Automatic crafter"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "unconfirmed",
+      "checkedAt": "2026-09-07",
+      "version": "VR bis / through 1.0.3",
+      "note": {
+        "de": "Minecraft-Inhalt; für RealmCraft VR hier nicht bestätigt. Fehlender Beleg bedeutet nicht sicher fehlender Spielinhalt.",
+        "en": "Minecraft feature; not confirmed here for RealmCraft VR. Missing evidence does not prove absence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://minecraft.wiki/w/Crafter"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "redstone"
+    },
+    {
+      "id": "elytra",
+      "category": "items",
+      "title": {
+        "de": "Elytren",
+        "en": "Elytra"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "unconfirmed",
+      "checkedAt": "2026-09-07",
+      "version": "VR bis / through 1.0.3",
+      "note": {
+        "de": "Minecraft-Inhalt; für RealmCraft VR hier nicht bestätigt. Fehlender Beleg bedeutet nicht sicher fehlender Spielinhalt.",
+        "en": "Minecraft feature; not confirmed here for RealmCraft VR. Missing evidence does not prove absence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Elytren"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "dimensions"
+    },
+    {
+      "id": "dragon",
+      "category": "mobs",
+      "title": {
+        "de": "Enderdrache",
+        "en": "Ender dragon"
+      },
+      "minecraftStatus": "included",
+      "realmcraftStatus": "unconfirmed",
+      "checkedAt": "2026-09-07",
+      "version": "VR bis / through 1.0.3",
+      "note": {
+        "de": "Minecraft-Inhalt; für RealmCraft VR hier nicht bestätigt. Fehlender Beleg bedeutet nicht sicher fehlender Spielinhalt.",
+        "en": "Minecraft feature; not confirmed here for RealmCraft VR. Missing evidence does not prove absence."
+      },
+      "sources": [
+        {
+          "title": "RealmCraft Wiki · general / allgemein",
+          "url": "https://realmcraftgame.fandom.com/wiki/RealmCraft_Game_Wiki"
+        },
+        {
+          "title": "Minecraft Wiki",
+          "url": "https://de.minecraft.wiki/w/Enderdrache"
+        },
+        {
+          "title": "RealmCraft VR · Roadmap",
+          "url": "https://realmcraft-vr.canny.io/"
+        },
+        {
+          "title": "RealmCraft Wiki · mechanics overview",
+          "url": "https://realmcraftgame.fandom.com/wiki/Mechanics"
+        }
+      ],
+      "topicId": "dimensions"
+    }
+  ]
+}

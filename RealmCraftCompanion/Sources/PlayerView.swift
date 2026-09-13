@@ -6,13 +6,24 @@ import UniformTypeIdentifiers
     @Published var snapshot: PlayerSnapshot?
     @Published var source = ""
     @Published var readAt: Date?
-    @Published var quest = true
+    @Published var quest = false
+    private var sourceInitialized = false
     @Published var query = ""
     @Published var refreshError: String?
     private var sourceKey: String?
     private func key(_ model: Model) -> String {
         if quest { return "quest:\(model.serial):\(model.library.package):\(model.world)" }
         return "backup:\(model.library.root.path):\(model.selection ?? "")"
+    }
+    func prepareSource(_ model: Model) {
+        let connected = !model.serial.isEmpty && !model.setup.package.isEmpty
+        if !sourceInitialized {
+            quest = connected
+            sourceInitialized = true
+        } else if !connected {
+            quest = false
+        }
+        validateSource(model)
     }
     func validateSource(_ model: Model) {
         if sourceKey != key(model) { reset() }
@@ -42,7 +53,7 @@ import UniformTypeIdentifiers
                 guard try data == Data(contentsOf: second) else {
                     throw PlayerReadError(english ? "The game saved during reading. Please try again." : "Das Spiel hat während des Auslesens gespeichert. Bitte erneut versuchen.")
                 }
-                source = "Quest · \(world)"
+                source = "\(english ? "Device" : "Gerät") · \(world)"
             } else {
                 guard let save else { throw PlayerReadError("No savegame / Kein Spielstand") }
                 data = try backend.readPlayerData(save)
@@ -81,6 +92,8 @@ struct PlayerView: View {
     @Environment(\.companionTheme) private var theme
     @AppStorage("realmcraft.playerSkin.v1") private var skinJSON = ""
     @State private var showSkinEditor = false
+    @State private var skinResetToken = 0
+    @State private var readActionFrame: CGRect = .zero
     private var skinProfile: PlayerSkinProfile { PlayerSkinProfile.decode(skinJSON) }
     private var english: Bool { language == "en" }
     private var unavailable: Bool { model.busy || model.scanning || (player.quest ? (model.serial.isEmpty || model.world.isEmpty || model.setup.package.isEmpty) : model.selected == nil) }
@@ -89,36 +102,38 @@ struct PlayerView: View {
             CompanionPageHeader(title: english ? "Player" : "Spieler") {
                 Button(player.snapshot == nil ? (english ? "Read player" : "Spieler auslesen") : (english ? "Refresh" : "Aktualisieren")) { player.read(model, quest: player.quest, english: english) }
                     .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(unavailable).keyboardShortcut("r", modifiers: .command)
+                    .background(GeometryReader { geometry in
+                        Color.clear.preference(key: PlayerActionBounds.self, value: geometry.frame(in: .named("playerSourceLayout")))
+                    })
             } menu: {
                 Group {
                     Button(english ? "Skin…" : "Skin …") { showSkinEditor = true }
                     Button(english ? "Export JSON" : "JSON exportieren") { player.export(model) }.disabled(player.snapshot == nil)
-                    Button(english ? "Quest setup…" : "Quest einrichten …") { model.showSetup = true }
+                    Button(english ? "Device setup…" : "Gerät einrichten …") { model.showSetup = true }
                     Button(english ? "Check connection" : "Verbindung prüfen") { model.connect() }
                 }
                 .disabled(model.busy)
             }
             VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Picker(english ? "Source" : "Quelle", selection: $player.quest) {
-                        Text("Quest").tag(true); Text(english ? "Backup" : "Sicherung").tag(false)
-                    }.pickerStyle(.segmented).frame(width: 220)
+                PlayerSourceLayout(title: english ? "Source" : "Quelle", actionFrame: readActionFrame) {
+                    PlayerSourceToggle(quest: $player.quest, deviceTitle: english ? "Device" : "Gerät", savegameTitle: english ? "Savegame" : "Spielstand")
+                } detail: {
                     if player.quest {
-                        Picker(english ? "World" : "Welt", selection: $model.world) { ForEach(model.worlds, id: \.self) { Text($0).tag($0) } }.frame(maxWidth: 340)
+                        CompanionPopup(title: english ? "World" : "Welt", selection: $model.world, options: model.worlds.map { ($0, $0) }).companionField(english ? "World" : "Welt")
                     } else {
-                        Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
-                            ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                        }.frame(maxWidth: CompanionLayout.sourceWidth)
+                        SourceContextBar(saves: model.saves, selection: $model.selection, language: language).frame(maxWidth: .infinity)
                     }
                 }.disabled(model.busy || model.scanning)
                 Text(english ? "Reads the last saved state, not live gameplay. Save in RealmCraft before refreshing. No game files are changed." : "Liest den zuletzt gespeicherten Stand, keine Live-Spielwerte. Vor dem Aktualisieren in RealmCraft speichern. Spieldateien werden nicht verändert.")
                     .font(.caption).foregroundStyle(.secondary)
+                if model.busy || player.refreshError != nil {
                 HStack(spacing: 8) {
                     if model.busy { ProgressView().controlSize(.small); Text(tr(model.status)) }
                     else if let error = player.refreshError { Text(error).foregroundStyle(.orange) }
                     Spacer()
                 }.font(.caption).frame(minHeight: 20, alignment: .leading).fixedSize(horizontal: false, vertical: true)
-            }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
+                }
+            }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             if let snapshot = player.snapshot {
                 ScrollView {
@@ -135,13 +150,20 @@ struct PlayerView: View {
                         HStack(alignment: .center, spacing: 30) {
                             VStack(spacing: 10) {
                                 if skinProfile.configured {
-                                    PlayerSkinScene(profile: skinProfile, armor: snapshot.armor).frame(width: 235, height: 300)
+                                    PlayerSkinScene(profile: skinProfile, armor: snapshot.armor, resetToken: skinResetToken).frame(width: 235, height: 300)
                                     Text(english ? "Your manually selected skin" : "Dein manuell ausgewählter Skin").font(.caption).foregroundStyle(.secondary)
                                     Text(english ? "Armor colors approximated" : "Rüstungsfarben angenähert").font(.caption2).foregroundStyle(.secondary)
                                 } else {
                                     PlayerAvatar(armor: snapshot.armor, names: names, english: english)
                                 }
-                                Button(english ? "Choose skin…" : "Skin auswählen …") { showSkinEditor = true }
+                                HStack {
+                                    Button(english ? "Choose skin…" : "Skin auswählen …") { showSkinEditor = true }
+                                    if skinProfile.configured {
+                                        Button { skinResetToken += 1 } label: { Image(systemName: "arrow.counterclockwise") }
+                                            .help(english ? "Reset view" : "Ansicht zurücksetzen")
+                                            .accessibilityLabel(english ? "Reset view" : "Ansicht zurücksetzen")
+                                    }
+                                }
                             }
                             VStack(alignment: .leading, spacing: 12) {
                             Label(english ? "Equipped armor" : "Angelegte Rüstung", systemImage: "shield.fill").font(.title2.bold())
@@ -190,15 +212,18 @@ struct PlayerView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "person.crop.rectangle").font(.system(size: 46)).foregroundStyle(theme.accent)
                     Text(english ? "Your player at a glance" : "Dein Spieler auf einen Blick").font(.title.bold())
-                    Text(english ? "Choose Quest or a backup, then read your level, inventory and equipped armor." : "Wähle Quest oder eine Sicherung und lies Level, Inventar und angelegte Rüstung aus.").foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    Text(english ? "Choose a connected device or a local savegame, then read your level, inventory and equipped armor." : "Wähle ein verbundenes Gerät oder einen lokalen Spielstand und lies Level, Inventar und angelegte Rüstung aus.").foregroundStyle(.secondary).multilineTextAlignment(.center)
                 }.padding(40).frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+        .coordinateSpace(name: "playerSourceLayout")
+        .onPreferenceChange(PlayerActionBounds.self) { readActionFrame = $0 }
         .onChange(of: player.quest) { _, _ in player.validateSource(model) }
         .onChange(of: model.selection) { _, _ in if !player.quest { player.validateSource(model) } }
         .onChange(of: model.world) { _, _ in if player.quest { player.validateSource(model) } }
-        .onChange(of: model.serial) { _, _ in if player.quest { player.validateSource(model) } }
-        .onAppear { player.validateSource(model) }
+        .onChange(of: model.serial) { _, _ in player.prepareSource(model) }
+        .onChange(of: model.setup.package) { _, _ in player.prepareSource(model) }
+        .onAppear { player.prepareSource(model) }
         .sheet(isPresented: $showSkinEditor) {
             PlayerSkinEditor(saved: $skinJSON, armor: player.snapshot?.armor ?? [], english: english)
         }

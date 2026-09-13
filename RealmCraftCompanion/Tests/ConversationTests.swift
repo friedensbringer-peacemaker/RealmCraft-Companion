@@ -5,6 +5,14 @@ import Foundation
         let resource = URL(fileURLWithPath: CommandLine.arguments[1])
         let recipes = try JSONDecoder().decode([ConversationRecipe].self, from: Data(contentsOf: resource.appendingPathComponent("ConversationRecipes.json")))
         let guides = try JSONDecoder().decode(BuildCatalog.self, from: Data(contentsOf: resource.appendingPathComponent("BuildGuides.json"))).guides
+        let catalog = try CraftingCatalog.load(from: resource.appendingPathComponent("CraftingCatalog.json")).index()
+        var extended = ConversationKnowledge(recipes: recipes, guides: [], videoTips: [], craftingIndex: catalog)
+        let extendedAnswer = extended.answer("Was brauche ich für 65 Fackeln?", world: nil, places: [], english: false)
+        precondition(extendedAnswer.spokenText?.contains("17 Durchgänge") == true, "Catalog lookup works without world")
+        _ = extended.answer("Wo ist mein Haus?", world: nil, places: [], english: false)
+        precondition(extended.crafting?.lastItem == nil, "Other intent clears catalog followup")
+        extended.remember(CompanionAnswer(text: "synthetic material plan"), world: nil, english: false)
+        precondition(extended.answer("Nochmal", world: nil, places: [], english: false).text == "synthetic material plan", "Repeat current plan, not an older recipe")
         var engine = ConversationKnowledge(recipes: recipes, guides: guides)
         let places = CompanionPlace.named(["o:building:-12,64,30": "Haus", "n:chest:5,70,-8": "Netherlager", "bad": "Bogus", "o:bed:bad,3,4": "Invalid"])
         var count = 0

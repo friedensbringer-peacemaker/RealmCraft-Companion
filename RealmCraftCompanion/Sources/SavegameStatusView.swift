@@ -19,15 +19,16 @@ struct SavegameStatusView: View {
                 Label(en ? "Backup & storage status" : "Backup- und Speicherstatus", systemImage: "externaldrive.badge.checkmark").font(.headline)
                 Spacer()
                 Button { refresh = UUID() } label: { Image(systemName: "arrow.clockwise") }
+                    .buttonStyle(CompanionButtonStyle(width: CompanionLayout.actionHeight))
                     .help(en ? "Check status again" : "Status erneut prüfen").disabled(model.busy)
             }
             if let storage {
                 Label(storage.optimizedFiles == 0 ? (en ? "Not optimized" : "Nicht optimiert") : storage.optimizedFiles == storage.files ? (en ? "Optimized" : "Optimiert") : (en ? "Partially optimized" : "Teilweise optimiert"), systemImage: "square.stack.3d.up")
                 Text(en ? "\(storage.optimizedFiles) of \(storage.files) files use the shared storage pool; \(storage.sharedFiles) also share storage with other savegames." : "\(storage.optimizedFiles) von \(storage.files) Dateien nutzen den gemeinsamen Speicher; \(storage.sharedFiles) teilen ihn auch mit anderen Spielständen.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(.secondary).padding(.leading, 28)
                 Label(en ? "Independent snapshot · no other savegame required" : "Eigenständiger Spielstand · kein anderes Savegame erforderlich", systemImage: "checkmark.shield")
                 Text(en ? "Hard links share storage, not a chain of incremental backups. Deleting another savegame does not remove this snapshot’s files. This checks file structure, not content checksums." : "Hardlinks teilen Speicher, bilden aber keine Kette inkrementeller Backups. Das Löschen eines anderen Savegames entfernt die Dateien dieses Stands nicht. Hier wird die Dateistruktur geprüft, nicht der Inhalt per Prüfsumme.")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(.secondary).padding(.leading, 28)
                 if !storage.related.isEmpty {
                     DisclosureGroup(en ? "Shares files with \(storage.related.count) savegame(s)" : "Gemeinsame Dateien mit \(storage.related.count) Spielständen") {
                         VStack(alignment: .leading, spacing: 8) {
@@ -65,7 +66,8 @@ struct SavegameStatusView: View {
                 }
             } else { ProgressView(en ? "Checking cloud folder…" : "Cloud-Ordner wird geprüft …") }
             Text(en ? "RealmCraft / Meta online save: unknown. The Companion has no connection to these services and cannot confirm a server backup or cloud upload." : "RealmCraft-/Meta-Online-Spielstand: unbekannt. Der Companion hat keine Verbindung zu diesen Diensten und kann weder Server-Backup noch Cloud-Upload bestätigen.").font(.caption).foregroundStyle(.secondary)
-        }.padding(16).frame(maxWidth: .infinity, alignment: .leading)
+        }.labelStyle(CompanionAlignedLabelStyle())
+            .padding(CompanionLayout.panelInset).frame(maxWidth: .infinity, alignment: .leading)
             .background(theme.accent.opacity(0.06), in: RoundedRectangle(cornerRadius: theme.radius))
             .task(id: taskID) {
                 storage = nil; cloud = nil; error = nil

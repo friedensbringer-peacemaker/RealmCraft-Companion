@@ -36,6 +36,9 @@
 :root[data-companion] #sidebar {width:220px}
 :root[data-companion] #sidebar header,:root[data-companion] .level-steps {display:none}
 :root[data-companion] .world {padding-top:18px}
+:root[data-companion] .coords-input {grid-template-columns:minmax(0,1fr) minmax(0,1fr) 42px;gap:6px}
+:root[data-companion] .coords-input label {padding:6px 8px;font-size:12px}
+:root[data-companion] .coords-input input {font-size:15px;min-width:0}
 
 :root[data-companion] .ownership-toolbar{left:16px;top:98px}
 :root[data-companion] #ownership-panel{left:16px;bottom:66px;background:var(--control);color:inherit;border-color:var(--border)}

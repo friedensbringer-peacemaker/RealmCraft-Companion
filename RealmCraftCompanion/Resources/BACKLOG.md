@@ -1,5 +1,286 @@
 BACKLOG
 
+## Map and layer controls · 1.7.49 (71) · 2026-09-13
+
+Compact action-aligned Maps controls, source information popover, readable map
+titles and prominent ore Y navigation are implemented. Mouse wheel and standard
+two-finger scroll handling is scoped to the layer row, with inertial tails ignored.
+Next acceptance: physical mouse/trackpad direction and sensitivity, pinned layer
+header in loaded screens, narrow-window keyboard/VoiceOver and long translated
+labels. Keep the 1.7.48 stable backup available. Treemap remains a future idea;
+no new quantitative visualization or platform synchronization is included here.
+
+## Local stable baseline · 1.7.48 (70) · 2026-09-13
+
+The integrated 1.7.47 candidate is promoted to the user-selected stable baseline
+with the normal existing savegame library. Earlier candidate installation notes
+are historical. No device transfer or save migration is introduced. The UI/UX,
+keyboard/VoiceOver, Metro, translation-runtime and platform-parity acceptance
+items below remain open; a stable designation does not close these findings.
+
+## Metro network assistant · 1.7.47 (69) · 2026-09-13
+
+METRO-005: automatic geometric proposals are implemented for concentric square
+rings, up to 32 target pins and combined layouts. Three strategies compare a
+minimum straight-line connection tree, symmetric construction and nearest-stop
+branches. Preview reuses Atlas/MetroDiagram; explicit Apply preserves existing
+metadata and creates only planned directed rail links and proposed portal sites.
+Surface targets without confirmed measured portal observations remain open.
+Limits: 1–8 rings, 16–4096-block spacing, existing network storage caps. Rail
+length is geometric construction length, not terrain access, travel time or a
+complete bill of materials. Next: terrain/coverage-aware candidate scoring,
+verified portal siting, cost profiles, dense-network legibility and native
+DE/EN/keyboard acceptance. No game writes, install or platform parity is claimed.
+
+## Screen density · 1.7.47 (69) · 2026-09-13
+
+Player refinement: align the two equal source segments and backup/world right
+edge with Read player/Refresh rather than the full content width. Live keyboard
+and loaded-state acceptance remains open.
+
+Header-grid follow-up: backup selectors across source-based screens now end at
+the actual action-group right edge, excluding Help/overflow. Maps area and
+Tectonicus options follow that edge; headers without actions retain full width.
+Ore section tabs and compact Metro navigation have equal-width segments.
+Uniform 180 × 32 labeled header actions include Help. Symbol-only
+controls remain square. UX-010/012 live narrow-window and popup acceptance remains
+open; selection and draft protection are unchanged.
+Comparable form selectors now share a fixed label column and full-width control
+edge, with a stacked fallback for narrow panes. Verify long selected values and
+popup keyboard interaction in the live candidate.
+
+Implemented a shared alignment and progressive-disclosure pass after the supplied
+screenshots. Video browsing, secondary details, source controls, Help rows, Metro
+fields and ore setup/trial sections are lighter. Critical warnings remain visible;
+opening a disclosure does not start an operation or save a draft.
+
+UX-010/012/023 remain partially addressed: validate full native scrolling, long
+DE/EN controls, both themes, loaded/error/busy states and keyboard/VoiceOver.
+The 20-destination source matrix is in the audit. Source/component evidence is not
+complete screen acceptance. A full Mining trials wizard and treemap remain future
+work; the new expandable trial sections do not implement either.
+
+## Library alignment · 1.7.47 (69) · 2026-09-13
+
+Implemented: compact shared header, wider backup browser, consistent detail-title
+hierarchy, responsive preview/facts grouping, aligned icon columns and square
+symbol controls. No backup operation or destructive confirmation was changed.
+Next: live validation of the complete library scroll area and header fallbacks
+across destinations, then the guided Mining trials redesign. Synthetic component
+renders do not establish full application or accessibility acceptance.
+
+## Ore UX first package · 1.7.47 (69) · 2026-09-13
+
+Implemented in source: independent close-inspection zoom, bounding-box framing,
+Fit to view, zoom-limit feedback, compact Ore header, aligned layer controls and
+nearby selected-height readout. Guide-camera defaults remain unchanged.
+Camera math and synthetic SceneKit render/picking tests cover repeated zoom and
+close-up preset round-trips. A separate test build must still receive live
+standard/large-view, narrow-window, DE/EN and both-theme acceptance.
+Next: redesign Mining trials as a guided sequence with consistent field columns;
+then simplify reference presentation and distribution controls. Treemap remains
+an optional later addition, not part of this package.
+
+## Native audit preparation implemented · 1.7.47 (69) · 2026-09-12
+
+Fresh Demo-profile tooling, a guarded audit-only launcher, source-executable content
+verification, 20-screen/six-journey coverage records and allowlisted helper diagnostic
+summaries are implemented. Fifteen synthetic tests passed. A separately signed
+1.7.47 Demo candidate passed headless profile checks, import and integrity validation;
+missing/wrong profile environments refused to launch. Original app/source, personal
+library and permissions remain unchanged. See `docs/UI-UX-AUDIT-RUNBOOK.md`.
+
+Approved native follow-up: audit app launch and bounded Demo startup passed;
+Home/Help views and their inspected scroll areas worked. Switching to Ore was
+followed by the same helper crash on screenshot retrieval, before an explicit AX
+read. Ten matching reports now exist; both Companion processes continued running.
+Retries stopped. Helper stability, full scroll/control coverage and cross-feature
+acceptance remain open. This is not a helper
+crash fix, an OS sandbox or a UI feature release. UX-018–023 remain proposed.
+
+## Native audit infrastructure blocker · 1.7.47 (69) · 2026-09-12
+
+The repeated closed-pipe error is now backed by nine same-day `SkyComputerUseService` crash reports (eight during the evening audit): helper 26.902.1000968, Swift assertion at `Array.remove(at:)`, identical helper offset. The Companion process continued from before those eight crashes; executable hash and strict signature still match. Exact UI trigger remains unknown. This is a testing-infrastructure defect, not a newly proven Companion feature crash. No fix, restart, permission reset or external report was performed.
+
+Next: one controlled stability/reproduction gate; isolated Demo-only state; finish nine untouched screens and library visuals; finish partial panes/buttons and cross-feature tasks; then DE/EN/themes/keyboard/VoiceOver/newcomer acceptance. If the helper repeats the fault, stop retry loops and use user-operated overlapping screenshots, clearly labeled as assisted evidence. Full evidence and the ordered test plan are at the top of `docs/UI-UX-AUDIT-2026-09-12.md`. Original crash reports remain private.
+
+## Community-first UI/UX audit · 1.7.47 (69) · 2026-09-12
+
+Proposed work, not implemented. Full evidence, per-screen coverage and ordered packages are in `docs/UI-UX-AUDIT-2026-09-12.md`. Initial live inspection reached Home, Player and Maps plus library accessibility. After manual Home recovery, the walkthrough also reached Portal pairs, Metro, loaded Chests, Conversation/settings, one complete video article and parts of a build guide including a step/2D switch. UI transport failed again. These are state-level observations, not full screen acceptance; exact remaining scroll/control coverage is recorded in the audit. Future checks must traverse whole scroll areas and exercise safe load/switch/detail controls; never delete data and ask before unusual or potentially problematic actions.
+
+- **UX-018 · P1 · Map reliability/recovery:** a saved Demo map showed only a grid, including after Whole world. All 10 expected tile paths exist; root cause is unconfirmed. Diagnose in an isolated copy, then provide visible load/render failure and retry/rebuild states. Acceptance: valid Demo terrain is visible and unavailable/corrupt assets cannot look like successful empty terrain; preserve old outputs and original backups.
+- **UX-019 · P1 · Unique Go shortcuts:** eight feature commands share Cmd-Shift-E in `CompanionNavigationCommands`. Replace positional fallback assignment with explicit optional unique mappings; preserve unique established shortcuts. Acceptance: mapping uniqueness regression and native menu/focus verification. Existing case-order tests alone are insufficient.
+- **UX-020 · P2 · Honest search coverage:** `QuickFindCatalog.search` labels every Crafting hit as a comparison recipe, although 618 of 1,206 browsable entries have no output recipe. Show item/no-recipe versus available-reference status in DE/EN; retain the unverified-game qualifier and exact result IDs. Acceptance: both coverage states produce truthful labels and unchanged target routing.
+- **UX-021 · P2 · Answer-to-action handoffs:** add optional typed native actions to supported Conversation answers using existing `CompanionLookup` routing. Acceptance: exact recipe/guide/place opens without retyping, unknown intent requests clarification, draft guards remain, no new service or automatic microphone/network activation.
+- **UX-022 · P2 · Chest density and icon fallback alignment:** the loaded Demo chest required long scrolling through repeated stacks, while final iconless rows shifted names left. Offer compact slot presentation or an explicitly separate stock summary and reserve the icon column. Acceptance: preserve exact slots/quantities/IDs, align labels with and without icons, and verify the final slot remains reachable. No content or asset absence is inferred beyond the observed rows.
+- **UX-023 · P2 · Help orientation:** live Help still groups the five More tools features under Your world / AI tools; several topic names truncate. Align feature-topic groups with navigation metadata, retain stable IDs and support chapters, improve long-title readability, add a compact material-plan starter and describe type-first recipe browsing. Acceptance: matching specialist grouping, readable DE/EN titles, working old links/search, and retained safety/evidence details. Help's topic list and two complete articles, related-topic/back navigation and no-result recovery were successfully checked; all 48 article bodies were not. Transport failed again on Statistics, including a screenshot-only fallback; full live acceptance remains blocked.
+- **UX-009/010/011/012/014 refinement:** explicit offline-first setup branch; compact Player avatar and Maps setup/header; consistent task verbs, source freshness and empty/disabled-state next steps. Keep all technical controls and safety evidence accessible.
+- **UX-013/016/017 refinement:** edited video answer/steps before export configuration; reuse existing coach and material-plan flow; feedback fields adapt to report type; finish the blocked native matrix and newcomer acceptance in both languages/themes. Do not rebuild already present search, coach, filter popovers or single-sheet handoff.
+
+Suggested sequence: A reliability/labels → B first useful result → C answer-first knowledge and handoffs → D community/native acceptance. No application implementation, installation, device write, screenshot publication or translation integration was performed by this audit.
+
+## Community translation foundation · 1.7.47 source baseline · 2026-09-12
+
+- **L10N-001 · Foundation implemented, coverage partial:** one versioned `Resources/Translations/catalog.json` inventories existing DE/EN interface text, recognized Swift literal branches/helpers, bilingual structured resources and setup/transfer documents. It includes source context, placeholder identities, target-language review states and a visible unresolved-literal list. `translation_catalog.py` refreshes the inventory, retains retired entries, exports scoped language packs and imports into a new candidate after source/target/placeholder validation. Native `tr()` resource generation now reads the catalog and permits reviewed English overrides. Complete text extraction is not claimed.
+- **L10N-002 · Runtime migration · P1:** classify remaining literals, introduce stable semantic keys and explicit parameters, migrate Swift/content/map readers, add plural and locale-aware formatting, then expose additional locales with measured coverage and English/original fallback. Acceptance: one additional locale must work across every advertised screen, messages, help and maps without translating personal world/sign content. Android/web need their own adapters and acceptance.
+- **L10N-003 · App translation workspace · P2:** Settings → Language & translations with search, context, completeness/review counts, explicit file export, preview/conflict-aware import, versioned local activation/reset and system sharing. Reuse native panels and draft guards. Acceptance: Cancel/error keeps the active pack and drafts; an invalid/stale import changes nothing; sharing starts only on an explicit action.
+- **L10N-004 · GitHub and agent collaboration · P2:** the contribution guide and local CI commands are available; install translation checks into the actual repository workflow and add a focused PR template during a reviewed publication. Add a context-sensitive terminology glossary and an independent language review. No automatic agent self-approval, GitHub upload, PR or public release is implemented by this tooling change.
+
+Validation: synthetic exchange/extraction regressions, complete inventory freshness check and isolated DE/EN resource generation. Installed app, savegames and platform binaries are unchanged. See `Resources/Translations/README.md` for the exact currently active runtime boundary.
+
+## Type-first crafting and matching navigation · 1.7.47 (69) · 2026-09-12
+
+- Crafting's item browser groups known item types before sorting material/color variants within each type, using explicit longest-match ID suffixes and DE/EN family headings. Ordinary boats, chest boats, rafts, fence gates, trapdoors, pickaxes and other distinct types remain separate. Unknown/special items keep their full title and independent identity. This changes presentation only: original item IDs, icons, recipe alternatives, filters, material-plan targets and evidence remain unchanged. Global Quick find and other ingredient pickers retain their existing search order.
+- The Home explanation “What each section does”, sidebar and Go menu now share `CompanionNavigationGroup`. The overview includes matching group headings and Help, with specialist tools last. All 20 destinations and their original shortcut assignments remain intact. Metadata lives in `Sources/CompanionFeature.swift` so order and help-target regressions can run without the app model.
+- No RealmCraft crafting mechanic was verified by this change. The bundled comparison recipes distinguish oak, birch and acacia boats and their corresponding planks; grouping does not make their ingredients interchangeable.
+
+
+## Usability implementation · 1.7.46 (68) · 2026-09-12
+
+Mac source candidate. This implements a first coherent package from UX-008–017, not every proposed screen redesign.
+
+- **UX-015:** Metro connection editing now authorizes the transition inside the shared `editEdge` entry point. Both station and line links use it; Cancel or failed Save does not replace the draft.
+- **UX-008/009:** persistent top sidebar search, four real category filters, grouped direct results, keyboard shortcut and explicit no-result/missing-catalog states. Feedback remains bottom-left. All 20 destinations and existing raw IDs/Go shortcuts are retained; five specialist tools use an expandable group that opens on direct navigation. Home leads with four task entries and offline/import/Quest options when no backup exists. Import is also visible in the library header. These new navigation entries start no transfers or rendering.
+- **UX-010/012/014 (partial):** shared page-purpose/help row opens stable topic IDs through the draft guard. Source details separate technical IDs from game-file time and not-live status, now including Conversation. Localized world/backup, assistant-instruction and creature labels; actionable AI-export blocked reasons and an empty-network Metro sequence.
+- **UX-011/013/016 (partial):** recipe filters collapse while counts/reset and evidence stay visible; unavailable historical metrics move into a labeled disclosure. Reviewed guide materials transition to the plan in the same sheet instead of opening a nested plan sheet. Explicit Save, provenance, bounds and recipe choices remain. Feedback participates in draft protection: successful ZIP export saves report/images, Cancel/errors retain the draft, Discard clears it; the mail recipient is not stored in ZIP and no mail is sent automatically.
+- Help retains all 48 bilingual topics and existing IDs. Navigation, search, source, material and feedback workflows were updated; setup and embedded agent copies use the same current menu paths. No savegame schema, game content, world/library data, device write or publication changed.
+
+Remaining: full Atlas/Ore progressive disclosure, portal/chest task flows, broader knowledge-filter harmonization, further dialog/VoiceOver/contrast work, and new-user task observation. The separate Metro/terrain adapter (UX-007) and Android/web parity are not part of this package. Native full-app task acceptance and installation remain separate from compilation, model tests and isolated component renders.
+
+
+## New-user usability review · 1.7.45 baseline · proposed, not implemented
+
+See the new-user follow-up in `docs/UI-UX-AUDIT-2026-09-12.md` for all 20 screens, dialog families, current-source evidence and acceptance tasks.
+
+- **UX-015 · P1:** close the Metro line-to-connection draft-guard bypass before further presentation work; static finding, native reproduction pending.
+- **UX-008/009/010 · P1:** persistent top knowledge search with real filters and bottom feedback; task-based Home with offline/import/Quest entry; consistent page purpose, primary action and actionable empty/blocked states.
+- **UX-011/012/014 · P2:** progressive disclosure in Maps/Ore/Metro/AI export, concise source/result status, plain DE/EN terminology and context-sensitive help. Keep all technical options and safety-critical evidence.
+- **UX-013/016 · P2:** consistent knowledge filters, single guide-material review/plan sequence, understandable dialog save/close states and feedback draft protection.
+- **UX-017 · Per-package acceptance:** DE/EN, both themes, keyboard/focus/VoiceOver, short screens and real newcomer task observation. Existing geometry/model checks are not full GUI acceptance.
+- No application implementation, installation, savegame changes or platform synchronization is part of this review. Preserve previous UX IDs and historical completion notes below.
+
+## UX integration · 1.7.45 (67) · 2026-09-12
+
+Implemented in the macOS source candidate; installation and native end-to-end acceptance remain separate.
+
+- Shared `SourceContextBar` replaces duplicate backup pickers in Metro, portals, ores, Maps, Tectonicus, Chests, Player (backup mode), Statistics, Editor and AI export. It distinguishes backup time, game-file time and optional dimension/result time using the existing Savegame model.
+- A per-model `DraftTransitions` registry guards source/workspace transitions, protected feature selections/reloads, setup opening, main-window close and application termination. Metro, portal and ore-trial drafts and material plans participate. Save failures and Cancel block navigation; Discard restores persisted state. Other editors retain their existing policies. Portal metadata additionally rejects stale concurrent writes.
+- Page headers adapt to narrow widths. Metro switches its three panes below 1080 points of workspace width. Ore 3D, Feedback and Build coach use bounded flexible sheets. Travel modes are localized; portal/ore notices share text, icon and severity. This is partial consistency work, not an accessibility certification.
+- Quick find (Cmd-Shift-F) reuses four local catalogs and opens exact recipe, build-guide, video or help IDs after clearing destination filters. Searching starts no scan, playback or AI request. Opening a video destination may load its normal online thumbnails.
+- Reviewed build-guide materials can be added to the existing crafting plan. Only explicit unambiguous item IDs and exact bilingual quantities are preselected. Users resolve uncertain rows; omitted rows and original values remain in provenance. Existing recipe choices are preserved; explicit Save plan is required. No stock deduction, recipe verification or cross-platform synchronization is implied.
+- Help now contains 48 bilingual topics, including Quick find and the new source/draft/material workflows. All previous topic IDs remain valid.
+
+Remaining: native keyboard/focus/window-close and nested-sheet acceptance, minimum-window Metro interaction, long source titles, VoiceOver/contrast, remaining editor/status consistency, and UX-007's separate Metro/terrain navigation adapter. Android/APK/web parity is not claimed.
+
+## UI/UX consistency · 1.7.44 audit · 2026-09-12
+
+Detailed source evidence, all 20 destinations, principal dialogs and acceptance criteria: `docs/UI-UX-AUDIT-2026-09-12.md`.
+
+- **HELP-001 · Implemented:** 47 DE/EN topics, stable IDs, related/back navigation, bilingual search with correct no-results behavior, current menu paths and synchronized setup/agent instructions. Whole-app native acceptance is separate.
+- **UX-001 · P1:** shared source-context display, piloted in Metro/Ore, distinguishing backup time, game time and result time.
+- **UX-002 · P1:** consistent Save / Discard / Cancel guard for unsaved feature drafts and source/selection transitions; reuse the existing material-plan safety pattern.
+- **UX-003 · P1:** adaptive toolbars/inspectors and flexible scrollable dialogs, especially ore 3D, Metro, feedback and coach.
+- **UX-004 · P2 / quick:** localized travel modes, consistent search/refresh/source terminology and text-backed status/evidence presentation; extend contrast/keyboard/VoiceOver checks.
+- **UX-005 · P2:** global quick finder reusing local indexes, with explicit result handoff and no automatic scan, download or operation.
+- **UX-006 · P2:** reviewed build-guide → material-plan handoff, preserving unmapped items and uncertain quantities; no silent stock deduction.
+- **UX-007 · P3:** versioned Metro/terrain navigation adapter only after source/transition consistency and confirmed direction/portal evidence.
+- Recommended order: UX-001/004, UX-002/003, then UX-005 and preview-only UX-006. This audit does not implement those non-help changes.
+
+## Crafting material planner · 1.7.43 development candidate · 2026-09-12
+
+- **CRAFT-001 · Recursive material plan:** multi-target direct/recursive calculation, explicit production/ingredient choices, shared-batch rounding, cycle/quantity guards, local persistence and provenance-preserving text export implemented.
+- **CRAFT-003 · Recipe/plan icons:** macOS recipe ingredients, alternatives, grid slots, plan targets/materials/outputs and Conversation lookup reuse the existing optional icon packs. Direct settings access, text-only preference and neutral missing-icon fallback are implemented; real native click-through remains an acceptance gate.
+- **CRAFT-002 · Quick/voice retrieval:** macOS Conversation lookup, quantity/variant followups and saved-plan reading implemented. Android 0.10.0 source candidate carries the same catalog, responsive local lookup/planner and optional on-device speech. APK, native speech and physical Quest acceptance require their own gates; see the cross-platform integration note.
+- Remaining: multiple named plans, mixing alternatives within one ingredient group, verified personal-stock reconciliation and confirmed RealmCraft recipe coverage. Fuel and station construction remain explicitly excluded; these are not missing quantities represented as zero. Platform parity and GUI acceptance are separate.
+
+## Ore exploration comfort · 1.7.42 development candidate · 2026-09-12
+
+- **LAYER-007 · Presentation:** large cutaway view, stored relative camera and explicit local PNG with date, bounds and legend implemented. No model/texture export or publication.
+- **LAYER-005 · 3D connectivity follow-up:** six-face connected material groups across existing spatial census data, count/Y range and visible-slice highlight implemented. Missing neighbors, measurement boundaries and the 65,536-block cap remain explicit. Arbitrary subdivisions, automatic geological classification and safe underground routing remain open.
+- **MAP-007 · System completion notice:** explicit opt-in and permission handling, background-only completion including gaps, duplicate suppression and in-app fallback implemented. Real macOS permission/banner acceptance requires user interaction; Tectonicus remains separate.
+
+## Layer 3D · 1.7.41 development candidate · 2026-09-12
+
+- **LAYER-006 · Native 3D cutaway:** implemented from validated spatial census data, with shared material selection, 1/4/8-layer thickness, bounded movable sections, fixed-target camera, block picking and existing tunnel/Atlas handoff. Missing cells remain explicit; no terrain or ore geometry is inferred from aggregate/sample-only reports.
+- Remaining: full-world 3D analysis, original game textures/partial-block shapes, automatic geological vein classification and platform parity. Measured 3D connectivity is covered by 1.7.42 above. GUI acceptance and installation are tracked separately from model/build tests.
+
+## Crafting catalog · 1.7.40 development candidate · 2026-09-11
+
+- Implemented: offline name-catalog coverage, pinned comparison recipes, direct ingredient quantities, stations, grids, variant selection, ingredient navigation and bilingual help. See `CRAFTING-SOURCES.md` for provenance and reproduction.
+- Remaining: record exact RealmCraft platform/version and in-game evidence for every recipe, station, yield and item mapping before promoting any recipe to verified. Missing entries are not classified as uncraftable. Complete RealmCraft-exclusive, dynamic and brewing recipes from evidence; add newer comparison versions only as explicitly separate sources.
+- Web parity and extending personal-stock checks to this catalog remain separate follow-ups. Recursive material lists and conversation lookup are covered by 1.7.43 above; Android 0.10.0 is a separate source candidate, not a claim of an installed or tested APK.
+
+## Implemented in development candidate · 1.7.40 · 2026-09-11
+
+- **METRO-005 · Persisted journeys:** named snapshot-local routes and manually confirmed progress, guarded by a network fingerprint. Changed networks require replanning.
+- **METRO-006 · Structured journey export:** multi-dimension JSON/Markdown with explicit portal checkpoints, transfers, recorded paths and shared assistant safety guidance. Terrain approach/departure routing remains open.
+- **ORE-005 · Reusable analysis presets:** world-scoped region/filter/sampling settings, kept separate from measurement results.
+- **STAT-004 · Chunk change map:** verified backup hashes shown as new/changed/missing/identical chunk files, with filtering, centering, zoom and JSON export. Block-level difference decoding remains open.
+- **LIB-004 · Incremental follow-up transfer:** copy verified unchanged files and download changed/new files; retain full SHA-256 checks and full-transfer fallback. Metadata-assisted remote hash acceleration and real-device timing remain open.
+- **MAP-006 · Background rendering:** verified independent temporary input, dedicated queue, continued navigation, persistent completion/failure notice, Open map, cancellation and separate cache lease. Optional system notifications are added by MAP-007 above; background Tectonicus conversion remains open.
+- **Acceptance boundary:** the user deferred the previous interactive acceptance/help/install step. This candidate is not installed or published. Complete the isolated GUI checks and installation separately; see `docs/INTEGRATION-2026-09-11.md`.
+
+## First comprehensive code audit · 2026-09-07
+
+Detailed evidence and the complete idea matrix are in `docs/AUDIT-2026-09-07.md` and `docs/IDEAS-2026-09-07.md`. These items are ordered by dependency; they are not promised release dates.
+
+- **DEV-005 · Safe build destination · Completed 2026-09-11:** `build.sh` now defaults to a fresh temporary bundle and rejects symlinks, existing destinations and paths under `/Applications`. Installation remains a separate, verified step, so a development build cannot follow the project app symlink or retain stale resources in a reused bundle.
+- **MAP-004 · Restore the Atlas regression gate · Completed 2026-09-11:** the orientation harness loads the portal and Metro modules; the complete Atlas Node suite passes 62/62.
+- **DEV-006 · Documentation/version reconciliation · P2:** completed in this audit: aligned the Android 0.9.0 README and backlog with shipped 0.8/0.9 behavior. Remaining: decide after public-content review whether `package_source.py` should include the new `docs/` directory.
+- **MAP-001 · Shared map-tool coordinator · Partial in 1.7.39 candidate:** shared activation, Escape, dimension/privacy reset and pending-write protection now cover measurement, ownership, portal plans, resource selection and Metro capture. Remaining: a generalized world-region/volume selection contract; existing coordinate transforms remain shared.
+- **LAYER-001/003 · Layer and region aggregates · Present in 1.7.38:** the existing Atlas area handoff now feeds a bounded north-up layer map, material filters and a layer/volume ledger. Remaining: arbitrary user-defined material categories and a generic WorldRegion migration (INT-002). Keep world counts separate from inventory ownership.
+- **LAYER-004 · Interesting-layer navigation · Present in 1.7.38:** selected-material count thresholds drive arrow/keyboard/Option-scroll skipping; the slider remains unrestricted. Incomplete coverage is explicitly reported, not interpreted as zero terrain.
+- **LAYER-005 · Multi-area and cluster analysis · Partial in 1.7.42 candidate:** adjacent-area comparisons, layer connectivity and snapshot-scoped XYZ handoff to Atlas are implemented; 1.7.42 adds measured six-face 3D connectivity with explicit limits. Existing navigation plans a surface approach and exports the original target plus an explicit unplanned-descent warning. Remaining: arbitrary subdivisions, geological classification and validated underground/final-access routing.
+- **METRO-001 · Verify RealmCraft portal mechanics:** complete the existing evidence matrix for scale, search radius, height, orientation and both travel directions before reliable link prediction.
+- **METRO-002 · Metro graph and persistence · Partial in 1.7.39 candidate:** snapshot-local editing and reviewed carry-forward to a newer same-world empty network are implemented. Carry-forward rechecks both portal files and source metadata, drops changed portal references and resets all travel evidence to planned. Remaining: reconciliation with directed portal observations; never promote evidence automatically.
+- **METRO-003 · Geographic and schematic metro views · Partial in 1.7.38:** one network drives the direction-aware schematic, dedicated shared-Atlas workspace and read-only Metro layer in standard Atlas. Station/portal picking, color picker and manual bend capture are implemented. Remaining: topology-aware automatic rail tracing with coverage evidence, line offsets/label collision management for dense networks, and ring-network optimization.
+- **METRO-004 · Route integration · Partial in 1.7.38:** confirmed measured journeys show line changes, checkpoints, manual arrival confirmation and a copied briefing using existing navigation safety instructions. Remaining: validated dimension-aware NavigationPack adapter, terrain-checked approach/departure legs, shared spoken-section/export integration, waiting-time model and journey-progress persistence.
+- **DEV-003 · Maintainable change index:** document a reviewed Graphify update command and extend coverage beyond the Swift source corpus before considering automation. Heuristic edges remain non-authoritative.
+- **DEV-004 · Cross-platform conformance fixtures:** run the same synthetic world/chunk/player/chest/sign vectors and neutral expected JSON through Python/Swift, Android Java and web JavaScript readers.
+
+## Ore research follow-up
+
+Shipped in 1.7.35: direct chunk census, spatial random sampling, horizontal biome stratification, Top 3 heights, version-pinned Java references and mining-trial journals with before/after and chest/sign evidence.
+
+Shipped in 1.7.38: linked layer inspection, shared multi-material line/heatmap/bar charts, geographic area comparison and consolidated trial workflow. See `docs/RESOURCE-WORKSPACE-2026-09-09.md` for scope and compatibility.
+
+- Validate generation mechanics across multiple RealmCraft VR game versions and pristine independent worlds before promoting a Minecraft height transform to a confirmed rule.
+- Add a version-verified Bedrock reference profile; do not silently apply Java counts to Bedrock.
+- Consider population-weighted spatial estimates and cluster-based uncertainty intervals after the sampling design and effective independent units have been validated. Current spatial samples and trial rates remain explicitly descriptive.
+- Port the new ore research workflow to Android/Quest and the web demo in a separate platform-sync update.
+
+## Planned · Nether Portal & Travel Planner · 2026-09-07
+
+Portal inventory and locally recorded directional pairs shipped in 1.7.33. Version 1.7.34 adds map picking, a portal layer, local plans and an explicitly assumed 8:1 X/Z calculator in both directions. Verified link prediction, route planning and platform parity remain planned. Suggested German UI name: “Nether-Reiseplaner”. Plan portal locations and shorter journeys between settlements, landmarks and biomes in either direction between the Overworld and the Nether.
+
+Nether Metro workspace (1.7.38 development integration): the macOS page now combines a searchable station/line directory, schematic or shared geographic map, contextual editors and a journey inspector. Saved portals can seed stations; names and radial proposals use a user-selected Nether origin, with N = −Z. A native color picker and manually recorded bend geometry drive the map overlay without copying terrain tiles. Stations, lines and connections are editable/removable; line removal retains its connections, while station deletion confirms affected links. Planned and built links remain non-routable; only manually confirmed directed links between confirmed stations with measured durations produce travel instructions. No portal pairing, scale conversion or savegame modification is performed. Remaining work is the evidence workflow below, generic map-tool coordination, dimension-aware navigation/export adaptation, automatic rail topology, snapshot carry-forward and Android/web parity. See `docs/METRO-WORKSPACE-2026-09-09.md` for exact contracts and verification limits.
+
+- **First step — verify RealmCraft mechanics:** inspect existing portal candidates in a selected local snapshot and compare two user-confirmed portal pairs. The reported starting scenario has two portals in each dimension, connecting a main base and a second settlement through the Nether, with one Nether portal near a fortress. These are user-reported connections, not yet verified from save data. Keep actual place names, coordinates and evidence in private local analysis; public documentation and tests use synthetic examples. Establish the horizontal scale, axis conventions, rounding and actual linking behavior for the installed RealmCraft version before claiming accurate predictions. Do not infer confirmed links solely from proximity or a place label.
+- **MVP input:** choose the source dimension and click a map location, select a saved place/biome destination, or enter X/Z coordinates with optional Y. Offer “Plan corresponding portal” from the map and allow switching the calculation direction. Use world coordinates regardless of map rotation.
+- **MVP result:** show the corresponding target X/Z, a target marker in the other dimension, copyable coordinates and a separately saved planned place. Treat the Minecraft-style 8:1 horizontal scale only as an explicitly labeled, unverified starting hypothesis: Overworld to Nether divides X/Z by 8; Nether to Overworld multiplies X/Z by 8. For a synthetic example, Overworld (800, -400) maps to Nether (100, -50) under that assumption. Preserve the exact result and show the chosen block rounding, including negative coordinates. Y is a separate height/build-site choice, not a value to divide or multiply by eight; safe height and RealmCraft height/linking rules require verification.
+- **Existing portals:** show detected or manually recorded portals by dimension and let the user confirm observed travel connections, including each direction separately. Distinguish planned, detected and travel-confirmed portals. Show nearby portal candidates as possible linking conflicts; do not copy Minecraft search radii or guarantee which portal RealmCraft will choose without evidence. Generated exits may differ from the ideal coordinate.
+- **Travel planning:** initially compare direct Overworld horizontal distance with the horizontal Nether segment and optional approach/departure legs via existing portals. Label these as geometric estimates, not traversable routes or guaranteed time savings. Later integrate the existing waypoint/transport planner for multi-stop biome trips and a portal-network overview; add travel-time estimates only with justified movement assumptions.
+- **Coverage and safety:** display snapshot date, missing map coverage and unknown terrain at the proposed build site. A mathematically corresponding point is not proof of a safe or buildable location. Store plans as Companion metadata; this feature does not construct portals or change savegames. Reuse existing map, saved-place and navigation components, with macOS as the initial reference for subsequent platform parity.
+- **Acceptance for the first release:** verify both conversion directions, zero/negative/fractional coordinates, rounding and rotated-map picking with synthetic fixtures; demonstrate map-click and manual-coordinate parity and persistence of planned places. Validate the assumed transform against observed RealmCraft portal pairs, document deviations and preserve uncertainty about untested link selection. If validation remains inconclusive, ship only as an explicitly experimental calculator with a visible assumed scale.
+
+### Minecraft reference and RealmCraft verification matrix · 2026-09-07
+
+User-provided reference: [Netherportal](https://minecraft.fandom.com/de/wiki/Netherportal), especially [portal interaction](https://minecraft.fandom.com/de/wiki/Netherportal#Wechselwirkung_zwischen_Portalen). Direct page retrieval was unavailable during this review; the user supplied excerpts describing a 128-block Overworld spacing, preserved east–west/north–south orientation of generated exits, and an eightfold horizontal distance relationship. These are Minecraft comparison claims, not verified RealmCraft behavior. Record Minecraft edition/version when retrieving the full rules; do not treat a wiki excerpt as a universal minimum-spacing guarantee.
+
+| Comparison hypothesis | RealmCraft verification needed | Current status |
+|---|---|---|
+| Horizontal 8:1 scale | Compare several independently observed pairs in both directions, positive/negative X/Z, and distinguish ideal coordinates from generated-site displacement. | Existing local pairs are compatible with this hypothesis, not conclusive. |
+| 128/1024-block Overworld spacing and shared Nether exits | The longer user-supplied excerpt distinguishes a claimed 1024-block spacing for new exits from a 128-block shared-exit area. Resolve these contexts and edition/version differences; separate coordinate scale, existing-portal search radius and new-exit placement. Test boundary distances in both travel directions with controlled competing portals and heights. | Unverified; neither 128 nor 1024 is a guaranteed RealmCraft linking threshold. |
+| Automatically generated exits retain the source orientation | Test generated exits from both portal orientations in both dimensions. Distinguish generated exits from manually built or subsequently rebuilt frames. | Unverified; existing portal geometry alone cannot establish generation behavior. |
+| Height and nearest-portal selection | Hold X/Z constant while varying Y; determine whether 2D or 3D distance and tie-breaking affect the chosen exit. | Unverified. |
+| Return paths and changed portals | Observe both directions independently, then separately test moved/deactivated/rebuilt portals and reloading. | User-reported forward journeys recorded; reverse behavior not independently tested. |
+
+Additional supplied material describes many-to-one connections, returning through a shared exit to a central portal, a multiplayer deactivate/reactivate procedure, and portals above the Nether ceiling. Keep these as separate unverified comparison cases. The supplied diagram illustrates the claimed 128-to-16 horizontal scale and shared exits; it does not establish a RealmCraft search algorithm. Model portal travel as directed connections rather than assuming exclusive symmetric pairs. Do not promise that every newly placed Nether portal generates a new Overworld exit or that an eightfold coordinate scale guarantees an eightfold time saving. Approach legs, terrain, portal delays and movement speeds must be included. Multiplayer manipulation and ceiling builds are outside the initial planner and require separate platform/version feasibility checks. Do not reproduce the supplied third-party illustration in distributed resources without checking its license.
+
+Maintain evidence per rule: source, platform/game version, controlled setup, before/after portal coordinates and orientation, observed outcome, and confirmed/different/unresolved status. Use local analysis or an isolated test world; do not alter existing portals for these experiments. Only verified rules may drive reliable linking predictions; all others remain visible assumptions.
+
+Related work: Atlas navigation and position tracking, Saved biomes, and Chest explorer and places. Initial scope is coordinate and portal planning; automatic Nether pathfinding is a later extension.
+
 ## Completed · 1.7.30 · Help and public documentation
 
 Refreshed bilingual in-app help and added route-planning/navigation guidance. Documented 3D build controls, current video and export options, 90-degree map orientation and sign labels. Public documentation distinguishes snapshot-based navigation from live tracking.
@@ -16,7 +297,9 @@ Discovery references: [Programs and editors](https://minecraft.fandom.com/wiki/T
 
 ### Tectonicus-compatible export — user-requested feasibility idea · 2026-09-06
 
-Goal: generate a separate rendering export from a RealmCraft snapshot so that Tectonicus can produce its zoomable maps. Status: exploratory; no working compatibility established and no integration version assigned.
+Goal: generate a separate rendering export from a RealmCraft snapshot so that Tectonicus can produce its zoomable maps. Status: integrated as an experimental Overworld workflow in Companion 1.7.31; block-state fidelity remains incomplete. Tectonicus 2.31 rendered four synthetic RealmCraft v9 chunks via a Java 1.16.5 intermediate. Independent read-back verified 262,144 cells against the declared mapping, and the browser map was visually checked. Real-save fidelity, complete block/state mapping, lighting and biomes remain unverified. BlueMap 5.23 also rendered the same synthetic export after license confirmation; four high-resolution mesh tiles and the browser view were verified. Its partial-world setting `ignore-missing-light-data: true` is required for this isolated fixture. Neither prototype establishes full real-save fidelity. The subsequent 1.7.31 integration adds the local Tectonicus workflow described below.
+
+Local demo milestone (2026-09-07): Tectonicus 2.31 rendered 1,020 approved demo chunks through a Java 1.17.1 intermediate. Independent read-back checked 66,846,720 block positions against the declared mapping; 354 base tiles and zoom levels rendered without exceptions and passed browser visual inspection. Block-state defaults, blank sign text, constant biome and simplified lighting remain approximations. No full game-to-render fidelity or playable-world compatibility claim. Companion 1.7.31 adds setup, save selection, separate exports, progress/cancellation and local preview. Next: decode original block states, lighting and biomes; add Nether support and repeat-render cache reuse.
 
 Reference: [Tectonicus project and usage](https://github.com/tectonicus/tectonicus). Tectonicus renders Minecraft Java worlds and accepts an XML configuration. A generic 3D model export or renamed RealmCraft files would not establish compatible world input.
 
@@ -114,7 +397,7 @@ Static layout audit completed for all 15 main navigation destinations. Version 1
 This is a list of proposed improvements, not a release schedule. Items have no promised delivery date. Completed work is recorded in the Update Log.
 
 PLANNED · PRIORITIZED VIDEO REVIEW
-Review the remaining important official tutorials and practical survival/build guides before incidental travel footage. The catalog has 197 videos, with 154 authored contributions and 43 pending. Use conservative, sequential acquisition; pause on YouTube rate limits and reuse already available captions. Do not imply continuous viewing when only image samples were inspected. No scheduled or automatic downloader is configured.
+Review the remaining important official tutorials and practical survival/build guides before incidental travel footage. The catalog has 197 videos, with 197 authored contributions and 0 pending. Use conservative, sequential acquisition; pause on YouTube rate limits and reuse already available captions. Do not imply continuous viewing when only image samples were inspected. No scheduled or automatic downloader is configured.
 
 HIGH PRIORITY · DISTRIBUTION
 Developer ID signing and Apple notarization. Requires an appropriate Apple developer account and signing credentials. Current builds are ad-hoc signed.
@@ -173,8 +456,8 @@ User-managed resource bookmarks, resource favorites and additional independent f
 
 ## Atlas preview
 - Broaden block/format coverage using synthetic fixtures and separately authorized local validation; never publish private savegame fixtures.
-- Add map cache size controls and cleanup inside the app.
-- Add native marker export and map-generation cancellation.
+- Map cache size and cleanup are present: the map menu shows the temporary render-cache size and offers a confirmed cleanup action that preserves generated maps and savegames. Future work may add a configurable size limit.
+- Add native marker export. Map-generation cancellation, bounded renderer termination and safe finalization are implemented in the 1.7.39 candidate.
 - One-click private Python/NumPy/Pillow installation is implemented. Consider a licensed fully offline bundled runtime for machines without download access.
 
 ## Chest explorer and places

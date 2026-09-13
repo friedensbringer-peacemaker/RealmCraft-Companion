@@ -23,7 +23,7 @@ struct AgentSkillsView: View {
     private var current: AgentSkill? { filtered.first { $0.id == selected } ?? filtered.first }
     var body: some View {
         VStack(spacing: 0) {
-            CompanionPageHeader(title: en ? "Skill library" : "Skill-Bibliothek") {
+            CompanionPageHeader(title: en ? "Assistant instructions" : "Assistenten-Anweisungen") {
                 TextField(en ? "Search skills" : "Skills suchen", text: $query).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
                 Button(en ? "New skill" : "Neuer Skill") {
                     isNew = true; editing = AgentSkill(title: "", summary: "", instructions: "")

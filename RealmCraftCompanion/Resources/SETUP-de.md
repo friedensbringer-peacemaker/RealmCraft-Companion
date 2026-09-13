@@ -1,32 +1,22 @@
 ASSISTENT BEIM ERSTEN START
 
-Beim ersten Start öffnet Companion automatisch eine Anleitung mit acht Schritten. Sie trennt Aktionen am Mac, Smartphone und in der Brille. Mit Weiter und Zurück gehst du in deinem Tempo vor. Später schließt sie und merkt sich deinen Schritt; öffne sie über Einstellungen → Quest einrichten erneut. Alle Einstellungen öffnet die vollständige Konfiguration. Der Abschluss zeigt, was tatsächlich erkannt wurde; er startet kein Backup und keine Wiederherstellung.
+Beim ersten Start öffnet Companion automatisch eine schrittweise Anleitung. Sie trennt Aktionen am Mac, Smartphone und in der Brille. Mit Weiter und Zurück gehst du in deinem Tempo vor. Später schließt sie und merkt sich deinen Schritt; öffne sie über Einstellungen → Gerät einrichten erneut. Alle Einstellungen öffnet die vollständige Konfiguration. Der Abschluss zeigt, was tatsächlich erkannt wurde; er startet kein Backup und keine Wiederherstellung.
 
 Diese Anleitung wurde am Beispiel der Meta Quest integriert. Menüs, Freigaben, Kontovoraussetzungen und Speicherorte können bei anderen Brillen oder Softwareversionen abweichen. Die Kompatibilität mit anderen Brillen ist nicht garantiert. Folge bei Abweichungen den aktuellen Anweisungen des Herstellers.
 
-ZEITBEISPIELE · MACBOOK AIR M3
+WAS DU WOFÜR BRAUCHST
 
-Referenz ist das für die Entwicklung verwendete MacBook Air mit Apple M3, 8 CPU-Kernen und 16 GB RAM. Karten werden mit 8 parallelen Workern aus lokalen Sicherungen berechnet; der Companion verwendet einen Chunk-Cache. Diese Beispiele sind keine Leistungszusage für deinen Mac. Stand: September 2026.
+Rezepte, Materialpläne, Bauanleitungen und die Hilfe lassen sich ohne angeschlossene Quest nachschlagen. Die lokalen Rezeptdaten sind Vergleichsdaten, keine vollständig bestätigten RealmCraft-Rezepte. Gegenstands-Icons sind optional; ohne installiertes Paket bleiben Namen und Mengen sichtbar.
 
-USB-IMPORT · QUEST → MAC
-Für eine beispielhafte Welt mit 250 MiB kannst du grob 2–10 Minuten als Zeitreserve für „Vom Gerät sichern“ einplanen. Das ist eine Planungsschätzung, kein auf diesem Kabel gemessener Gesamt-Benchmark; größere Welten oder sehr viele kleine Dateien können deutlich länger dauern.
+ADB wird für die direkte Quest-Verbindung benötigt. Karten, Kistensuche und Erzanalysen benötigen die optionalen Kartenwerkzeuge. Tectonicus hat eine eigene experimentelle Einrichtung. Lokales Vorlesen im Bau-Coach verwendet die macOS-Sprachausgabe; die Konversation hat eine separate Einrichtung für Sprache und Modelle.
 
-Rechenbeispiel: Bei angenommenen effektiven 5–20 MiB/s dauert das reine Kopieren von 250 MiB etwa 13–50 Sekunden. Hinzu kommen Dateilisten, SHA-256-Prüfungen auf Quest und Mac sowie die Aufnahme in die Library. Die USB-Nennrate ist deshalb kein Maß für die Gesamtdauer. Kabel, Hub, Quest-Speicher, Dateianzahl und laufende Programme beeinflussen das Ergebnis. Die aktuelle Kabelgeschwindigkeit wurde für dieses Beispiel nicht gemessen. Warte auf „Gesichert und geprüft“.
+DAUER UND HINTERGRUNDAUFGABEN
 
-KARTE SMALL · URSPRUNG ±128 BLÖCKE
-Gespeicherte Laufprotokolle auf dem Referenz-Mac zeigen für die reine Kartenberechnung gerundet etwa 1–15 Sekunden. „Small“ meint hier die Auswahl „Ursprung ±128 Blöcke“, nicht einen Umkreis um die aktuelle Spielerposition.
+Sicherung und Karten hängen von Datenmenge, Dateianzahl, Kabel, freiem Speicher und Cache ab. Warte auf den bestätigten Abschluss statt mit festen Minutenwerten zu planen. Folge-Sicherungen können geprüfte unveränderte Dateien wiederverwenden, prüfen aber weiterhin den vollständigen Stand.
 
-KARTE FULL · ALLE GESPEICHERTEN CHUNKS
-Bei kleinen gespeicherten Welten lag die reine Berechnung im Sekundenbereich; bei größeren vollständigen Karten zeigten die vorhandenen Läufe etwa 1½–11 Minuten. „Full“ bedeutet alle bereits gespeicherten Chunks, nicht die gesamte theoretisch erzeugbare Welt. Die Datenmenge kann sich zwischen Welten um ein Vielfaches unterscheiden.
+Atlas bereitet zunächst eine unabhängig geprüfte Arbeitskopie vor. Während der anschließenden Hintergrundberechnung kannst du andere Bereiche verwenden. Fortschritt, Abbrechen und später „Karte öffnen“ bleiben in der App erreichbar. Optionale Systemhinweise werden erst nach deiner Aktivierung und macOS-Freigabe verwendet. Tectonicus ist ein eigener Ablauf und nutzt diese Atlas-Hinweise nicht.
 
-ZWISCHENGRÖSSEN
-Für „Ursprung ±512 Blöcke“ wurden etwa 14–20 Sekunden, für ±1024 etwa 33 Sekunden und für ±2048 etwa 73 Sekunden reine Berechnungszeit beobachtet. Das sind einzelne Beispiele mit unterschiedlicher Abdeckung und nicht festem Cache-Zustand, keine allgemeine Skalierungstabelle.
-
-WAS IN DEN RENDERZEITEN FEHLT
-Die Werte stammen aus dem Feld elapsedSeconds vorhandener Kartenprotokolle. Die Integritätsprüfungen der vollständigen Sicherung vor und nach dem Rendern, abschließende Ausgabeschritte und das Öffnen der Ansicht kommen hinzu. Auch eine kleine Karte kann deshalb merklich länger benötigen als ihre reine Renderzeit.
-
-CACHE, ERSTER LAUF UND ERNEUTES ÖFFNEN
-Bereits verarbeitete Chunks können erneutes Rendern beschleunigen. Die alten Protokolle unterscheiden jedoch nicht zuverlässig zwischen kaltem und warmem Cache; die Zahlen sind keine getrennten Erstlauf-/Cache-Benchmarks. Eine vorhandene Karte zu öffnen startet keine vollständige Neuberechnung. Ausgelagerte Cloud-Dateien, wenig freier Speicher und gleichzeitige rechenintensive Aufgaben können jeden Vorgang verlängern. Downloads zur erstmaligen Installation von Python, NumPy und Pillow sind in den Zeiten nicht enthalten.
+„Alle gespeicherten Chunks“ bedeutet die bereits gespeicherte Abdeckung, nicht die gesamte theoretisch erzeugbare Welt. Eine vorhandene Karte zu öffnen startet keine Neuberechnung. Ausgelagerte Cloud-Dateien müssen gegebenenfalls zuerst geladen werden.
 
 EINRICHTUNG SCHRITT FÜR SCHRITT
 
@@ -34,7 +24,7 @@ Du brauchst einen Mac mit macOS 14 oder neuer, deine eingerichtete Quest, ein US
 
 1 · APP AUF DEM MAC ÖFFNEN
 
-Entpacke das Community-ZIP. Ziehe „RealmCraft Companion.app“ nach Programme und starte diese Kopie. Beim ersten Start ist Englisch ausgewählt. Oben kannst du auf Deutsch wechseln; die App merkt sich die Sprache. Öffne Einstellungen → Quest einrichten. Die folgenden Details ergänzen die acht Schritte des Startassistenten; „Alle Einstellungen“ öffnet die ausführlichen Optionen.
+Entpacke das Community-ZIP. Ziehe „RealmCraft Companion.app“ nach Programme und starte diese Kopie. Beim ersten Start ist Englisch ausgewählt. Im Einrichtungsfenster oder unter Einstellungen → Language kannst du auf Deutsch wechseln; die App merkt sich die Sprache. Öffne Einstellungen → Gerät einrichten. Die folgenden Details ergänzen den Startassistenten; „Alle Einstellungen“ öffnet die ausführlichen Optionen.
 
 Wird die App von macOS blockiert, lies die verlinkte Apple-Anleitung „Apps sicher öffnen“. Diese Community-Ausgabe ist noch nicht notarisiert. Deaktiviere nicht die Sicherheit des gesamten Macs.
 
@@ -48,7 +38,7 @@ Alternativ unter Alle Einstellungen → ADB verwalten: „Vorhandenes ADB auswä
 
 3 · META-KONTO VORBEREITEN
 
-Öffne die verlinkte Meta-Geräteeinrichtung. Meta verlangt ein verifiziertes Entwicklerkonto, Teamzugehörigkeit und ein Mindestalter von 18 Jahren. Verwende dein Quest-Konto, erstelle ein Team oder tritt einem bei und schließe die Kontoprüfung selbst ab.
+Öffne die verlinkte Meta-Geräteeinrichtung. Folge dort den aktuellen Voraussetzungen für Entwicklerkonto, Team und Kontoprüfung. Verwende dein Quest-Konto und erledige die erforderlichen Bestätigungen selbst; Herstellerbedingungen können sich ändern.
 
 4 · ENTWICKLERMODUS EINSCHALTEN
 
@@ -56,13 +46,13 @@ Am Smartphone: Meta Horizon → Headset-Symbol → dein gekoppeltes Headset → 
 
 5 · USB-DEBUGGING ERLAUBEN
 
-Verbinde die Quest direkt mit dem Mac und setze sie auf. Klicke am Mac „Erneut prüfen“. Bestätige im Headset „USB-Debugging zulassen“. „Von diesem Computer immer zulassen“ nur für deinen vertrauenswürdigen Mac wählen. Meta nennt außerdem Einstellungen → Entwickler → MTP-Benachrichtigung einschalten.
+Verbinde die Quest direkt mit dem Mac und setze sie auf. Klicke am Mac „Erneut prüfen“. Bestätige im Headset „USB-Debugging zulassen“. „Von diesem Computer immer zulassen“ nur für deinen vertrauenswürdigen Mac wählen. Falls deine Quest-Version Einstellungen → Entwickler → MTP-Benachrichtigung anbietet, beachte dazu die aktuelle Meta-Anleitung.
 
 Debugging ist die Freigabe für ADB-Befehle von diesem Mac. Eine reine Dateiübertragungs-Abfrage ist nicht dieselbe Freigabe. Ein Ladegerät-Kabel ohne Datenleitungen genügt nicht. Kontopasswörter und Bestätigungscodes gehören ausschließlich in die Meta-Anmeldung, nicht in einen KI-Chat.
 
 6 · VERBINDUNG PRÜFEN
 
-In „Einrichtung“ muss ADB mit Version erscheinen. Unter „Quest & RealmCraft“ muss die App das Spiel und mindestens eine Welt erkennen. Unter Savegames → (…) → Gerät & Welt findest du Gerät, Welt-ID und „Verbindung prüfen“.
+In „Einrichtung“ muss ADB mit Version erscheinen. Unter „Quest & RealmCraft“ muss die App das Spiel und mindestens eine Welt erkennen. Unter Welten & Sicherungen → (…) → Gerät & Welt findest du Gerät, Welt-ID und „Verbindung prüfen“.
 
 Keine Quest: Headset aufwecken, Kabel neu verbinden, anderes Datenkabel oder anderen USB-Port testen. Zunächst ohne Hub anschließen. „USB-Debugging bestätigen“: Headset aufsetzen und die Freigabe prüfen. „RealmCraft nicht installiert“: das richtige Headset wählen und das Spiel dort installieren. „Keine Welt“: im Spiel eine Welt erstellen und speichern.
 
@@ -70,15 +60,15 @@ Bleibt die Debugging-Abfrage aus, kontrolliere den Entwicklermodus und die aktue
 
 7 · ERSTE SICHERUNG ERSTELLEN
 
-Speichere deinen Fortschritt im Spiel und beende RealmCraft vollständig. Wähle unter Savegames → (…) → Gerät & Welt die richtige Quest und Welt. Sichere jede gewünschte Welt separat. Klicke „Vom Gerät sichern“. Lasse die Verbindung bestehen und starte das Spiel erst nach „Gesichert und geprüft“ wieder. Ein neuer Eintrag mit Datum und Uhrzeit erscheint links.
+Speichere deinen Fortschritt im Spiel und beende RealmCraft vollständig. Wähle unter Welten & Sicherungen → (…) → Gerät & Welt die richtige Quest und Welt. Sichere jede gewünschte Welt separat. Klicke „Vom Gerät sichern“. Lasse die Verbindung bestehen und starte das Spiel erst nach „Gesichert und geprüft“ wieder. Ein neuer Eintrag mit Datum und Uhrzeit erscheint links.
 
-Savegames → (…) → Gerät & Welt → RealmCraft auf Quest beenden beendet das Spiel ohne Speichern. Verwende diese Aktion erst nach dem Speichern im Spiel.
+Welten & Sicherungen → (…) → Gerät & Welt → RealmCraft auf Quest beenden beendet das Spiel ohne Speichern. Verwende diese Aktion erst nach dem Speichern im Spiel.
 
 8 · SICHERUNG FINDEN ODER ALS ZIP SPEICHERN
 
-Unter Savegames → (…) öffnet „Bibliotheksordner öffnen“ die gesamte Library und „Im Finder anzeigen“ den ausgewählten Weltordner. „ZIP exportieren“ sichert einen Spielstand, „Library-Backup-ZIP exportieren“ die gesamte Library. Verwahre eine zusätzliche Kopie, bevor du eine Wiederherstellung ausprobierst.
+Unter Welten & Sicherungen → (…) öffnet „Bibliotheksordner öffnen“ die gesamte Library und „Im Finder anzeigen“ den ausgewählten Weltordner. „ZIP exportieren“ sichert einen Spielstand, „Library-Backup-ZIP exportieren“ die gesamte Library. Verwahre eine zusätzliche Kopie, bevor du eine Wiederherstellung ausprobierst.
 
-Standardordner: ~/Library/Application Support/RealmCraftLibrary/Savegames. Unter Quest einrichten → Alle Einstellungen kannst du ihn ändern. Lass „Vorhandene Spielstände … mitkopieren“ eingeschaltet, wenn die bisherigen Einträge mitkommen sollen. Die Originale bleiben erhalten.
+Standardordner: ~/Library/Application Support/RealmCraftLibrary/Savegames. Unter Gerät einrichten → Alle Einstellungen kannst du ihn ändern. Lass „Vorhandene Spielstände … mitkopieren“ eingeschaltet, wenn die bisherigen Einträge mitkommen sollen. Die Originale bleiben erhalten.
 
 9 · SPÄTER WIEDERHERSTELLEN
 
@@ -86,18 +76,22 @@ Speichere und beende das Spiel. Wähle links die gewünschte Sicherung und prüf
 
 QUELLEN
 
-Meta-Geräteeinrichtung und Android-Geräteanleitung, geprüft am 5. September 2026. Die Links unten öffnen die Originalanleitungen; bei abweichenden Menüs ist die aktuelle Meta-Anleitung maßgeblich.
+Meta-Geräteeinrichtung, Android-Geräteanleitung und Apple-Sicherheitshinweise. Die Links unten öffnen die Originalanleitungen; bei abweichenden Menüs ist die aktuelle Meta-Anleitung maßgeblich.
 
 
 KARTEN UND KISTENSUCHE EINRICHTEN (OPTIONAL)
 
-Öffne Einstellungen → Quest einrichten und im Schritt „Speicher wählen“ oder unter „Alle Einstellungen“ den Block „Karten- & Kistenwerkzeuge“. Klicke dort auf „Kartenwerkzeuge installieren“. Derselbe Button erscheint im Bereich „Karten“, wenn Werkzeuge fehlen.
+Öffne Einstellungen → Gerät einrichten und im Schritt „Speicher wählen“ oder unter „Alle Einstellungen“ den Block „Karten- & Kistenwerkzeuge“. Klicke dort auf „Kartenwerkzeuge installieren“. Derselbe Button erscheint im Bereich „Karten“, wenn Werkzeuge fehlen.
 
-Die App installiert Python, NumPy und Pillow in einem eigenen Ordner für deinen Benutzer und prüft anschließend ihre Funktion. Dafür brauchst du Internet, aber kein Administratorpasswort, Homebrew, Xcode oder vorinstalliertes Python. Der Python-Download kommt von Astral/GitHub, die Pakete von PyPI. Vorhandene Python-Installationen werden nicht verändert.
+Die App installiert die benötigten Kartenwerkzeuge mit Python, NumPy und Pillow in einem eigenen Ordner für deinen Benutzer und prüft anschließend ihre Funktion. Dafür brauchst du Internet, aber kein Administratorpasswort, Homebrew, Xcode oder vorinstalliertes Python. Der Python-Download kommt von Astral/GitHub, die Pakete von PyPI. Vorhandene Python-Installationen werden nicht verändert.
 
 Bei einem Fehler kannst du die Installation erneut starten; eine bisherige Installation bleibt erhalten. Für normale Backups und die Spieleransicht sind diese Kartenwerkzeuge nicht nötig.
 
 
 TRANSFER OHNE ADB · UNGETESTETE ALTERNATIVEN
 
-Öffne Einstellungen → Quest einrichten → Alternative: ohne ADB übertragen. Dort gibt es einen Empfangsordner-Button, eine Auswahl für eingebundene Quest-Ordner, Pfadkopie, lokalen Import und ZIP-Export. Ein reines MTP-Gerät hat keinen normalen Finder-Pfad. ADB bleibt der empfohlene, getestete Weg mit SHA-256-Prüfung. Für Richtigkeit, Vollständigkeit, Kompatibilität und Erfolg externer Apps wird keine Gewähr übernommen; Nutzung auf eigenes Risiko. Andere Brillen können abweichen.
+Öffne Einstellungen → Gerät einrichten → Alternative: ohne ADB übertragen. Dort gibt es einen Empfangsordner-Button, eine Auswahl für eingebundene Quest-Ordner, Pfadkopie, lokalen Import und ZIP-Export. Ein reines MTP-Gerät hat keinen normalen Finder-Pfad. ADB bleibt der empfohlene, getestete Weg mit SHA-256-Prüfung. Für Richtigkeit, Vollständigkeit, Kompatibilität und Erfolg externer Apps wird keine Gewähr übernommen; Nutzung auf eigenes Risiko. Andere Brillen können abweichen.
+
+OHNE HEADSET STARTEN
+
+Wähle im Assistenten Später. Auf Start öffnet Offline nutzen die Rezepte; die Schnellsuche oben findet Rezepte, Bauanleitungen, Videos und Hilfe. Sicherung importieren öffnet Welten & Sicherungen; dort startet Sicherung importieren … die Dateiauswahl. Quest einrichten führt zurück zur Einrichtung. Es wird dabei kein Backup automatisch gestartet.

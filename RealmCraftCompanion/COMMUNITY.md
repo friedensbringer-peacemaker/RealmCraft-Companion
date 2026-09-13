@@ -38,6 +38,8 @@ Use a new fixture folder for each run. Adding `--download` performs a real offic
 
 Improvements, translations and bug fixes are welcome. Preserve checksum verification, the automatic backup before restoration, the running-game guard, and rollback behavior. Never test a restore change against a valuable world without an independent backup.
 
+For translations, start with [the central catalog and contribution guide](Resources/Translations/README.md). `translation_catalog.py` exports scoped JSON language packs, validates contributions and writes a new merged candidate. Existing DE/EN text, source locations and review states are included. Additional app languages and native import/share controls still require runtime integration; a language-pack import alone does not activate a locale.
+
 The project code and original icon are provided under the MIT license in `LICENSE`. The source package contains no personal savegames, developer certificates, API keys or Google Platform Tools binaries.
 
 Der Quellcode und das selbst erstellte Icon stehen unter der MIT-Lizenz. Das Paket enthält keine persönlichen Spielstände, Entwicklerzertifikate, API-Schlüssel oder Google-Platform-Tools-Binärdateien.

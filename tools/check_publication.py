@@ -7,7 +7,7 @@ import struct
 import subprocess
 import sys
 
-DENIED_PARTS = {'backups', 'restore-candidates', 'AI-Exports', '.objects', '.env', '.cache', '__pycache__'}
+DENIED_PARTS = {'backups', 'restore-candidates', 'AI-Exports', '.objects', '.env', '.cache', '__pycache__', 'graphify-out'}
 DENIED_NAMES = {'player_data', 'world_data', 'screenshot.jpg', 'poiOverworld', 'poiTheNether'}
 TEXT_EXTENSIONS = {'.swift', '.py', '.md', '.txt', '.json', '.strings', '.rtf', '.js', '.cjs', '.html', '.css', '.sh', '.toml', '.command', '.tsv', '.obj', '.yml', '.yaml'}
 TEXT_NAMES = {'LICENSE', '.gitignore', '.gitattributes'}

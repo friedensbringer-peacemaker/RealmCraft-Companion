@@ -1,5 +1,11 @@
 # Optionale Gegenstands-Icons
 
+## Crafting und Materialplan · 1.7.43 Entwicklungskandidat
+
+„Gegenstands-Icons“ lässt sich direkt in Crafting / Rezepte und im Materialplan öffnen. Die vorhandene globale Auswahl „Nur Text“ / „Icons + Text“ und das gewählte Grafikpaket gelten auch für Rezeptsuche, Zutaten und Alternativen, Rezeptgitter, Planziele, Materialmengen, Herstellungsergebnisse und die schnelle Rezeptsuche im Gespräch. Downloads starten weiterhin nur mit „Herunterladen & nutzen“.
+
+Namen, Mengen und die Nummern der Zutatengruppen bleiben sichtbar. Im Rezeptgitter steht bei Alternativen weiterhin ausdrücklich ein Beispiel, keine Auswahl für den Materialplan. Ohne passende numerische Zuordnung zeigt der Crafting-Bereich bei eingeschalteten Icons ein neutrales gestricheltes Quadrat; dies ist kein Gegenstandsbild. „Nur Text“ blendet auch diesen Platzhalter aus. Exportierte Texte bleiben bildfrei und behalten Mengen und Quellen. Die Bilder bestätigen keine RealmCraft-Rezepte.
+
 Recherche und Integration vom 2026-09-06. Optionaler Download über Einstellungen → Gegenstands-Icons.
 
 ## Ergebnis der Quellenprüfung

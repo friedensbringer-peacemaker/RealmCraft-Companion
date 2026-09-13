@@ -3,10 +3,14 @@ import SwiftUI
 // Standalone test model: compile this file with Sources/CompanionLifecycle.swift.
 @MainActor final class Model: ObservableObject {
  @Published var busy = false
+ @Published var backgroundMapJobs = 0
  @Published var error: String?
 }
 @main struct CompanionLifecycleTests {
  @MainActor static func main() async throws {
+  let model = Model(); model.backgroundMapJobs = 1
+  CompanionLifecycle.shared.perform(restart: false, model: model, english: true)
+  precondition(!CompanionLifecycle.shared.isWorking)
   var requests = 0; var exited = false; var pauses = 0
   let normal = CompanionQuitTarget(requestQuit: { requests += 1; return true }, hasExited: { exited })
   let result = try await CompanionQuitSequence.close([normal], attempts: 3) { pauses += 1; exited = true }

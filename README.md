@@ -64,7 +64,7 @@ The shared demo is a separately reviewed download, not a collection of private s
 
 ## Download or build the macOS Companion
 
-The current desktop release is **1.7.30**. [Download the universal macOS app and checksums](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/releases/tag/v1.7.30). It supports Apple Silicon and Intel on macOS 14+. This community build is ad-hoc signed and is not Apple-notarized.
+The current desktop release is **1.7.49**. [Download the universal macOS app and checksums](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/releases/tag/v1.7.49). It supports Apple Silicon and Intel on macOS 14+. This community build is ad-hoc signed and is not Apple-notarized.
 
 The release brings the latest native UI, interactive 2D/3D build plans, visible sign labels, navigation clipboard/iCloud export and longer spoken route sections, with refreshed German/English help. Screenshots below retain their original 1.7.26 capture labels.
 

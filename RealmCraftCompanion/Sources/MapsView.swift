@@ -3,12 +3,24 @@ import AppKit
 import WebKit
 
 @MainActor final class MapController: ObservableObject {
+    let notifications = MapNotifications()
     @Published var mapURL: URL?
+    @Published var focusTarget: MapFocusTarget?
     @Published var ready = false
     @Published var checking = false
     @Published var python = ""
     @Published var notice = ""
     @Published var builtFor = ""
+    @Published var cacheBytes: Int64?
+    @Published var generating = false
+    @Published var cancellable = false
+    struct FinishedMap { let saveID: String; let root: URL; let radius: String; let language: String }
+    @Published var backgroundStatus = ""
+    @Published var finishedMap: FinishedMap?
+    private let renderQueue = DispatchQueue(label: "RealmCraft.MapRender", qos: .utility)
+    private var displayRequest = ""
+    private var job: MapRenderJob?
+    private var cacheSizeRequest = UUID()
     let support = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/RealmCraftLibrary/Maps")
     var tools: MapTools { MapTools(support: support) }
     func check(_ model: Model) {
@@ -36,7 +48,45 @@ import WebKit
             return english ? "Python, NumPy and Pillow are ready for maps and chests." : "Python, NumPy und Pillow sind für Karten und Kisten bereit."
         }
     }
+    func clearCache(_ model: Model, language: String) {
+        guard !model.busy && model.backgroundMapJobs == 0 else { return }
+        let cache = support.appendingPathComponent("cache", isDirectory: true)
+        let english = language == "en"
+        cacheSizeRequest = UUID()
+        model.work(english ? "Clearing map cache…" : "Karten-Cache wird geleert …", lockLibrary: false) {
+            let lease = try MapCacheLease(support: cache.deletingLastPathComponent())
+            defer { withExtendedLifetime(lease) {} }
+            let files = FileManager.default
+            if files.fileExists(atPath: cache.path) {
+                try files.removeItem(at: cache)
+            }
+            try files.createDirectory(at: cache, withIntermediateDirectories: true)
+            DispatchQueue.main.async { self.cacheBytes = 0 }
+            return english ? "Map cache cleared. Your savegames and generated maps are unchanged." : "Karten-Cache geleert. Spielstände und erzeugte Karten bleiben unverändert."
+        }
+    }
+    func refreshCacheSize() {
+        let cache = support.appendingPathComponent("cache", isDirectory: true)
+        let request = UUID()
+        cacheSizeRequest = request
+        DispatchQueue.global(qos: .utility).async {
+            let files = FileManager.default
+            var total: Int64 = 0
+            if let entries = files.enumerator(at: cache, includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey]) {
+                for case let entry as URL in entries {
+                    let values = try? entry.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+                    if values?.isRegularFile == true { total += Int64(values?.fileSize ?? 0) }
+                }
+            }
+            DispatchQueue.main.async {
+                guard self.cacheSizeRequest == request else { return }
+                self.cacheBytes = total
+            }
+        }
+    }
+    func cancelGeneration() { job?.cancel(); cancellable = false }
     func restoreLast(_ save: Savegame?, radius: String, language: String) {
+        displayRequest = (save?.id ?? "") + ":" + radius + ":" + language
         mapURL = nil; builtFor = ""; notice = ""
         guard let save else { return }
         let alternateLanguage = language == "en" ? "de" : "en"
@@ -47,7 +97,7 @@ import WebKit
         // Refresh only the viewer assets; cached world data and map tiles stay intact.
         let directory = url.deletingLastPathComponent()
         let stamp = directory.appendingPathComponent(".viewer-version")
-        let viewerVersion = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown") + ":annotations-2-signs-1:" + language
+        let viewerVersion = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown") + ":annotations-2-signs-1-resources-3-metro-4-tools-1:" + language
         if (try? String(contentsOf: stamp, encoding: .utf8)) != viewerVersion {
             do {
                 if let web = Bundle.main.resourceURL?.appendingPathComponent("MapEngine/realmcraft_map/web") {
@@ -64,31 +114,70 @@ import WebKit
         mapURL = url; builtFor = save.title
     }
     func generate(_ model: Model, save: Savegame, radius: String, language: String) {
-        guard ready else { return }
-        let english = language == "en", backend = model.library, interpreter = python
+        guard ready && !generating && !model.busy && model.backgroundMapJobs == 0 else { return }
+        guard let backend = try? Library(root: model.library.root, adb: model.library.adb) else { return }
+        backend.package = model.library.package
+        let english = language == "en", interpreter = python
         let activityRoot = backend.root
         let output = support.appendingPathComponent(save.id).appendingPathComponent(UUID().uuidString)
+        let inputURL = FileManager.default.temporaryDirectory.appendingPathComponent("realmcraft-map-input-" + UUID().uuidString)
         let cache = support.appendingPathComponent("cache")
         guard let engine = Bundle.main.resourceURL?.appendingPathComponent("MapEngine") else { return }
-        notice = ""
-        model.work(english ? "Generating map from the selected backup…" : "Karte aus der ausgewählten Sicherung wird erstellt …") {
-            _ = try backend.verify(save)
-            DispatchQueue.main.async { model.status = english ? "Rendering map and locating interesting places…" : "Karte und interessante Orte werden berechnet …" }
-            var arguments = ["-I", "-B", "-u", "-c", "import sys; sys.path.insert(0, sys.argv.pop(1)); from realmcraft_map.__main__ import main; raise SystemExit(main())", engine.path, backend.worldFolder(save).path, "--output", output.path, "--workers", "8", "--cache", cache.path]
+        let job = MapRenderJob(); self.job = job; generating = true; cancellable = true
+        let notificationJobID = UUID()
+        let request = save.id + ":" + radius + ":" + language
+        displayRequest = request; model.backgroundMapJobs += 1
+        notice = ""; finishedMap = nil
+        backgroundStatus = (english ? "Preparing map in background: " : "Karte im Hintergrund vorbereiten: ") + save.title
+        renderQueue.async {
+            var completed = false
+            defer {
+                if !completed { try? FileManager.default.removeItem(at: output) }
+                try? FileManager.default.removeItem(at: inputURL)
+                DispatchQueue.main.async {
+                    self.generating = false; self.cancellable = false; self.job = nil; self.refreshCacheSize()
+                    model.backgroundMapJobs = max(0, model.backgroundMapJobs - 1)
+                }
+            }
+            do {
+            try job.checkCancellation()
+            let lease = try MapCacheLease(support: cache.deletingLastPathComponent())
+            defer { withExtendedLifetime(lease) {} }
+            let input = try MapSnapshotInput.prepare(library: backend, save: save, directory: inputURL)
+            try job.checkCancellation()
+            DispatchQueue.main.async { self.backgroundStatus = (english ? "Rendering in background: " : "Karte wird im Hintergrund gerendert: ") + save.title }
+            let workers = String(max(1, min(4, ProcessInfo.processInfo.activeProcessorCount - 2)))
+            var arguments = ["-I", "-B", "-u", "-c", "import sys; sys.path.insert(0, sys.argv.pop(1)); from realmcraft_map.__main__ import main; raise SystemExit(main())", engine.path, input.directory.path, "--output", output.path, "--workers", workers, "--cache", cache.path]
             if radius != "all" { arguments += ["--radius", radius] }
-            let result = try backend.run(interpreter, arguments, timeout: 3600)
+            let result = try job.run(executable: interpreter, arguments: arguments)
             guard result.code == 0 || result.code == 2 else { throw LibraryError(String(result.output.suffix(4000))) }
-            _ = try backend.verify(save)
+            try backend.assertSame(input.manifest, backend.localManifest(input.directory))
             let index = output.appendingPathComponent("index.html")
             guard FileManager.default.fileExists(atPath: index.path) else { throw LibraryError(english ? "No map was produced." : "Es wurde keine Karte erzeugt.") }
             if english { try MapLocalization.english(output) }
+            try job.beginCommit()
+            DispatchQueue.main.async { self.cancellable = false }
             UserDefaults.standard.set(index.path, forKey: "map.\(save.id).\(radius).\(language)")
             DispatchQueue.main.async {
-                self.mapURL = index; self.builtFor = save.title
+                if model.selection == save.id && model.library.root == activityRoot && self.displayRequest == request {
+                    self.mapURL = index; self.builtFor = save.title
+                    self.notice = result.code == 2 ? (english ? "Incomplete coverage; see audit.json." : "Unvollständige Abdeckung; siehe audit.json.") : ""
+                }
+                self.finishedMap = FinishedMap(saveID: save.id, root: activityRoot, radius: radius, language: language)
+                Task { await self.notifications.finished(jobID:notificationJobID,gaps:result.code == 2,english:english) }
+                self.backgroundStatus = (result.code == 2 ? (english ? "Map ready with gaps: " : "Karte mit Lücken fertig: ") : (english ? "Map ready: " : "Karte fertig: ")) + save.title
+                model.history.append(self.backgroundStatus)
+                self.refreshCacheSize()
                 CompanionActivity.shared.record(CompanionActivityRecord(date: Date(), saveID: save.id, title: save.title, path: index.path, radius: radius, language: language), kind: "map", root: activityRoot)
-                self.notice = result.code == 2 ? (english ? "Some chunks could not be read. This map has gaps; see audit.json in the map folder." : "Einige Chunks konnten nicht gelesen werden. Die Karte hat Lücken; Details stehen in audit.json im Kartenordner.") : ""
             }
-            return english ? "Map generated. Your savegame is unchanged." : "Karte erzeugt. Dein Spielstand ist unverändert."
+            completed = true
+            } catch MapRenderJob.Failure.cancelled {
+                DispatchQueue.main.async { self.backgroundStatus = english ? "Map generation cancelled. Previous map retained." : "Kartenerzeugung abgebrochen. Vorherige Karte bleibt erhalten." }
+            } catch MapRenderJob.Failure.timedOut {
+                DispatchQueue.main.async { self.backgroundStatus = english ? "Map generation exceeded one hour. Try a smaller area." : "Kartenerzeugung hat eine Stunde überschritten. Bitte einen kleineren Bereich wählen." }
+            } catch {
+                DispatchQueue.main.async { self.backgroundStatus = (english ? "Map generation failed: " : "Kartenerzeugung fehlgeschlagen: ") + String(error.localizedDescription.prefix(500)); model.history.append(self.backgroundStatus) }
+            }
         }
     }
 }
@@ -99,14 +188,19 @@ struct MapsView: View {
     @ObservedObject var maps: MapController
     let language: String
     var requestedRadius: String? = nil
+    var openPortals: () -> Void = {}
+    var openOreAnalysis: () -> Void = {}
     @State private var radius = "128"
     @State private var showMapExport = false
+    @State private var confirmCacheClear = false
+    @State private var showNotifications = false
     private var english: Bool { language == "en" }
+    private var cacheSize: String { ByteCountFormatter.string(fromByteCount: maps.cacheBytes ?? 0, countStyle: .file) }
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Maps" : "Karten") {
-                    Button(english ? "Generate map" : "Karte erzeugen") { if let save = model.selected { maps.generate(model, save: save, radius: radius, language: language) } }
-                        .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.busy || !maps.ready || model.selected == nil || maps.checking)
+                    if maps.generating { Button(english ? "Cancel" : "Abbrechen") { maps.cancelGeneration() }.disabled(!maps.cancellable) }
+                    else { Button(english ? "Generate map" : "Karte erzeugen") { if let save = model.selected { maps.generate(model, save: save, radius: radius, language: language) } }.buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.busy || model.backgroundMapJobs > 0 || !maps.ready || model.selected == nil || maps.checking) }
 
             } menu: {
                 Group {
@@ -116,33 +210,38 @@ struct MapsView: View {
                 .disabled(maps.mapURL == nil)
                 Divider()
                 Button(english ? "Map export settings…" : "Kartenexport-Einstellungen …") { showMapExport = true }
+                Button(english ? "Completion notifications…" : "Fertigmeldungen …") { showNotifications = true }
+                Divider()
+                if maps.cacheBytes != nil {
+                    Text(english ? "Map cache: \(cacheSize)" : "Karten-Cache: \(cacheSize)")
+                }
+                Button(english ? "Clear map cache…" : "Karten-Cache leeren …") { confirmCacheClear = true }
+                    .disabled(model.busy || model.backgroundMapJobs > 0)
             }
             VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Picker(english ? "Savegame" : "Spielstand", selection: $model.selection) {
-                        if model.saves.isEmpty { Text(english ? "No savegames" : "Keine Spielstände").tag(nil as String?) }
-                        ForEach(model.saves) { save in Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id)) }
-                    }.frame(maxWidth: CompanionLayout.sourceWidth)
-                    Picker(english ? "Area" : "Bereich", selection: $radius) {
-                        Text(english ? "Origin ±128 blocks" : "Ursprung ±128 Blöcke").tag("128")
-                        Text(english ? "Origin ±256 blocks" : "Ursprung ±256 Blöcke").tag("256")
-                        Text(english ? "Origin ±512 blocks" : "Ursprung ±512 Blöcke").tag("512")
-                        Text(english ? "Origin ±1024 blocks" : "Ursprung ±1024 Blöcke").tag("1024")
-                        Text(english ? "Origin ±2048 blocks" : "Ursprung ±2048 Blöcke").tag("2048")
-                        Text(english ? "All saved chunks" : "Alle gespeicherten Chunks").tag("all")
-                    }.frame(width: 220)
-                    Spacer(minLength: 0)
-
-                }.disabled(model.busy)
-                Text(model.busy ? tr(model.status) : english ? "Maps are built locally from saved chunks, not live Quest data. Large worlds can take several minutes. Colors are schematic; unknown blocks may differ." : "Karten entstehen lokal aus gespeicherten Chunks, nicht aus Live-Daten der Quest. Große Welten können mehrere Minuten dauern. Farben sind schematisch; unbekannte Blöcke können abweichen.").font(.caption).foregroundStyle(.secondary).frame(minHeight: 32, alignment: .leading).fixedSize(horizontal: false, vertical: true)
+                MapSourceControls(saves: model.saves, selection: $model.selection, radius: $radius, english: english).disabled(model.busy)
+                if model.busy { Text(tr(model.status)).font(.caption).foregroundStyle(.secondary) }
                 if !maps.ready || maps.installing {
                     MapToolsSetup(model: model, maps: maps, english: english)
                 }
                 if !maps.notice.isEmpty { Text(maps.notice).font(.callout).foregroundStyle(.orange) }
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             .sheet(isPresented: $showMapExport) { MapExportSettings(english: english).companionAppearance() }
+            .sheet(isPresented: $showNotifications) {
+                VStack(alignment: .leading, spacing: 18) {
+                    Text(english ? "Completion notifications (optional)" : "Fertigmeldungen (optional)").font(.headline)
+                    MapNotificationControls(notifications: maps.notifications, english: english)
+                    Button(english ? "Close" : "Schließen") { showNotifications = false }.keyboardShortcut(.cancelAction)
+                }.padding(24).frame(width: 440).companionAppearance()
+            }
+            .alert(english ? "Clear map cache?" : "Karten-Cache leeren?", isPresented: $confirmCacheClear) {
+                Button(english ? "Cancel" : "Abbrechen", role: .cancel) { }
+                Button(english ? "Clear cache" : "Cache leeren", role: .destructive) { maps.clearCache(model, language: language) }
+            } message: {
+                Text(english ? "Only temporary map-rendering cache data will be removed. Savegames and generated maps stay unchanged." : "Es werden nur temporäre Daten der Kartenerzeugung entfernt. Spielstände und erzeugte Karten bleiben unverändert.")
+            }
             Divider()
-            if let url = maps.mapURL { LocalMapWebView(url: url, world: model.selected?.world ?? "", scope: model.selected?.annotationScope ?? "", library: model.library.root, english: english).id(url) }
+            if let url = maps.mapURL { LocalMapWebView(url: url, world: model.selected?.world ?? "", scope: model.selected?.annotationScope ?? "", library: model.library.root, english: english, saveID: model.selected?.id ?? "", worldFolder: model.selected.map { model.library.worldFolder($0) }, openPortals: openPortals, openOreAnalysis: openOreAnalysis, focusTarget: maps.focusTarget, displayName: model.selected?.title ?? "").id(url) }
             else {
                 VStack(spacing: 14) {
                     Image(systemName: "map.fill").font(.system(size: 50)).foregroundStyle(theme.accent)
@@ -151,18 +250,69 @@ struct MapsView: View {
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .onAppear { if let requestedRadius { radius = requestedRadius }; maps.check(model); maps.restoreLast(model.selected, radius: radius, language: language) }
+        .onAppear { if let requestedRadius { radius = requestedRadius }; maps.check(model); maps.refreshCacheSize(); maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: model.selection) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: radius) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
         .onChange(of: language) { _, _ in maps.restoreLast(model.selected, radius: radius, language: language) }
     }
 }
-private struct LocalMapWebView: NSViewRepresentable {
+struct LocalMapWebView: NSViewRepresentable {
     let url: URL
     let world: String
     let scope: String
     let library: URL
     let english: Bool
+    let saveID: String
+    let worldFolder: URL?
+    let openPortals: () -> Void
+    let openOreAnalysis: () -> Void
+    var metroWorkspace = false
+    var metroDocument: MetroNetworkStore.Document? = nil
+    var metroFocus: String? = nil
+    var metroPick: ((MetroMapSelection) -> Void)? = nil
+    var metroCapturing = false
+    var metroCancel: (() -> Void)? = nil
+    var focusTarget: MapFocusTarget? = nil
+    var displayName = ""
+    private var targetScript: String {
+        guard let target = focusTarget, target.valid, target.saveID == saveID, target.world == world, !metroWorkspace,
+              let data = try? JSONEncoder().encode(target) else { return "" }
+        return "window.ATLAS_FOCUS_TARGET=" + String(decoding: data, as: UTF8.self) + ";window.dispatchEvent(new CustomEvent('atlas-focus-target',{detail:window.ATLAS_FOCUS_TARGET}));"
+    }
+    private var portalScript: String {
+        var value: [String: Any] = ["saveID": saveID, "world": world, "portals": [], "plans": []]
+        do {
+            if let worldFolder {
+                value["portals"] = try PortalReader.read(worldFolder).portals.map { p in
+                    ["id": p.id, "dimension": p.dimension, "x": p.anchor.x, "y": p.anchor.y, "z": p.anchor.z, "bounds": p.bounds, "count": p.blocks.count] as [String: Any]
+                }
+            }
+        } catch { value["inventoryError"] = english ? "Saved portal inventory unavailable for this snapshot." : "Gespeicherter Portalbestand für diese Sicherung nicht verfügbar." }
+        do {
+            let store = PortalPlanStore(url: library.appendingPathComponent(".portal-plans").appendingPathComponent(saveID + ".json"))
+            value["plans"] = try store.load().map(\.mapValue)
+        } catch { value["plansError"] = error.localizedDescription }
+        let data = (try? JSONSerialization.data(withJSONObject: value)) ?? Data("{}".utf8)
+        return "window.ATLAS_PORTALS=" + String(decoding: data, as: UTF8.self) + ";"
+    }
+    private var metroScript: String {
+        var value: [String: Any] = ["saveID": saveID, "world": world, "workspace": metroWorkspace, "capturing": metroCapturing, "stations": [], "lines": [], "edges": []]
+        do {
+            let store = MetroNetworkStore(url: library.appendingPathComponent(".metro-networks").appendingPathComponent(saveID + ".json"))
+            let document = try metroDocument ?? store.load()
+            value["stations"] = document.stations.map { ["id": $0.id, "name": $0.name, "dimension": $0.dimension, "x": $0.x, "y": $0.y, "z": $0.z, "status": $0.status.rawValue, "portalCandidate": $0.portalCandidate == true] }
+            value["lines"] = document.lines.map { ["id": $0.id, "name": $0.name, "color": $0.color] }
+            value["edges"] = document.edges.map { edge in
+                var item: [String: Any] = ["id": edge.id, "from": edge.from, "to": edge.to, "mode": edge.mode.rawValue, "status": edge.status.rawValue]
+                if let lineID = edge.lineID { item["lineID"] = lineID }
+                if let path = edge.path { item["path"] = path.map { ["x": $0.x, "y": $0.y, "z": $0.z] } }
+                return item
+            }
+            if let metroFocus { value["focusID"] = metroFocus }
+        } catch { value["error"] = error.localizedDescription }
+        let data = (try? JSONSerialization.data(withJSONObject: value)) ?? Data("{}".utf8)
+        return "window.ATLAS_METRO=" + String(decoding: data, as: UTF8.self) + ";window.dispatchEvent(new CustomEvent('atlas-metro-update',{detail:window.ATLAS_METRO}));"
+    }
     @AppStorage("exploration.spoilerFree") private var spoilerFree = false
     private var privacyScript: String {
         let state = ChestVisibility.load(world: scope)
@@ -178,9 +328,20 @@ private struct LocalMapWebView: NSViewRepresentable {
         let args = String(data: data, encoding: .utf8)!
         return "(() => { const [css, skin, appearance] = " + args + "; let style = document.getElementById('companion-skin'); if (!style) { style = document.createElement('style'); style.id = 'companion-skin'; document.head.appendChild(style); } style.textContent = css; document.documentElement.dataset.companion = skin; document.documentElement.dataset.appearance = appearance; })();"
     }
-    func makeCoordinator() -> Coordinator { Coordinator(world: world, scope: scope, library: library, english: english) }
+    func makeCoordinator() -> Coordinator { Coordinator(world: world, scope: scope, library: library, english: english, saveID: saveID, mapURL: url, openPortals: openPortals, openOreAnalysis: openOreAnalysis) }
     func makeNSView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
+        let displayData = try! JSONSerialization.data(withJSONObject: [displayName])
+        configuration.userContentController.addUserScript(WKUserScript(source: "window.ATLAS_DISPLAY_NAME=" + String(decoding: displayData, as: UTF8.self) + "[0];", injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        configuration.userContentController.addUserScript(WKUserScript(source: targetScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        context.coordinator.lastTargetScript = targetScript
+        context.coordinator.metroPick = metroPick
+        context.coordinator.metroCancel = metroCancel
+        configuration.userContentController.addUserScript(WKUserScript(source: portalScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        configuration.userContentController.addUserScript(WKUserScript(source: metroScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        configuration.userContentController.add(context.coordinator, name: "atlasPortals")
+        configuration.userContentController.add(context.coordinator, name: "atlasMetro")
+        configuration.userContentController.add(context.coordinator, name: "atlasResources")
         configuration.userContentController.addUserScript(WKUserScript(source: privacyScript, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         let markerValue: Any = UserDefaults.standard.object(forKey: "atlasMarkers." + scope) ?? (scope == world ? NSNull() : [] as Any)
         let orientation = UserDefaults.standard.dictionary(forKey: "atlasOrientation." + world) ?? [:]
@@ -209,21 +370,100 @@ private struct LocalMapWebView: NSViewRepresentable {
         return view
     }
     func updateNSView(_ view: WKWebView, context: Context) {
+        context.coordinator.metroCancel = metroCancel
+        context.coordinator.pendingTargetScript = targetScript
+        context.coordinator.pendingMetroScript = metroWorkspace ? metroScript : ""
+        if !view.isLoading && context.coordinator.lastTargetScript != targetScript {
+            context.coordinator.lastTargetScript = targetScript
+            view.evaluateJavaScript(targetScript, completionHandler: nil)
+        }
+        context.coordinator.metroPick = metroPick
+        if metroWorkspace && !view.isLoading && context.coordinator.lastMetroScript != metroScript {
+            context.coordinator.lastMetroScript = metroScript
+            view.evaluateJavaScript(metroScript, completionHandler: nil)
+        }
         context.coordinator.styleScript = styleScript + privacyScript
         if !view.isLoading { view.evaluateJavaScript(styleScript + privacyScript, completionHandler: nil) }
     }
-    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigationExport"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
+    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) { view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPortals"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMetro"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasResources"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigationExport"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasNavigation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOrientation"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasMarkers"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasPOINames"); view.configuration.userContentController.removeScriptMessageHandler(forName: "atlasOwnership") }
     final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate, WKDownloadDelegate {
         let world: String
         let scope: String
         let library: URL
         let english: Bool
+        let saveID: String
+        let mapURL: URL
+        let openPortals: () -> Void
+        let openOreAnalysis: () -> Void
         var styleScript = ""
+        var lastMetroScript = ""
+        var lastTargetScript = ""
+        var pendingTargetScript = ""
+        var pendingMetroScript = ""
+        var metroPick: ((MetroMapSelection) -> Void)?
+        var metroCancel: (() -> Void)?
+        private func chunkOriginIndex(_ coordinate: Int) -> Int { coordinate >= 0 ? coordinate / 16 : (coordinate - 15) / 16 }
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             webView.evaluateJavaScript(styleScript, completionHandler: nil)
+            if !pendingTargetScript.isEmpty && pendingTargetScript != lastTargetScript {
+                lastTargetScript = pendingTargetScript
+                webView.evaluateJavaScript(pendingTargetScript, completionHandler: nil)
+            }
+            if !pendingMetroScript.isEmpty && pendingMetroScript != lastMetroScript {
+                lastMetroScript = pendingMetroScript
+                webView.evaluateJavaScript(pendingMetroScript, completionHandler: nil)
+            }
         }
-        init(world: String, scope: String, library: URL, english: Bool) { self.world = world; self.scope = scope; self.library = library; self.english = english }
+        init(world: String, scope: String, library: URL, english: Bool, saveID: String, mapURL: URL, openPortals: @escaping () -> Void, openOreAnalysis: @escaping () -> Void) { self.world = world; self.scope = scope; self.library = library; self.english = english; self.saveID = saveID; self.mapURL = mapURL; self.openPortals = openPortals; self.openOreAnalysis = openOreAnalysis }
         func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "atlasMetro", message.frameInfo.isMainFrame,
+               message.frameInfo.request.url?.standardizedFileURL == mapURL.standardizedFileURL,
+               let body = message.body as? [String: Any], body["saveID"] as? String == saveID,
+               body["world"] as? String == world, body["action"] as? String == "cancelCapture" {
+                metroCancel?(); return
+            }
+            if message.name == "atlasMetro" {
+                guard let callback = metroPick, message.frameInfo.isMainFrame,
+                      message.frameInfo.request.url?.standardizedFileURL == mapURL.standardizedFileURL,
+                      let body = message.body as? [String: Any], body["saveID"] as? String == saveID,
+                      body["world"] as? String == world, body["action"] as? String == "pick",
+                      let selection = MetroMapSelection.read(body) else { return }
+                callback(selection)
+                return
+            }
+            if message.name == "atlasResources" {
+                guard message.frameInfo.isMainFrame,
+                      message.frameInfo.request.url?.standardizedFileURL == mapURL.standardizedFileURL,
+                      let body = message.body as? [String: Any], body["world"] as? String == world,
+                      let dimension = body["dimension"] as? String, ["o", "n"].contains(dimension),
+                      let x0 = body["x0"] as? Int, let x1 = body["x1"] as? Int,
+                      let z0 = body["z0"] as? Int, let z1 = body["z1"] as? Int,
+                      x0 <= x1, z0 <= z1,
+                      abs(Double(x0)) <= 30_000_000, abs(Double(x1)) <= 30_000_000,
+                      abs(Double(z0)) <= 30_000_000, abs(Double(z1)) <= 30_000_000,
+                      (chunkOriginIndex(x1) - chunkOriginIndex(x0) + 1) * (chunkOriginIndex(z1) - chunkOriginIndex(z0) + 1) <= 4096 else { return }
+                UserDefaults.standard.set(["dimension": dimension, "x0": x0, "x1": x1, "z0": z0, "z1": z1], forKey: "ore.region." + saveID)
+                openOreAnalysis()
+                return
+            }
+            if message.name == "atlasPortals" {
+                guard message.frameInfo.isMainFrame,
+                      message.frameInfo.request.url?.standardizedFileURL == mapURL.standardizedFileURL,
+                      UUID(uuidString: saveID) != nil,
+                      let body = message.body as? [String: Any], body["saveID"] as? String == saveID,
+                      body["world"] as? String == world, let action = body["action"] as? String else { return }
+                if action == "open" { openPortals(); return }
+                var reply: [String: Any] = ["ok": false]
+                do {
+                    guard action == "add", let plan = PortalPlanStore.request(body) else { throw PortalPlanStore.StoreError.invalid }
+                    let store = PortalPlanStore(url: library.appendingPathComponent(".portal-plans").appendingPathComponent(saveID + ".json"))
+                    reply = ["ok": true, "plans": try store.add(plan).map(\.mapValue)]
+                } catch { reply["error"] = error.localizedDescription }
+                if let data = try? JSONSerialization.data(withJSONObject: reply) {
+                    message.webView?.evaluateJavaScript("window.dispatchEvent(new CustomEvent('atlas-portals-saved',{detail:" + String(decoding: data, as: UTF8.self) + "}));", completionHandler: nil)
+                }
+                return
+            }
             if message.name == "atlasNavigationExport" {
                 guard message.frameInfo.isMainFrame, message.frameInfo.request.url?.isFileURL == true,
                       let body = message.body as? [String: Any], let action = body["action"] as? String,

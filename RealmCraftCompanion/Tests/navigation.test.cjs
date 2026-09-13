@@ -54,9 +54,11 @@ test('copy and cloud buttons export the current route and reset with selection',
  vm.createContext(context);vm.runInContext(fs.readFileSync(require.resolve('../Resources/MapEngine/realmcraft_map/web/navigation.js'),'utf8'),context);
  const measure={panel:new Element('section'),output:new Element('div'),points:[{x:0,z:0},{x:6,z:0}],dimension:'o',read:(x,z)=>z===0&&x>=0&&x<=6?{id:1,y:64}:null,clear(){},start(){},draw(){},changed(){}};
  context.AtlasNavigation.install(measure,{title:'synthetic',generatedAt:'synthetic',registry:{1:'stone'},dimensions:{o:{}}},()=>[]);
+ measure.resourceTarget={saveID:'synthetic-snapshot',dimension:'o',x:6,y:12,z:0};
  const button=text=>elements.find(e=>e.tag==='button'&&e.textContent===text);
  assert.ok(button('Copy navigation').hidden);await button('Plan English navigation').onclick();assert.equal(button('Copy navigation').hidden,false);
  await button('Copy navigation').onclick();assert.equal(messages[0].action,'copy');assert.equal(messages[0].pack.world,'synthetic');
+ assert.ok(messages[0].pack.guidance.some(s=>s.includes('X 6, Y 12, Z 0')&&s.includes('unplanned')));
  button('Save to iCloud…').onclick();assert.equal(messages[1].action,'cloud');assert.ok(messages[1].pack.steps.length);
  measure.clear();assert.ok(button('Copy navigation').hidden);assert.ok(button('Save to iCloud…').hidden);
 });

@@ -5,21 +5,24 @@ struct PlayerSkinScene: NSViewRepresentable {
     let profile: PlayerSkinProfile
     let armor: [PlayerItem]
     var hands = false
+    var resetToken = 0
 
     final class Coordinator {
         var key = ""
         var geometry: [String: SCNGeometry] = [:]
         var previousHands: Bool?
+        var previousReset: Int?
     }
     func makeCoordinator() -> Coordinator { Coordinator() }
-    func makeNSView(context: Context) -> SCNView {
-        let view = SCNView()
+    func makeNSView(context: Context) -> SkinPreviewView {
+        let view = SkinPreviewView(frame: .zero, options: nil)
         view.backgroundColor = .clear
         view.antialiasingMode = .multisampling4X
-        view.allowsCameraControl = true
+        view.allowsCameraControl = false
         view.autoenablesDefaultLighting = false
         view.scene = SCNScene()
         let camera = SCNNode(); camera.name = "camera"; camera.camera = SCNCamera()
+        camera.camera?.fieldOfView = 45; camera.camera?.projectionDirection = .vertical
         camera.camera?.zNear = 0.01; camera.camera?.zFar = 100
         view.scene?.rootNode.addChildNode(camera); view.pointOfView = camera
         let ambient = SCNNode(); ambient.light = SCNLight(); ambient.light?.type = .ambient
@@ -30,7 +33,11 @@ struct PlayerSkinScene: NSViewRepresentable {
         view.defaultCameraController.target = SCNVector3(0, 1, 0)
         return view
     }
-    func updateNSView(_ view: SCNView, context: Context) {
+    func updateNSView(_ view: SkinPreviewView, context: Context) {
+        if context.coordinator.previousReset != resetToken || context.coordinator.previousHands != hands {
+            view.resetView()
+            context.coordinator.previousReset = resetToken
+        }
         let key = profile.encoded + "\(hands)" + armor.map { "\($0.slot):\($0.itemID)" }.joined(separator: ",")
         guard key != context.coordinator.key, let root = SkinAssets.root else { return }
         context.coordinator.key = key
@@ -72,12 +79,14 @@ struct PlayerSkinScene: NSViewRepresentable {
             group.position = SCNVector3(-(low.x + high.x) * 0.5 * scale, (hands ? 1 - (low.y + high.y) * 0.5 * scale : -low.y * scale), -(low.z + high.z) * 0.5 * scale)
         }
         view.scene?.rootNode.addChildNode(group)
-        if context.coordinator.previousHands == nil || context.coordinator.previousHands != hands {
-            let camera = view.scene?.rootNode.childNode(withName: "camera", recursively: false)
-            camera?.position = SCNVector3(0, 1.05, 2.65)
-            camera?.look(at: SCNVector3(0, 1, 0))
-            view.pointOfView = camera
+        // A bounding sphere keeps the whole model visible at every allowed rotation.
+        if height > 0 {
+            let halfX = (high.x - low.x) / height
+            let halfY = (high.y - low.y) / height
+            let halfZ = (high.z - low.z) / height
+            view.modelRadius = sqrt(halfX * halfX + halfY * halfY + halfZ * halfZ)
         }
+        view.applyCamera()
         context.coordinator.previousHands = hands
     }
     private struct Part: Decodable {
@@ -144,4 +153,60 @@ struct PlayerSkinScene: NSViewRepresentable {
         let indices = Array(0..<Int32(vertices.count))
         return SCNGeometry(sources: [SCNGeometrySource(vertices: vertices), SCNGeometrySource(normals: vertexNormals), SCNGeometrySource(textureCoordinates: vertexUVs)], elements: [SCNGeometryElement(indices: indices, primitiveType: .triangles)])
     }
+}
+
+
+/// Fixed-target orbit controls. SceneKit's free pan/dolly controls stay disabled.
+final class SkinPreviewView: SCNView {
+    private(set) var yaw: CGFloat = 0
+    private(set) var pitch: CGFloat = 0
+    private(set) var zoom: CGFloat = 1
+    var modelRadius: CGFloat = 1.2
+    private var lastDragPoint: NSPoint?
+
+    func resetView() {
+        yaw = 0; pitch = 0; zoom = 1; lastDragPoint = nil
+        applyCamera()
+    }
+    func orbit(horizontal: CGFloat, vertical: CGFloat) {
+        guard horizontal.isFinite, vertical.isFinite else { return }
+        yaw = (yaw + horizontal).truncatingRemainder(dividingBy: 2 * .pi)
+        pitch = min(0.65, max(-0.65, pitch + vertical))
+        applyCamera()
+    }
+    func changeZoom(_ amount: CGFloat) {
+        guard amount.isFinite else { return }
+        zoom = min(2.5, max(1, zoom * exp(min(2, max(-2, amount)))))
+        applyCamera()
+    }
+    func applyCamera() {
+        guard let camera = scene?.rootNode.childNode(withName: "camera", recursively: false) else { return }
+        let aspect = max(0.1, bounds.width / max(1, bounds.height))
+        let halfAngle = atan(tan(CGFloat.pi / 8) * min(1, aspect))
+        let distance = max(0.1, modelRadius) / sin(halfAngle) * 1.08 * zoom
+        SCNTransaction.begin(); SCNTransaction.disableActions = true
+        camera.position = SCNVector3(sin(yaw) * cos(pitch) * distance,
+                                    1 + sin(pitch) * distance,
+                                    cos(yaw) * cos(pitch) * distance)
+        camera.look(at: SCNVector3(0, 1, 0), up: SCNVector3(0, 1, 0), localFront: SCNVector3(0, 0, -1))
+        pointOfView = camera
+        SCNTransaction.commit()
+    }
+    override func layout() { super.layout(); applyCamera() }
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+    override func mouseDown(with event: NSEvent) { lastDragPoint = event.locationInWindow }
+    override func mouseUp(with event: NSEvent) { lastDragPoint = nil }
+    override func mouseDragged(with event: NSEvent) {
+        let point = event.locationInWindow
+        if let previous = lastDragPoint {
+            orbit(horizontal: -(point.x - previous.x) * 0.012, vertical: -(point.y - previous.y) * 0.012)
+        }
+        lastDragPoint = point
+    }
+    override func scrollWheel(with event: NSEvent) { changeZoom(event.scrollingDeltaY * 0.01) }
+    override func magnify(with event: NSEvent) { changeZoom(-event.magnification) }
+    override func rotate(with event: NSEvent) { orbit(horizontal: CGFloat(event.rotation) * .pi / 180, vertical: 0) }
+    override func rightMouseDragged(with event: NSEvent) {}
+    override func otherMouseDragged(with event: NSEvent) {}
+    override func swipe(with event: NSEvent) {}
 }

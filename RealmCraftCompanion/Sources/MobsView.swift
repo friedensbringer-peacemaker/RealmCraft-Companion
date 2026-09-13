@@ -20,7 +20,7 @@ struct MobsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            CompanionPageHeader(title: "Mobs & Animals") {
+            CompanionPageHeader(title: english ? "Mobs & Animals" : "Tiere & Kreaturen") {
                 EmptyView()
             } menu: {
                 Toggle(english ? "Show mob images" : "Mob-Bilder einblenden", isOn: $showImages)
@@ -29,14 +29,19 @@ struct MobsView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Label(MobCatalog.disclaimer(english), systemImage: "exclamationmark.triangle.fill")
                     .font(.callout.weight(.medium)).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                Text(english ? "Selected references · not a world scan · check your Quest version."
+                     : "Ausgewählte Referenzen · kein Welt-Scan · Quest-Version prüfen.")
+                    .font(.caption).foregroundStyle(.secondary)
+                CompanionDetails(english ? "Research scope & platform limits" : "Rechercheumfang & Plattformgrenzen") {
                 Text(english ? "Research snapshot: \(catalog?.reviewedAt ?? "—") · Selected known entries; not a complete mob census or a scan of your world. Baby forms without a separate VR source are unconfirmed. VR evidence may refer to Steam; check your Quest version."
                      : "Recherche-Stand: \(catalog?.reviewedAt ?? "—") · Auswahl bekannter Einträge; keine vollständige Artenliste oder Auslesung deiner Welt. Babyformen ohne eigenen VR-Beleg sind unbestätigt. VR-Belege können Steam betreffen; Quest-Version prüfen.")
                     .font(.caption).foregroundStyle(.secondary)
+                }.font(.caption)
                 HStack {
                     TextField(english ? "Search name, dimension, biome or update…" : "Name, Dimension, Biom oder Update suchen …", text: $query).textFieldStyle(.roundedBorder)
                     Picker(english ? "Category" : "Kategorie", selection: $kind) {
                         Text(english ? "All types" : "Alle Arten").tag("all")
-                        Text("Animals").tag("animal")
+                        Text(english ? "Animals" : "Tiere").tag("animal")
                         Text(english ? "Other mobs" : "Weitere Mobs").tag("mob")
                     }.frame(width: 220)
                 }
@@ -64,11 +69,6 @@ struct MobsView: View {
                                 if showImages { MobThumbnail(entry: entry, english: english).frame(width: 66, height: 66) }
                                 VStack(alignment: .leading, spacing: 5) {
                                 Text(entry.name.value(english)).font(.headline)
-                                Text(entry.name.value(!english)).font(.caption).foregroundStyle(.secondary)
-                                if let habitat = entry.habitat {
-                                    Text(habitat.dimensionTitle(english) + (habitat.basis == "vr_release" || habitat.dimension == "unknown" ? "" : (english ? " · reference" : " · Orientierung")))
-                                        .font(.caption2).foregroundStyle(.secondary)
-                                }
                                 Text(entry.statusTitle(english)).font(.caption2).foregroundStyle(entry.status == "released" ? Color.secondary : Color.orange)
                                 }
                             }.padding(.vertical, 7).tag(entry.id)

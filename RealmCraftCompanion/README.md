@@ -16,6 +16,10 @@ The header stays fixed across all six sections. The Appearance menu switches bet
 
 # RealmCraft Companion
 
+Community translations: [central language catalog, import/export and contribution guide](Resources/Translations/README.md). The translation workspace includes DE/EN source text and accepts reviewed contributions for additional languages; app-wide locale activation is a separate implementation step.
+
+Crafting / Rezepte (1.7.40 development candidate) adds offline search across all 1,206 name-catalog entries, with 821 Minecraft Java 1.16.5 comparison recipes for 588 outputs. Ingredients, quantities, yield, station, one-batch grids, recipe variants, ingredient navigation and whole-batch calculations are available in German and English. Unmapped recipes remain open; no RealmCraft/Quest compatibility is claimed. Field-scoped RealmCraft wiki evidence is shown separately. See [Crafting sources and validation](Resources/CRAFTING-SOURCES.md).
+
 Native SwiftUI-App für lokale RealmCraft-Sicherungen auf macOS 14+ (Apple Silicon und Intel). Oberfläche, Dialoge, Statusmeldungen und integrierte Hilfe sind zwischen Deutsch und Englisch umschaltbar und enthält auch den Ursprung aus der bereitgestellten Discord-Nachricht vom 31.08.2026.
 
 Funktionen: ADB erkennen, prüfen und von Google installieren; Quest, RealmCraft und vollständige Welten automatisch erkennen; Savegames mit Datum, Uhrzeit und Vorschau verwalten; Backup und Wiederherstellung mit SHA-256-Prüfung; automatische Sicherung vor Wiederherstellung; Spiel nach Bestätigung per ADB beenden; ZIP-Import und -Export; Library-Speicherort wechseln und bestehende Einträge geprüft kopieren.
@@ -30,7 +34,7 @@ Benutzeranleitung: `LIESMICH-README.txt` und integrierte Hilfe. Verteilung nur �
 - `Sources/SetupView.swift`: Einrichtung und Diagnose.
 - `Sources/HelpView.swift`: vollständige zweisprachige Offline-Hilfe.
 - `icon.swift`, `make_icon.py`: eigenes App-Icon; keine fremden Marken-Assets.
-- `build.sh`: Universal Binary und App-Bundle unter `/private/tmp/realmcraft-distribution-build/`.
+- `build.sh`: Universal Binary und ein frisches App-Bundle unter `$TMPDIR/realmcraft-companion-build-…/`. Ein bestehendes, verlinktes oder direkt unter `/Applications` liegendes Ziel wird verweigert; Installation bleibt ein separater, geprüfter Schritt.
 
 Erstellen: `./build.sh`. Erfordert Xcode Command Line Tools, Swift und Python 3 ausschließlich für den Build. Endnutzer benötigen diese Werkzeuge nicht.
 
@@ -51,6 +55,8 @@ Complete MIT-licensed community source: see COMMUNITY.md and the source ZIP, als
 
 
 Release history and proposed work: `Resources/CHANGELOG.md` and `Resources/BACKLOG.md`, also available in offline Help.
+
+Current architecture and planning documentation: `docs/FEATURE-MAP.md`, `docs/ARCHITECTURE.md`, `docs/DATA-MODEL.md`, `docs/IDEAS-2026-09-07.md` and `docs/AUDIT-2026-09-07.md`.
 
 ## World maps (Atlas preview)
 Maps are a separate feature, generated locally from verified backups. Python 3.10+, NumPy 2.x and Pillow 10.4–12.x are required. The Install map tools button in Maps and Setup downloads a private Python 3.12 runtime from Astral/python-build-standalone (SHA-256 verified) and binary NumPy/Pillow packages from PyPI. No preinstalled Python, Homebrew, Xcode or administrator password is needed. Existing working environments remain usable; failed installations preserve the previous runtime. Maps use schematic block colors and only show saved chunks. Read the bilingual in-app map guide. The frozen renderer source is in Resources/MapEngine; personal worlds and generated maps are excluded from distribution.
@@ -223,3 +229,7 @@ Die Bibliothek gruppiert lokale Sicherungen nach Welt-ID und zeigt den lesbaren 
 Löschen ist über das Papierkorb-Symbol, das Aktionsmenü und das Kontextmenü möglich. Jede Aktion erfordert eine Bestätigung mit Spielstand, Welt, Datum und Größe. Nur die bestätigte lokale Sicherung wird in den macOS-Papierkorb verschoben; Quest-Welten und andere Sicherungen bleiben erhalten. Änderungen an Metadaten oder Bibliothek seit der Bestätigung sowie verknüpfte Einträge werden abgewiesen. Es gibt keinen permanenten Lösch-Fallback.
 
 Regression: `Tests/SavegameOrganizationTests.swift` mit `Sources/Library.swift` und `Sources/SavegameOrganization.swift` kompilieren. Der Test nutzt ausschließlich temporäre Dateien und einen simulierten Papierkorb.
+
+### Portal pairs
+
+The Portal pairs area reads the selected snapshot’s Overworld and Nether POI files and groups adjacent portal blocks. Coordinates identify a bottom portal block; bounds describe the saved active area. Named, directional connections and observation notes are stored separately in local library metadata. Connections are reported observations, not destination links decoded from the save. Changed POI data invalidates the stored associations. In Maps, enable the portal layer, select a point and choose “Plan portal here”. Preview and save the counterpart in Portal pairs using an explicitly assumed 8:1 scale in either direction. Exact coordinates and rounded block suggestions are displayed separately; target height, buildability and actual exit remain unknown. Plans are saved per snapshot in separate local library metadata. Browser-only plans remain local to that browser. Verified linking and cross-dimension routes remain planned.

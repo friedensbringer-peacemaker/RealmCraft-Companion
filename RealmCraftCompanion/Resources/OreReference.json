@@ -1,0 +1,627 @@
+{
+  "schema": 1,
+  "version": "Minecraft Java 1.21.1",
+  "reviewed": "2026-09-07",
+  "entries": [
+    {
+      "id": "coal",
+      "de": "Kohle",
+      "en": "Coal",
+      "dimension": "o",
+      "blockIDs": [
+        35,
+        36
+      ],
+      "notesDE": "Zwei überlappende Höhenverteilungen; die untere unterdrückt teilweise Luftkontakt. Kein Generierungsversuch unter Y 0.",
+      "notesEN": "Two overlapping height batches; the lower partly suppresses air exposure. No placement attempt below Y 0.",
+      "wiki": "https://minecraft.wiki/w/Coal_Ore",
+      "batches": [
+        {
+          "id": "ore_coal_upper",
+          "low": 136,
+          "high": 319,
+          "shape": "uniform",
+          "attempts": 30.0,
+          "size": 17,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_coal_upper.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_coal.json"
+          ],
+          "sha256": [
+            "d09883188a9cd7541d4ca6d4783ee4d8ae4cca80383d6ea6df8c97e042b32432",
+            "ef4a8bea17e65ac286e285808d45219fc2d6b989cf795aa5d161de9eea6147f0"
+          ]
+        },
+        {
+          "id": "ore_coal_lower",
+          "low": 0,
+          "high": 192,
+          "shape": "triangle",
+          "attempts": 20.0,
+          "size": 17,
+          "airSkip": 0.5,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_coal_lower.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_coal_buried.json"
+          ],
+          "sha256": [
+            "841536b1cf4c7d76debea6df9ff1cbbd0ce00b0e9bdf00440454f3cf17eae932",
+            "234de622543fae113fdad6d991c213ad2e0bc61b98bfdbb4ca79a1cebb1af734"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iron",
+      "de": "Eisen",
+      "en": "Iron",
+      "dimension": "o",
+      "blockIDs": [
+        33,
+        34
+      ],
+      "notesDE": "Unterirdischer Schwerpunkt Y 16, Berg-Schwerpunkt Y 232. Zusätzlich große Eisenadern mit Tuff zwischen Y −60 und −8; diese sind nicht durch die Versuche in der Tabelle beschrieben.",
+      "notesEN": "Underground mode Y 16, mountain mode Y 232. Large iron veins with tuff also occur between Y −60 and −8; they are separate from the tabulated attempts.",
+      "wiki": "https://minecraft.wiki/w/Iron_Ore",
+      "batches": [
+        {
+          "id": "ore_iron_upper",
+          "low": 80,
+          "high": 384,
+          "shape": "triangle",
+          "attempts": 90.0,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_iron_upper.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_iron.json"
+          ],
+          "sha256": [
+            "9c2e85ce5a9ad4cf6861063d9f71b20825391dc161c0c9d0e621b11601e6566a",
+            "dc48a7ccaa6af2ac8e24cbf0c850404112774b31743eba24d91c5168b7158e9d"
+          ]
+        },
+        {
+          "id": "ore_iron_middle",
+          "low": -24,
+          "high": 56,
+          "shape": "triangle",
+          "attempts": 10.0,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_iron_middle.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_iron.json"
+          ],
+          "sha256": [
+            "455ac5859926770dc9fb38f09188bfadd1e8b6aee834208ea25443787ee8eb0b",
+            "dc48a7ccaa6af2ac8e24cbf0c850404112774b31743eba24d91c5168b7158e9d"
+          ]
+        },
+        {
+          "id": "ore_iron_small",
+          "low": -64,
+          "high": 72,
+          "shape": "uniform",
+          "attempts": 10.0,
+          "size": 4,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_iron_small.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_iron_small.json"
+          ],
+          "sha256": [
+            "5e320093dc5c732b7756b5322bd88012cfe6b9c11abfebb4687dffc5ffbdff6b",
+            "0ac548ca4a9b076ef828c58c0e80c565b838349bfda609a56c7ef08fa66879fe"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copper",
+      "de": "Kupfer",
+      "en": "Copper",
+      "dimension": "o",
+      "blockIDs": [
+        826,
+        827
+      ],
+      "notesDE": "Schwerpunkt Y 48. In Tropfsteinhöhlen ersetzt die größere Variante die normale Charge; nicht beide addieren. Große Kupferadern mit Granit zwischen Y 0 und 50 sind ein eigener Mechanismus.",
+      "notesEN": "Mode Y 48. In dripstone caves the large variant replaces the regular batch; do not add both. Large copper veins with granite between Y 0 and 50 are a separate mechanism.",
+      "wiki": "https://minecraft.wiki/w/Copper_Ore",
+      "batches": [
+        {
+          "id": "ore_copper",
+          "low": -16,
+          "high": 112,
+          "shape": "triangle",
+          "attempts": 16.0,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "other",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_copper.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_copper_small.json"
+          ],
+          "sha256": [
+            "798c6bb49f74bd988964880e0bcb4dedabefebb86dd0cff821a0c7132bd526f6",
+            "354dadad5004e859b3dfa1c8d161235da058f1bc1d64c26f3efceca611e01ebc"
+          ]
+        },
+        {
+          "id": "ore_copper_large",
+          "low": -16,
+          "high": 112,
+          "shape": "triangle",
+          "attempts": 16.0,
+          "size": 20,
+          "airSkip": 0.0,
+          "condition": "dripstone",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_copper_large.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_copper_large.json"
+          ],
+          "sha256": [
+            "0f8e6768c303e7b01b7d91d41c749123169068672eb21a70d1830c8484e6bc73",
+            "e0d5f9cdc4d17e0374e41f30c8255122606d2d42b1f5643698e38f9a40f5ed9d"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gold",
+      "de": "Gold",
+      "en": "Gold",
+      "dimension": "o",
+      "blockIDs": [
+        31,
+        32
+      ],
+      "notesDE": "Schwerpunkt Y −16; zusätzliche Charge in Tafelbergen. Java 1.21.1: tiefe Zusatzcharge Y −64…−48, im Mittel 0,5 Versuche. Die ältere deutsche Fandom-Angabe „1 Versuch bis −32“ stimmt nicht mit dieser Version überein.",
+      "notesEN": "Mode Y −16; extra badlands batch. Java 1.21.1: deep extra batch Y −64…−48, averaging 0.5 attempts. The older German Fandom claim of one attempt up to −32 disagrees with this version.",
+      "wiki": "https://minecraft.wiki/w/Gold_Ore",
+      "batches": [
+        {
+          "id": "ore_gold",
+          "low": -64,
+          "high": 32,
+          "shape": "triangle",
+          "attempts": 4.0,
+          "size": 9,
+          "airSkip": 0.5,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_gold.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_gold_buried.json"
+          ],
+          "sha256": [
+            "cbba8bcfc9913e95d1eb1dd9e19aaf952f4000ae3b447333a3a26a7610720bf1",
+            "dc148eeac67d570add10087bfcdc71c36b8df4a365d483c38d07ecc7ce70ccc2"
+          ]
+        },
+        {
+          "id": "ore_gold_lower",
+          "low": -64,
+          "high": -48,
+          "shape": "uniform",
+          "attempts": 0.5,
+          "size": 9,
+          "airSkip": 0.5,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_gold_lower.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_gold_buried.json"
+          ],
+          "sha256": [
+            "e9633dad29a4303ab0f4c81e30fd411be87c2545d3083ed29a85bb77b11e2c40",
+            "dc148eeac67d570add10087bfcdc71c36b8df4a365d483c38d07ecc7ce70ccc2"
+          ]
+        },
+        {
+          "id": "ore_gold_extra",
+          "low": 32,
+          "high": 256,
+          "shape": "uniform",
+          "attempts": 50.0,
+          "size": 9,
+          "airSkip": 0.0,
+          "condition": "badlands",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_gold_extra.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_gold.json"
+          ],
+          "sha256": [
+            "b99133226cdfce59d4dd08b678c5e0d497a89988ed0772cd7c824feb678a28c6",
+            "a70a038829725492347e44ac986628737c98476d1b84ba734f2dbbe697ea345d"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lapis",
+      "de": "Lapislazuli",
+      "en": "Lapis lazuli",
+      "dimension": "o",
+      "blockIDs": [
+        73,
+        74
+      ],
+      "notesDE": "Schwerpunkt Y 0; die gleichmäßige Zusatzcharge vermeidet Luftkontakt vollständig. Unter Wasser zählt nicht als Luftkontakt.",
+      "notesEN": "Mode Y 0; the uniform extra batch completely avoids air exposure. Underwater is not air exposure.",
+      "wiki": "https://minecraft.wiki/w/Lapis_Lazuli_Ore",
+      "batches": [
+        {
+          "id": "ore_lapis",
+          "low": -32,
+          "high": 32,
+          "shape": "triangle",
+          "attempts": 2.0,
+          "size": 7,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_lapis.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_lapis.json"
+          ],
+          "sha256": [
+            "a909e46c60d1d637d10865bb73837b66921d136d488577f6638f54a7263fa4d8",
+            "bb7cd378e2ed67550f444bc4a16f9fcb7b65859d3fa9f6b93cf38bf07dbd2a09"
+          ]
+        },
+        {
+          "id": "ore_lapis_buried",
+          "low": -64,
+          "high": 64,
+          "shape": "uniform",
+          "attempts": 4.0,
+          "size": 7,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_lapis_buried.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_lapis_buried.json"
+          ],
+          "sha256": [
+            "9752749504929d5ae39429e6e73e0f21fadae454a069f95ec2906297745b9f2f",
+            "9cf4b3abafe5ad84529d9a1a90161e2f0ecc175f7aa68361a1a562248951f2c0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redstone",
+      "de": "Redstone",
+      "en": "Redstone",
+      "dimension": "o",
+      "blockIDs": [
+        187,
+        188
+      ],
+      "notesDE": "Die tiefe Dreiecksverteilung hat ihren rechnerischen Schwerpunkt bei Y −64 und wird an der Weltuntergrenze abgeschnitten. Mehr Versuche in tieferen Ebenen.",
+      "notesEN": "The deep triangular distribution has its mathematical mode at Y −64 and is clipped by the world floor. More attempts at lower levels.",
+      "wiki": "https://minecraft.wiki/w/Redstone_Ore",
+      "batches": [
+        {
+          "id": "ore_redstone",
+          "low": -64,
+          "high": 15,
+          "shape": "uniform",
+          "attempts": 4.0,
+          "size": 8,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_redstone.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_redstone.json"
+          ],
+          "sha256": [
+            "f1ab90001fa511b89be5636aea66ef93866bc26ee1399b7e5611a9d984ddeef1",
+            "f99d986b5188caf4073345a9daa6ae8cddbd92250eaf385a89cedadbfee97aa2"
+          ]
+        },
+        {
+          "id": "ore_redstone_lower",
+          "low": -96,
+          "high": -32,
+          "shape": "triangle",
+          "attempts": 8.0,
+          "size": 8,
+          "airSkip": 0.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_redstone_lower.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_redstone.json"
+          ],
+          "sha256": [
+            "b674411350aa57cc775ef2ca8e1a11cac4a720d659ed3a9223e5d03afa379701",
+            "f99d986b5188caf4073345a9daa6ae8cddbd92250eaf385a89cedadbfee97aa2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diamond",
+      "de": "Diamant",
+      "en": "Diamond",
+      "dimension": "o",
+      "blockIDs": [
+        155,
+        156
+      ],
+      "notesDE": "Drei Dreiecks-Chargen plus eine gleichmäßige Zusatzcharge bis Y −4. Diese berücksichtigt die Erhöhung ab Java 1.20.2. Tiefere Ebenen haben mehr Versuche; Grundgestein und Lava beeinflussen den nutzbaren Stollenbereich. Fossilien können zusätzlich Diamanterz enthalten.",
+      "notesEN": "Three triangular batches plus a uniform extra batch up to Y −4, reflecting the increase since Java 1.20.2. Lower levels have more attempts; bedrock and lava affect usable tunnel levels. Fossils can also contain diamond ore.",
+      "wiki": "https://minecraft.wiki/w/Diamond_Ore",
+      "batches": [
+        {
+          "id": "ore_diamond",
+          "low": -144,
+          "high": 16,
+          "shape": "triangle",
+          "attempts": 7.0,
+          "size": 4,
+          "airSkip": 0.5,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_diamond.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_diamond_small.json"
+          ],
+          "sha256": [
+            "e44024a5f7811a468688db5c9dc1e85b243b894dbdf16749536438d9585a2c12",
+            "61c1dea530a4d7604ab28f0e24cb30b3eba3e8e0da40da8a450b1f83c884be7a"
+          ]
+        },
+        {
+          "id": "ore_diamond_medium",
+          "low": -64,
+          "high": -4,
+          "shape": "uniform",
+          "attempts": 2.0,
+          "size": 8,
+          "airSkip": 0.5,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_diamond_medium.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_diamond_medium.json"
+          ],
+          "sha256": [
+            "975ce479dc5a84bcb40be8c1a5f2bf2db083ec4eec9f5e329d9512cb56ff197d",
+            "06070a5035223b20949c471dc99837b446efe01417d3413c1f751dba1e5e8a49"
+          ]
+        },
+        {
+          "id": "ore_diamond_large",
+          "low": -144,
+          "high": 16,
+          "shape": "triangle",
+          "attempts": 0.1111111111111111,
+          "size": 12,
+          "airSkip": 0.7,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_diamond_large.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_diamond_large.json"
+          ],
+          "sha256": [
+            "3dd651712d28ef08f30b70ebef681343834f0895865014efdd55ce2fa51a5e96",
+            "90892ee7cadb7aefefed1893d5b30e0237907f8c0d4b5961abaea8a7ad350493"
+          ]
+        },
+        {
+          "id": "ore_diamond_buried",
+          "low": -144,
+          "high": 16,
+          "shape": "triangle",
+          "attempts": 4.0,
+          "size": 8,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_diamond_buried.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_diamond_buried.json"
+          ],
+          "sha256": [
+            "09596d1399940b13364477a4098bca8db6c15e85bd425d76c13885aa76355df4",
+            "6ab5a4ba0663d1a07ab7f418b663e681a0c9d2c49d12daadb61f5e91ab7dbfa6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "emerald",
+      "de": "Smaragd",
+      "en": "Emerald",
+      "dimension": "o",
+      "blockIDs": [
+        281,
+        282
+      ],
+      "notesDE": "Nur passende Berg- und windgepeitschte Biome; rechnerischer Schwerpunkt Y 232. Die Regelobergrenze 480 ist keine begehbare Höhe: die Oberwelt endet bei 319.",
+      "notesEN": "Only eligible mountain and windswept biomes; mathematical mode Y 232. The rule maximum 480 is not a playable height: the Overworld ends at 319.",
+      "wiki": "https://minecraft.wiki/w/Emerald_Ore",
+      "batches": [
+        {
+          "id": "ore_emerald",
+          "low": -16,
+          "high": 480,
+          "shape": "triangle",
+          "attempts": 100.0,
+          "size": 3,
+          "airSkip": 0.0,
+          "condition": "mountains",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_emerald.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_emerald.json"
+          ],
+          "sha256": [
+            "80099f53b7fc34e9256268e3afd00e0346e325b6a47faa7b87334a347038e680",
+            "d819e3a1498731a6ac0f3ed36d68231c033d20a34c7fe1806e645c865bcdf801"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quartz",
+      "de": "Netherquarz",
+      "en": "Nether quartz",
+      "dimension": "n",
+      "blockIDs": [
+        348
+      ],
+      "notesDE": "Gleichmäßige Höhenverteilung in Netherrack. Basaltdeltas verwenden 32 statt 16 Versuche; beide Varianten sind Alternativen.",
+      "notesEN": "Uniform height distribution in netherrack. Basalt deltas use 32 instead of 16 attempts; these are alternatives.",
+      "wiki": "https://minecraft.wiki/w/Nether_Quartz_Ore",
+      "batches": [
+        {
+          "id": "ore_quartz_nether",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 16.0,
+          "size": 14,
+          "airSkip": 0.0,
+          "condition": "other",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_quartz_nether.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_quartz.json"
+          ],
+          "sha256": [
+            "d5fbbc4c5e18932eda7dcfc7d99438ea7bb38878b6f7f46d8f0a34d79ac62cf1",
+            "c0614136cc144eb459cdc7ada212774a91f4bd9e05fe08efc2800003b58596c0"
+          ]
+        },
+        {
+          "id": "ore_quartz_deltas",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 32.0,
+          "size": 14,
+          "airSkip": 0.0,
+          "condition": "deltas",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_quartz_deltas.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_quartz.json"
+          ],
+          "sha256": [
+            "3d5fbc9483e7344cea4cb5c0cf7e8c2e48b84a148db1f00d610f0bfd1eed8e83",
+            "c0614136cc144eb459cdc7ada212774a91f4bd9e05fe08efc2800003b58596c0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nether_gold",
+      "de": "Nethergold",
+      "en": "Nether gold",
+      "dimension": "n",
+      "blockIDs": [
+        37
+      ],
+      "notesDE": "Gleichmäßig in Netherrack. Basaltdeltas verwenden 20 statt 10 Versuche. Goldklumpen aus einem Erzblock dürfen nicht als mehrere Erzblöcke gezählt werden.",
+      "notesEN": "Uniform in netherrack. Basalt deltas use 20 instead of 10 attempts. Multiple nuggets from one ore block must not be counted as multiple ore blocks.",
+      "wiki": "https://minecraft.wiki/w/Nether_Gold_Ore",
+      "batches": [
+        {
+          "id": "ore_gold_nether",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 10.0,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "other",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_gold_nether.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_nether_gold.json"
+          ],
+          "sha256": [
+            "5d1f10bc245cf5d022a63025cde3f512d32aef9215a8f5a8526da407c418d3b2",
+            "407b32f3d94d3af7201a9ab960038ea051f95ea36c6afdfbfb84a7c5bd7bc776"
+          ]
+        },
+        {
+          "id": "ore_gold_deltas",
+          "low": 10,
+          "high": 117,
+          "shape": "uniform",
+          "attempts": 20.0,
+          "size": 10,
+          "airSkip": 0.0,
+          "condition": "deltas",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_gold_deltas.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_nether_gold.json"
+          ],
+          "sha256": [
+            "da71f4001f0b026d346fddc7e7824266dad59cc634d57c021004dd73c6851c43",
+            "407b32f3d94d3af7201a9ab960038ea051f95ea36c6afdfbfb84a7c5bd7bc776"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debris",
+      "de": "Antiker Schrott",
+      "en": "Ancient debris",
+      "dimension": "n",
+      "blockIDs": [
+        749
+      ],
+      "notesDE": "Zwei Chargen, tiefer Schwerpunkt Y 16. Vermeidet Luftkontakt. Als Nether-Rohstoff enthalten; kein Tiefenschiefer-Gegenstück. Bedrock-Zahlen unterscheiden sich, siehe Editionshinweis.",
+      "notesEN": "Two batches, lower mode Y 16. Avoids air exposure. Included as a Nether resource; no deepslate counterpart. Bedrock counts differ; see edition note.",
+      "wiki": "https://minecraft.wiki/w/Ancient_Debris",
+      "batches": [
+        {
+          "id": "ore_ancient_debris_large",
+          "low": 8,
+          "high": 24,
+          "shape": "triangle",
+          "attempts": 1.0,
+          "size": 3,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_ancient_debris_large.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_ancient_debris_large.json"
+          ],
+          "sha256": [
+            "211e2d7c51fe471a7fb2c019c37bd7a1a8c19bc11f30f207ec56e91d89cfbf0d",
+            "ef3f9d88dbb91c2336cb952b62e9401aaf655d6ca1756462ef877e91f84dfc38"
+          ]
+        },
+        {
+          "id": "ore_debris_small",
+          "low": 8,
+          "high": 119,
+          "shape": "uniform",
+          "attempts": 1.0,
+          "size": 2,
+          "airSkip": 1.0,
+          "condition": "all",
+          "sources": [
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/placed_feature/ore_debris_small.json",
+            "https://raw.githubusercontent.com/misode/mcmeta/1.21.1-data/data/minecraft/worldgen/configured_feature/ore_ancient_debris_small.json"
+          ],
+          "sha256": [
+            "d7364e42e123c0e02586563da6aa180cbb13df133b7c474894e918efa22cad23",
+            "81938f9d586ab028dde54a7578e84a301b58745fac73ba5a03a888c88a21c211"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    "https://minecraft.fandom.com/de/wiki/Erz",
+    "https://de.minecraft.wiki/w/Erz",
+    "https://feedback.minecraft.net/hc/en-us/articles/4415128577293-Minecraft-Java-Edition-1-18",
+    "https://www.minecraft.net/en-us/article/minecraft-java-edition-1-20-2",
+    "https://minecraft.wiki/w/Ancient_debris",
+    "https://realmcraftgame.fandom.com/wiki/Blocks"
+  ]
+}

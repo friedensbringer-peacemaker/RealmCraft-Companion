@@ -81,9 +81,9 @@ class Measure {
   this.panel.append(details);this.button.onclick=()=>this.panel.hidden?this.start():this.clear();reset.onclick=()=>this.start();close.onclick=()=>this.clear();
   root.addEventListener('atlas-privacy',()=>{this.button.disabled=!!root.AtlasPrivacy?.enabled;if(this.button.disabled)this.clear();});
  }
- start(){if(root.AtlasPrivacy?.enabled)return;this.points=[];this.active=true;this.panel.hidden=false;this.button.setAttribute('aria-expanded','true');this.activated();this.update();this.changed();}
- clear(){this.active=false;this.points=[];this.panel.hidden=true;this.button.setAttribute('aria-expanded','false');this.changed();}
- pick(p,dimension){if(!this.active)return false;this.dimension=dimension;this.points.push({x:Math.floor(p.x),z:Math.floor(p.z)});if(this.points.length===2)this.active=false;this.update();this.changed();return true;}
+ start(){if(root.AtlasPrivacy?.enabled)return;this.pendingResourceTarget=null;this.resourceTarget=null;this.points=[];this.active=true;this.panel.hidden=false;this.button.setAttribute('aria-expanded','true');this.activated();this.update();this.changed();}
+ clear(){this.pendingResourceTarget=null;this.resourceTarget=null;this.active=false;this.points=[];this.panel.hidden=true;this.button.setAttribute('aria-expanded','false');this.changed();}
+ pick(p,dimension){if(!this.active)return false;this.dimension=dimension;this.points.push({x:Math.floor(p.x),z:Math.floor(p.z)});if(this.pendingResourceTarget&&this.pendingResourceTarget.dimension===dimension){this.resourceTarget=this.pendingResourceTarget;this.points.push({x:this.resourceTarget.x,z:this.resourceTarget.z});this.pendingResourceTarget=null;}if(this.points.length===2)this.active=false;this.update();this.changed();return true;}
  read(x,z){const dim=this.data.dimensions[this.dimension],cx=Math.floor(x/16)*16,cz=Math.floor(z/16)*16,key=`${cx},${cz}`;let bytes=this.cache.get(key);if(!bytes){const encoded=dim.chunks[key];if(!encoded)return null;bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));this.cache.set(key,bytes);}const i=(z-cz)*16+x-cx;return {id:bytes[i*2]|bytes[i*2+1]<<8,y:bytes[512+i]};}
  update(){
   const t=this.t;this.output.replaceChildren();const line=text=>{const p=document.createElement('p');p.textContent=text;this.output.append(p);};

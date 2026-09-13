@@ -27,7 +27,7 @@ import Darwin
     private(set) var allowsTermination = false
 
     func perform(restart: Bool, model: Model, english: Bool) {
-        guard !isWorking, !model.busy else { return }
+        guard !isWorking, !model.busy, model.backgroundMapJobs == 0 else { return }
         isWorking = true
         Task {
             // Serialize simultaneous requests made in different Companion copies.
@@ -51,7 +51,7 @@ import Darwin
                 CompanionQuitTarget(requestQuit: { app.terminate() }, hasExited: { app.isTerminated })
             }
             do {
-                guard try await CompanionQuitSequence.close(targets), !model.busy else {
+                guard try await CompanionQuitSequence.close(targets), !model.busy, model.backgroundMapJobs == 0 else {
                     model.error = english ? "At least one instance is still open, possibly because a transfer or dialog is active. Finish it there and try again. No restart was started."
                         : "Mindestens eine Instanz ist noch geöffnet, möglicherweise wegen einer Übertragung oder eines Dialogs. Schließe den Vorgang dort ab und versuche es erneut. Es wurde kein Neustart gestartet."
                     return

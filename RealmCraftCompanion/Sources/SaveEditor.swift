@@ -132,14 +132,11 @@ struct SaveEditorView: View {
             Divider()
             VStack(alignment: .leading, spacing: 16) {
                 Label(warning, systemImage: "exclamationmark.triangle.fill").font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
-                HStack {
-                    Picker("Savegame", selection: $model.selection) {
-                        Text(en ? "Select savegame" : "Spielstand wählen").tag(nil as String?)
-                        ForEach(model.saves) { Text($0.title).tag(Optional($0.id)) }
-                    }
-                    Button { loadPlayer() } label: { Image(systemName: "arrow.clockwise") }.help(en ? "Read inventory again" : "Inventar erneut einlesen").disabled(model.selected == nil)
-                }
+                SourceContextBar(saves: model.saves, selection: $model.selection, language: language)
+                HStack(spacing: 12) {
+                Button { loadPlayer() } label: { Image(systemName: "arrow.clockwise") }.help(en ? "Read inventory again" : "Inventar erneut einlesen").disabled(model.selected == nil)
                 Picker("Editor", selection: $mode) { Text(en ? "Items" : "Gegenstände").tag("items"); Text(en ? "Player level" : "Spielerlevel").tag("level") }.pickerStyle(.segmented).frame(width: 290)
+                }
                 if mode == "items" { itemWorkspace } else { levelWorkspace }
                 footer
             }.padding(CompanionLayout.pageInset)

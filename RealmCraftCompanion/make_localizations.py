@@ -1,12 +1,24 @@
+"""Generate native tr() resources from the central translation catalog."""
+import argparse
 from pathlib import Path
-import json
-base=Path(__file__).resolve().parent
-pairs={}
-for line in (base/'translations.txt').read_text().splitlines():
-    if not line.strip(): continue
-    de,en=line.split('|||',1)
-    pairs[de.replace('\\n','\n')]=en.replace('\\n','\n')
-for language in ('de','en'):
-    folder=base/'Resources'/f'{language}.lproj'; folder.mkdir(parents=True,exist_ok=True)
-    (folder/'Localizable.strings').write_text('\n'.join(json.dumps(key,ensure_ascii=False)+' = '+json.dumps(value if language=='en' else key,ensure_ascii=False)+';' for key,value in pairs.items())+'\n')
-print(f'Localized {len(pairs)} interface strings in German and English')
+
+from translation_catalog import CATALOG, check_interface_sources, read_json, render_interface, validate
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, help="Alternate resource directory for isolated verification")
+    args = parser.parse_args()
+    base = Path(__file__).resolve().parent
+    catalog = validate(read_json(base / CATALOG))
+    check_interface_sources(catalog, base)
+    for language, content in render_interface(catalog).items():
+        folder = (args.output or base / "Resources") / f"{language}.lproj"
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "Localizable.strings").write_text(content, encoding="utf-8")
+    count = sum(item["kind"] == "interface" for item in catalog["entries"])
+    print(f"Localized {count} native interface strings from the central catalog (DE/EN)")
+
+
+if __name__ == "__main__":
+    main()

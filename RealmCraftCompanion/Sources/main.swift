@@ -5,17 +5,31 @@ import UniformTypeIdentifiers
 @MainActor final class Model: ObservableObject {
     @Published var saves: [Savegame] = []
     @Published var worldNames: [String:String] = [:]
-    @Published var selection: String? { didSet { UserDefaults.standard.set(selection, forKey: "lastSaveID") } }
+    let drafts = DraftTransitions()
+    @Published private var selectedSaveID: String?
+    var selection: String? {
+        get { selectedSaveID }
+        set {
+            guard newValue != selectedSaveID, drafts.authorize() else { return }
+            selectedSaveID = newValue
+            UserDefaults.standard.set(newValue, forKey: "lastSaveID")
+        }
+    }
     @Published var devices: [Device] = []
     @Published var serial = "" { didSet { if !serial.isEmpty { UserDefaults.standard.set(serial, forKey: "lastDevice") } } }
     @Published var worlds: [String] = []
     @Published var world = "" { didSet { if !world.isEmpty { UserDefaults.standard.set(world, forKey: "lastWorld") } } }
     @Published var busy = false
+    @Published var backgroundMapJobs = 0
     @Published var status = "Quest per USB verbinden und RealmCraft beenden."
     @Published var error: String?
     @Published var query = ""
     @Published var setup = SetupReport()
-    @Published var showSetup = false
+    @Published private var setupVisible = false
+    var showSetup: Bool {
+        get { setupVisible }
+        set { if !newValue || drafts.authorize() { setupVisible = newValue } }
+    }
     @Published var scanning = false
     @Published var history: [String] = []
     let library: Library
@@ -68,7 +82,7 @@ import UniformTypeIdentifiers
             self.objectWillChange.send()
         }
     }
-    func work(_ message: String, lockLibrary: Bool = true, action: @escaping () throws -> String) {
+    func work(_ message: String, lockLibrary: Bool = true, completion: (() -> Void)? = nil, action: @escaping () throws -> String) {
         guard !busy else { return }
         busy = true; status = message
         history.append("\(Date().formatted()) · \(message)")
@@ -77,6 +91,7 @@ import UniformTypeIdentifiers
             let result = Result { if lockLibrary { return try backend.withExclusiveOperation { try action() } }; return try action() }
             DispatchQueue.main.async {
                 self.busy = false; self.reload()
+                completion?()
                 switch result {
                 case .success(let text): self.status = text
                 case .failure(let error): self.status = "Aktion nicht abgeschlossen."; self.error = error.localizedDescription; self.history.append(error.localizedDescription)
@@ -243,7 +258,9 @@ struct MainView: View {
     @State private var confirmingOptimize = false
     var body: some View {
         VStack(spacing: 0) {
-            CompanionPageHeader(title: "Savegames") {
+            CompanionPageHeader(title: language == "en" ? "Worlds & backups" : "Welten & Sicherungen") {
+                Button(language == "en" ? "Import backup…" : "Sicherung importieren …") { model.importPanel() }
+                    .disabled(model.busy || model.scanning)
                 Button { model.backup() } label: { Label(language == "en" ? "Backup from device" : "Vom Gerät sichern", systemImage: "arrow.down.to.line") }
                     .buttonStyle(CompanionButtonStyle(prominent: true)).disabled(model.scanning || model.serial.isEmpty || model.world.isEmpty || model.setup.package.isEmpty)
             } menu: {
@@ -279,7 +296,7 @@ struct MainView: View {
             }
             HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
-                TextField("Spielstände suchen", text: $model.query).textFieldStyle(.roundedBorder).padding(.horizontal, 16).frame(height: 64)
+                TextField("Spielstände suchen", text: $model.query).textFieldStyle(.roundedBorder).padding(CompanionLayout.panelInset)
                 List(selection: $model.selection) {
                     ForEach(model.saveGroups) { group in
                         Section {
@@ -291,15 +308,15 @@ struct MainView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Label(model.worldTitle(group.id, english: language == "en"), systemImage: "globe.europe.africa.fill").font(.headline).foregroundStyle(theme.accent)
                                 Text("ID \(group.id) · \(group.saves.count) " + (language == "en" ? "savegames" : "Spielstände")).font(.caption2).foregroundStyle(.secondary)
-                            }.textCase(nil).padding(.top, 12).padding(.bottom, 6)
+                            }.labelStyle(CompanionAlignedLabelStyle()).textCase(nil).padding(.top, 4).padding(.bottom, 6)
                         }
                     }
                 }.listStyle(.sidebar).scrollContentBackground(.hidden).id(language)
                 HStack {
                     Text(model.saves.count == 1 ? tr("1 Spielstand") : "\(model.saves.count) " + tr("Spielstände")).foregroundStyle(.secondary)
                     Spacer()
-                }.font(.caption).padding(14)
-            }.frame(width: CompanionTheme.sidebarWidth).background(theme.surface)
+                }.font(.caption).padding(CompanionLayout.panelInset)
+            }.frame(width: CompanionLayout.librarySidebarWidth).background(theme.surface)
             Divider()
             VStack(spacing: 0) {
                 if let save = model.selected {
@@ -313,6 +330,7 @@ struct MainView: View {
                         Button("Savegame importieren …") { model.importPanel() }.controlSize(.large)
                     }.padding(40).frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+                if model.busy || !model.status.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 Divider()
                 HStack(spacing: 12) {
                     if model.busy { ProgressView().controlSize(.small) }
@@ -320,6 +338,7 @@ struct MainView: View {
                     Text(tr(model.status)).font(.callout).lineLimit(2).help(tr(model.status)).textSelection(.enabled)
                     Spacer()
                 }.padding(.horizontal, CompanionLayout.pageInset).frame(height: 54).background(theme.surface)
+                }
             }
             }
         }
@@ -400,26 +419,31 @@ struct MainView: View {
                         VStack(alignment: .leading, spacing: 18) {
                             HStack(alignment: .top) {
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text(save.title).font(.system(size: 24, weight: .bold)).textSelection(.enabled)
-                                    Text(displayDate(save.date)).foregroundStyle(.secondary)
+                                    Text(save.title).font(CompanionLayout.sectionTitle).fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
+                                    Text(displayDate(save.date, language: language)).font(.callout).foregroundStyle(.secondary)
                                 }
                                 Spacer()
                                 Button { requestDeletion(save) } label: { Image(systemName: "trash") }
+                                    .buttonStyle(CompanionButtonStyle(width: CompanionLayout.actionHeight))
                                     .help(language == "en" ? "Delete this local savegame…" : "Dieses lokale Savegame löschen …")
                                     .accessibilityLabel(language == "en" ? "Delete savegame" : "Savegame löschen")
                             }
-                            Label(model.worldTitle(save.world, english: language == "en"), systemImage: "globe.europe.africa.fill").font(.headline).foregroundStyle(theme.accent)
-                            if let preview = NSImage(contentsOf: model.library.worldFolder(save).appendingPathComponent("screenshot.jpg")) {
-                                Image(nsImage: preview).resizable().scaledToFit().frame(maxWidth: .infinity, maxHeight: 190)
-                                    .background(Color.black.opacity(0.12)).clipShape(RoundedRectangle(cornerRadius: theme.radius))
-                            }
-                            HStack(spacing: 14) {
+                            Label(model.worldTitle(save.world, english: language == "en"), systemImage: "globe.europe.africa.fill").font(.headline).foregroundStyle(theme.accent).labelStyle(CompanionAlignedLabelStyle())
+                            let preview = NSImage(contentsOf: model.library.worldFolder(save).appendingPathComponent("screenshot.jpg"))
+                            CompanionDetailOverview(hasPreview: preview != nil) {
+                                if let preview {
+                                    Image(nsImage: preview).resizable().scaledToFit()
+                                        .clipShape(RoundedRectangle(cornerRadius: theme.radius))
+                                }
+                            } facts: {
+                              VStack(alignment: .leading, spacing: 12) {
                                 info("Welt", save.world, icon: "globe.europe.africa")
                                 info("Dateien", displayCount(save.count), icon: "doc.on.doc")
                                 info("Größe", displayBytes(save.bytes), icon: "externaldrive")
+                              }
                             }
                             VStack(alignment: .leading, spacing: 10) {
-                                Label("Mit SHA-256-Prüfsummen gespeichert", systemImage: "checkmark.shield.fill").foregroundStyle(theme.accent)
+                                Label("Mit SHA-256-Prüfsummen gespeichert", systemImage: "checkmark.shield.fill").foregroundStyle(theme.accent).labelStyle(CompanionAlignedLabelStyle())
                                 SavegameStatusView(model: model, save: save)
                                 Text("Letzte Dateiänderung: \(displayDate(save.gameDate))")
                                     .foregroundStyle(.secondary)
@@ -430,10 +454,7 @@ struct MainView: View {
                     }
     }
     func info(_ title: String, _ value: String, icon: String) -> some View {
-        VStack(alignment: .leading, spacing: 9) {
-            Label(tr(title), systemImage: icon).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(.system(.headline, design: .rounded)).textSelection(.enabled)
-        }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 12)
+        CompanionDetailFact(title: tr(title), value: value, icon: icon)
     }
 }
 
@@ -441,14 +462,20 @@ struct MainView: View {
     var model: Model?
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if CompanionLifecycle.shared.isWorking && !CompanionLifecycle.shared.allowsTermination { return .terminateCancel }
+        if (model?.backgroundMapJobs ?? 0) > 0 {
+            let en = UserDefaults.standard.string(forKey: "appLanguage") == "en"
+            let alert = NSAlert(); alert.messageText = en ? "Map rendering is active" : "Kartenerzeugung läuft"
+            alert.informativeText = en ? "Wait for completion or cancel the map job in the Companion's background status bar before quitting." : "Vor dem Beenden auf Fertigstellung warten oder den Kartenauftrag in der Hintergrund-Statusleiste abbrechen."
+            alert.runModal(); return .terminateCancel
+        }
         if model?.busy == true {
             let alert = NSAlert(); alert.messageText = tr("Übertragung läuft")
             alert.informativeText = tr("Bitte warte, bis die Sicherung oder Wiederherstellung abgeschlossen ist.")
             alert.runModal(); return .terminateCancel
         }
-        return .terminateNow
+        return model?.drafts.authorize() == false ? .terminateCancel : .terminateNow
     }
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { model?.busy != true }
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { model?.busy != true && (model?.backgroundMapJobs ?? 0) == 0 }
 }
 struct RealmApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
@@ -456,7 +483,7 @@ struct RealmApp: App {
     @AppStorage("appLanguage") private var language = "en"
     var body: some Scene {
         WindowGroup("RealmCraft Companion") {
-            CompanionView(model: model).companionAppearance().background(WindowFramePersistence(name: "RealmCraftLibrary.Main")).onAppear { delegate.model = model }
+            CompanionView(model: model).companionAppearance().background(WindowFramePersistence(name: "RealmCraftLibrary.Main", canClose: { model.drafts.authorize() })).onAppear { delegate.model = model }
         }.defaultSize(width: 1200, height: 820)
         .commands { CommandGroup(replacing: .newItem) {}; HelpCommands(); CompanionNavigationCommands(model: model) }
         Window(language == "en" ? "RealmCraft · Help" : "RealmCraft · Hilfe", id: "help") { HelpView().companionAppearance().background(WindowFramePersistence(name: "RealmCraftLibrary.Help", title: language == "en" ? "RealmCraft · Help" : "RealmCraft · Hilfe")) }
@@ -490,7 +517,7 @@ if CommandLine.arguments.dropFirst().first?.hasPrefix("--") == true {
             for save in try lib.entries() { _ = try lib.verify(save); print("VERIFIED \(save.id)") }
         case "--backup":
             guard args.count == 4 else { throw LibraryError("--backup SERIAL WORLD") }
-            let save = try lib.backup(args[2], world: args[3]); print("BACKED_UP \(save.id)")
+            let save = try lib.withExclusiveOperation { try lib.backup(args[2], world: args[3]) }; print("BACKED_UP \(save.id)")
         case "--restore":
             guard args.count == 4, let save = try lib.entries().first(where: { $0.id == args[3] }) else { throw LibraryError("--restore SERIAL SAVE_ID") }
             try lib.restore(save, serial: args[2]); print("RESTORED")

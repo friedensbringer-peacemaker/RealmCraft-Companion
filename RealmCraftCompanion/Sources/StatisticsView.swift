@@ -23,13 +23,8 @@ struct StatisticsView: View {
                     .disabled(model.selected == nil || model.busy || model.scanning)
             }
             VStack(alignment: .leading, spacing: 10) {
-                Picker(english ? "Backup" : "Sicherung", selection: $model.selection) {
-                    Text(english ? "Choose a backup" : "Sicherung wählen").tag(Optional<String>.none)
-                    ForEach(model.saves) { save in
-                        Text(save.title + " · " + displayDate(save.date, language: language) + " · " + save.world).tag(Optional(save.id))
-                    }
-                }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy || model.scanning)
-                Text(english ? "Reads a local backup with checksum verification. To see new activity, first create a new backup in Savegames." : "Liest eine lokale Sicherung mit Prüfsummenprüfung. Für neue Aktivitäten zuerst unter Savegames eine neue Sicherung erstellen.")
+                SourceContextBar(saves: model.saves, selection: $model.selection, language: language).frame(maxWidth: .infinity).disabled(model.busy || model.scanning)
+                Text(english ? "Reads a local backup with checksum verification. To see new activity, first create a new backup under Worlds & backups." : "Liest eine lokale Sicherung mit Prüfsummenprüfung. Für neue Aktivitäten zuerst unter Welten & Sicherungen eine neue Sicherung erstellen.")
                     .font(.caption).foregroundStyle(.secondary)
                 CompanionStatusLane { if model.busy { ProgressView().controlSize(.small); Text(tr(model.status)) } }
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
@@ -59,13 +54,15 @@ struct StatisticsView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             Label(english ? "Your world's activity" : "Die Aktivitäten deiner Welt", systemImage: "chart.bar.xaxis").font(.title2.bold())
                             Text(model.saves.isEmpty
-                                 ? (english ? "First import or create a backup in Savegames." : "Zuerst unter Savegames eine Sicherung importieren oder erstellen.")
+                                 ? (english ? "First import or create a backup under Worlds & backups." : "Zuerst unter Welten & Sicherungen eine Sicherung importieren oder erstellen.")
                                  : (english ? "Choose a backup and read its saved build/dig counter." : "Wähle eine Sicherung und lies ihren gespeicherten Bau-/Abbauzähler aus."))
                                 .foregroundStyle(.secondary)
                         }.padding(.vertical, 16)
                     }
                     ChestStatisticsView(model: model, maps: maps, chests: chests, language: language, openMaps: openMaps)
-                    VStack(alignment: .leading, spacing: 16) {
+                    ChunkChangesView(model: model, english: english)
+                    DisclosureGroup(english ? "What cannot be measured · unknown is not zero" : "Was nicht messbar ist · unbekannt ist nicht null") {
+                      VStack(alignment: .leading, spacing: 16) {
                         Text(english ? "Historical statistics not currently readable" : "Historische Statistiken derzeit nicht auslesbar").font(.headline)
                         unavailable(english ? "Blocks mined / resources collected by type" : "Abgebaute Blöcke / gesammelte Ressourcen je Typ",
                                     english ? "No separate historical counters identified. Current inventory and chest contents are available in Player and Chests." : "Keine getrennten historischen Zähler identifiziert. Aktuelle Bestände findest du unter Spieler und Kisten.")
@@ -73,6 +70,7 @@ struct StatisticsView: View {
                                     english ? "No saved totals by creature type identified." : "Keine gespeicherten Summen nach Kreaturentyp identifiziert.")
                         unavailable(english ? "Distance travelled, deaths and crafting totals" : "Zurückgelegter Weg, Todesfälle und Crafting-Summen",
                                     english ? "No reliable saved lifetime counters identified. Missing data is not zero." : "Keine verlässlichen gespeicherten Gesamtzähler identifiziert. Fehlende Daten bedeuten nicht null.")
+                      }.padding(.top, 8)
                     }
                 }.padding(CompanionLayout.pageInset).frame(maxWidth: 1000, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
             }

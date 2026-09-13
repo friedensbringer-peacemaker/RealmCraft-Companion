@@ -17,6 +17,8 @@ struct ConversationView: View {
     var openAIExport: (() -> Void)? = nil
     @StateObject private var audio = ConversationAudio()
     @State private var knowledge = ConversationKnowledge(recipes: [], guides: [])
+    @State private var recipeSearch = ""
+    @State private var showCrafting = false
     @State private var messages: [ConversationMessage] = []
     @State private var draft = ""
     @State private var catalogNotice = ""
@@ -59,15 +61,15 @@ struct ConversationView: View {
                 }
             }
             VStack(alignment: .leading, spacing: 8) {
-                Picker(en ? "World" : "Welt", selection: $model.selection) {
-                    Text(en ? "No world selected" : "Keine Welt ausgewählt").tag(nil as String?)
-                    ForEach(model.saves) { save in
-                        Text(save.title + " · " + displayDate(save.date, language: language)).tag(Optional(save.id))
-                    }
-                }.frame(maxWidth: CompanionLayout.sourceWidth).disabled(model.busy)
+                SourceContextBar(saves: model.saves, selection: $model.selection, language: language)
+                    .frame(maxWidth: .infinity).disabled(model.busy)
+                if model.selected == nil {
+                    Text(en ? "Knowledge-only: ask about recipes or build guides. Choose a backup for questions about places and stored items." : "Nur Wissen: Frage nach Rezepten oder Bauanleitungen. Für Orte und gelagerte Gegenstände wähle eine Sicherung.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
                 Text((spokenEnglish ? "English" : "Deutsch") + " · " + (provider == "qwen" ? "Qwen3.5-4B" : provider == "apple" ? "Apple Intelligence" : (en ? "Basic lookup" : "Einfache Suche")) + " · " + (en ? "Saved data · answers may be incorrect" : "Gespeicherte Daten · Antworten können fehlerhaft sein"))
                     .font(.caption).foregroundStyle(.secondary)
-            }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
+            }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             if showLibrary { libraryPanel; Divider() }
             ScrollViewReader { scroll in
@@ -313,6 +315,17 @@ struct ConversationView: View {
                     Button(place.description(en)) { ask((en ? "Where is " : "Wo ist ") + place.name + "?") }.buttonStyle(.link)
                 }
                 Text(en ? "Recipe references · not verified in VR" : "Rezeptreferenzen · nicht in VR geprüft").font(.headline)
+                TextField(en ? "Quick recipe search · name or ID" : "Schnelle Rezeptsuche · Name oder ID", text: $recipeSearch).textFieldStyle(.roundedBorder)
+                if let index = knowledge.crafting?.index, !recipeSearch.isEmpty {
+                    let matches = index.filtered(query: recipeSearch, english: en)
+                    Text(en ? "\(matches.count) matches; showing up to 12" : "\(matches.count) Treffer; maximal 12 angezeigt").font(.caption)
+                    ForEach(Array(matches.prefix(12))) { item in
+                        Button { ask((en ? "How do I craft " : "Wie crafte ich ") + item.title.value(en) + "?") } label: {
+                            CraftingItemLabel(id: item.id, index: index, english: en)
+                        }.buttonStyle(.link)
+                    }
+                }
+                Button(en ? "Open recipes & material plan" : "Rezepte & Materialplan öffnen") { showCrafting = true }
                 ForEach(knowledge.recipes) { recipe in
                     Button(recipe.title.value(en)) { ask((en ? "How do I craft " : "Wie crafte ich ") + recipe.title.value(en) + "?") }.buttonStyle(.link)
                 }
@@ -322,6 +335,7 @@ struct ConversationView: View {
                 }
             }.frame(maxWidth: .infinity, alignment: .leading).padding(24)
         }.frame(height: 210)
+        .sheet(isPresented: $showCrafting) { CraftingView(language: language).frame(minWidth: 1000, minHeight: 720) }
     }
     private func load() {
         var issues: [String] = []
@@ -329,7 +343,10 @@ struct ConversationView: View {
         let guides: [BuildGuide]
         do { recipes = try ConversationRecipe.load() } catch { recipes = []; issues.append(en ? "Recipe catalog could not be loaded." : "Rezeptkatalog konnte nicht geladen werden.") }
         do { guides = try BuildCatalog.load().guides } catch { guides = []; issues.append(en ? "Build guides could not be loaded." : "Bauanleitungen konnten nicht geladen werden.") }
-        knowledge = ConversationKnowledge(recipes: recipes, guides: guides)
+        let crafting: CraftingIndex?
+        do { crafting = try CraftingCatalog.load().index() }
+        catch { crafting = nil; issues.append(en ? "Extended recipe catalog unavailable." : "Erweiterter Rezeptkatalog nicht verfügbar.") }
+        knowledge = ConversationKnowledge(recipes: recipes, guides: guides, craftingIndex: crafting)
         catalogNotice = issues.joined(separator: " ")
         updateIntelligenceStatus()
     }
@@ -385,7 +402,17 @@ struct ConversationView: View {
                 CompanionStorageContext(savedAt: save.gameDate, backupAt: save.date, index: chests.saveID == save.id ? chests.index : nil, ownedIDs: ownedIDs, itemNames: chests.names, chestLabels: chestLabels)
             }
             var directKnowledge = knowledge
-            let direct = directKnowledge.answer(question, world: model.selected?.world, places: places, english: spokenEnglish, storage: storage, spawn: spawn, spawnNotice: spawnNotice)
+            let direct: CompanionAnswer
+            if ["materialplan", "mein materialplan", "lies meinen materialplan", "material plan", "my material plan", "read my material plan"].contains(ConversationKnowledge.normalized(question)), let index = knowledge.crafting?.index {
+                do {
+                    let plan = try CraftingPlanStorage(url: CraftingPlanStorage.defaultURL, empty: CraftingPlan(catalog: CraftingPlan.fingerprint(index))).load()
+                    let reply = CraftingConversation.planAnswer(plan, index: index, english: spokenEnglish)
+                    direct = CompanionAnswer(text: reply.text, spokenText: reply.spoken)
+                } catch { direct = CompanionAnswer(text: error.localizedDescription) }
+                directKnowledge.remember(direct, world: model.selected?.world, english: spokenEnglish)
+            } else {
+                direct = directKnowledge.answer(question, world: model.selected?.world, places: places, english: spokenEnglish, storage: storage, spawn: spawn, spawnNotice: spawnNotice)
+            }
             var query = question
             if direct.handled { intelligenceNotice = en ? "Answered from local records" : "Aus lokalen Daten beantwortet" }
             if !direct.handled && (provider == "qwen" || provider == "apple") {

@@ -58,12 +58,19 @@ struct ConversationKnowledge {
     private var lastStorageItem: Int?
     private var scope = ""
     private var lastAnswer: CompanionAnswer?
+    var crafting: CraftingConversation?
+    private var usedCrafting = false
 
-    init(recipes: [ConversationRecipe], guides: [BuildGuide], videoTips: [VideoTip] = VideoTip.bundled ?? []) {
+    init(recipes: [ConversationRecipe], guides: [BuildGuide], videoTips: [VideoTip] = VideoTip.bundled ?? [], craftingIndex: CraftingIndex? = nil) {
         self.recipes = recipes; self.guides = guides; self.videoTips = videoTips
+        crafting = craftingIndex.map { CraftingConversation(index: $0) }
     }
     mutating func reset() {
         lastRecipe = nil; lastGuide = nil; lastPlace = nil; lastStorageItem = nil; lastAnswer = nil
+        crafting?.lastItem = nil; crafting?.lastQuantity = 1; crafting?.lastRecipeID = nil
+    }
+    mutating func remember(_ answer: CompanionAnswer, world: String?, english: Bool) {
+        reset(); scope = (world ?? "") + (english ? ":en" : ":de"); lastAnswer = answer
     }
     static func normalized(_ text: String) -> String {
         let folded = text.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_DE"))
@@ -75,7 +82,9 @@ struct ConversationKnowledge {
     mutating func answer(_ question: String, world: String?, places: [CompanionPlace], english en: Bool, storage: CompanionStorageContext? = nil, spawn: CompanionSpawnPoint? = nil, spawnNotice: String = "") -> CompanionAnswer {
         let newScope = (world ?? "") + (en ? ":en" : ":de")
         if scope != newScope { reset(); scope = newScope }
+        usedCrafting = false
         let answer = respond(question, world: world, places: places, english: en, storage: storage, spawn: spawn, spawnNotice: spawnNotice)
+        if !usedCrafting { crafting?.lastItem = nil }
         lastAnswer = answer
         return answer
     }
@@ -83,7 +92,7 @@ struct ConversationKnowledge {
         let q = Self.normalized(question)
         func has(_ phrases: [String]) -> Bool { phrases.contains { Self.contains(q, phrase: $0) } }
         func result(_ de: String, _ english: String, handled: Bool = true) -> CompanionAnswer { CompanionAnswer(text: en ? english : de, handled: handled) }
-        if has(["wiederholen", "noch einmal", "nochmal", "repeat", "say that again"]), let lastAnswer { return lastAnswer }
+        if has(["wiederholen", "noch einmal", "nochmal", "repeat", "say that again"]), let lastAnswer { usedCrafting = crafting?.lastItem != nil; return lastAnswer }
         let videoRequest = has(["video", "videos", "videotipps", "video tipps", "tipps", "anleitung", "guide", "tutorial", "wie baue ich", "how do i build"])
         let allVideoMatches = videoTips.filter { tip in
             (tip.aliases + [tip.title.de, tip.title.en]).contains { alias in
@@ -178,6 +187,9 @@ struct ConversationKnowledge {
             return missingPlace(en)
         }
         if has(["welche rezepte", "what recipes", "list recipes", "was kannst du craften"]) {
+            if let catalog = crafting?.index.catalog {
+                return result("Im erweiterten Katalog stehen \(catalog.recipes.count) ungeprüfte Vergleichsrezepte. Frage nach einem Gegenstand oder nutze die schnelle Rezeptsuche unter Orte & Rezepte. Eigene Vorräte werden weiterhin nur für die zehn bisherigen Referenzen geprüft.", "The extended catalog contains \(catalog.recipes.count) unverified comparison recipes. Ask for an item or use the quick recipe search under Places & recipes. Owned supplies are still checked only for the ten existing references.")
+            }
             return CompanionAnswer(text: (en ? "Available recipe references: " : "Verfügbare Rezeptreferenzen: ") + recipes.map { $0.title.value(en) }.joined(separator: ", ") + (en ? ". These still need testing in RealmCraft VR." : ". Diese müssen in RealmCraft VR noch geprüft werden."))
         }
         if has(["habe ich", "fehlt mir", "fehlen mir", "do i have", "am i missing", "how many do i have"]) {
@@ -191,6 +203,11 @@ struct ConversationKnowledge {
         if let guide = guideMatches.first {
             lastStorageItem = nil; lastGuide = guide.id; lastRecipe = nil; lastPlace = nil
             return guideAnswer(guide, en)
+        }
+        if let answer = crafting?.answer(question, english: en) {
+            usedCrafting = true
+            lastStorageItem = nil; lastRecipe = nil; lastGuide = nil; lastPlace = nil
+            return CompanionAnswer(text: answer.text, spokenText: answer.spoken)
         }
         let isShortFollowup = followup && q.split(separator: " ").count <= 9
         if let recipe = matches.first ?? (isShortFollowup ? recipes.first { $0.id == lastRecipe } : nil) {

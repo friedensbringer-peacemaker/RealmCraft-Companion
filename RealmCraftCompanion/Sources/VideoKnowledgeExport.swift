@@ -25,15 +25,19 @@ enum VideoKnowledgeExport {
         var seen = Set<String>()
         for tip in tips where seen.insert(tip.videoID).inserted {
             lines += ["## " + safe(tip.title.value(en)), "", "- YouTube: " + tip.videoURL.absoluteString,
-                "- " + safe(tip.channel) + " · " + tip.published + " · " + VideoTip.time(tip.duration),
+                "- " + safe(tip.channel) + " · " + tip.published + " · " + tip.durationLabel(en),
                 "- " + t("Prüfstatus: ", "Review status: ") + tip.coverageLabel(en),
                 "- " + safe(tip.sourceScope?.value(en) ?? t("Versionsbezug offen", "Version context unknown")), "",
                 "### " + t("Kurzfassung", "Short summary"), "", safe(tip.summary.value(en)), ""]
+            lines += ["- " + t("Spiel der Quelle: ", "Source game: ") + tip.gameLabel]
+            if let assessment = tip.transferAssessment {
+                lines += ["", "### " + t("Übertragung auf RealmCraft", "Transfer to RealmCraft"), "", safe(assessment.value(en)), ""]
+            }
             lines += ["- " + t("Originaltitel: ", "Original title: ") + safe(tip.originalTitle)]
             lines += ["- " + t("YouTube-Vorschaubild: ", "YouTube thumbnail: ") + tip.thumbnailURL.absoluteString, ""]
-            if tip.isCurated {
+            if tip.isCurated || (tip.isMinecraft && !tip.steps.isEmpty) {
                 lines += ["### " + t("Voraussetzungen", "Prerequisites"), "", safe(tip.prerequisites.value(en)), "",
-                    "### " + t("Anleitung und Sprungmarken", "Instructions and timestamps"), ""]
+                    "### " + (tip.isMinecraft ? t("Minecraft-Quellnotizen und Sprungmarken", "Minecraft source notes and timestamps") : t("Anleitung und Sprungmarken", "Instructions and timestamps")), ""]
                 for (index, step) in tip.steps.enumerated() {
                     lines += ["#### \(index + 1). " + safe(step.title.value(en)), "",
                         "[" + VideoTip.time(step.seconds) + "](" + tip.url(at: step.seconds).absoluteString + ")", "", safe(step.text.value(en)), ""]
