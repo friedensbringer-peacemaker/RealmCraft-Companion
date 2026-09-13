@@ -1,0 +1,1953 @@
+[
+  {
+    "id": "lava-bucket",
+    "items": [
+      "lava_bucket"
+    ],
+    "aliases": [
+      "Lavakübel",
+      "Lavaeimer",
+      "Lavakuebel",
+      "lava bucket"
+    ],
+    "method": {
+      "de": "In der Welt · Kübel füllen",
+      "en": "In the world · Fill a bucket"
+    },
+    "summary": {
+      "de": "Einen Lavakübel erhältst du durch Aufnehmen von Lava, nicht durch Anordnen von Zutaten im Crafting-Feld.",
+      "en": "Obtain a lava bucket by collecting lava, rather than arranging ingredients in a crafting grid."
+    },
+    "requirements": {
+      "de": "1 leerer Kübel und 1 erreichbarer Lavaquellblock. Für den leeren Kübel: 3 Eisenbarren an der Werkbank; siehe verlinktes Rezept.",
+      "en": "1 empty bucket and 1 accessible lava source block. The empty bucket requires 3 iron ingots at a crafting table; see the linked recipe."
+    },
+    "steps": [
+      {
+        "id": "equip",
+        "title": {
+          "de": "Kübel ausrüsten",
+          "en": "Equip the bucket"
+        },
+        "text": {
+          "de": "Wähle den leeren Kübel im Inventar und nimm ihn in die aktive Hand.",
+          "en": "Select the empty bucket in your inventory and hold it in the active hand."
+        }
+      },
+      {
+        "id": "collect",
+        "title": {
+          "de": "Quelle aufnehmen",
+          "en": "Collect the source"
+        },
+        "text": {
+          "de": "Visiere den Lavaquellblock an und betätige „Benutzen/Interagieren“. Der genaue Quest-Controllerknopf ist noch nicht geprüft.",
+          "en": "Aim at the lava source block and use/interact. The exact Quest controller button has not been checked."
+        }
+      },
+      {
+        "id": "check",
+        "title": {
+          "de": "Füllung prüfen",
+          "en": "Check the result"
+        },
+        "text": {
+          "de": "Der Kübel enthält jetzt Lava; im Überlebensablauf wird der aufgenommene Quellblock entfernt. Prüfe die Füllung im Inventar.",
+          "en": "The bucket now contains lava; the collected source is removed in the Survival procedure. Check the filled bucket in your inventory."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "source",
+        "title": {
+          "de": "Wenn es nicht klappt",
+          "en": "If it does not work"
+        },
+        "text": {
+          "de": "Visiere den Quellblock statt der Strömung an. Verwende einen leeren Kübel und die Aktion „Benutzen“, nicht „Angreifen“. Halte vorsorglich einen Inventarplatz frei.",
+          "en": "Aim at the source instead of the flow. Select an empty bucket and use the interaction action, not attack. Keep a spare inventory slot available."
+        }
+      },
+      {
+        "id": "hazard",
+        "title": {
+          "de": "Lava sicher handhaben",
+          "en": "Handle lava carefully"
+        },
+        "text": {
+          "de": "Arbeite von festem Boden aus. Lava verursacht Schaden und kann brennbare Blöcke entzünden. Gieße sie zuerst in ein vorbereitetes, nicht brennbares Becken. Eine unendliche Lavaquelle wird hier nicht vorausgesetzt.",
+          "en": "Work from solid ground. Lava damages entities and can ignite flammable blocks. Pour it into a prepared nonflammable basin. This guide does not assume an infinite lava source."
+        }
+      },
+      {
+        "id": "reuse",
+        "title": {
+          "de": "Ausgießen und wiederverwenden",
+          "en": "Pour and reuse"
+        },
+        "text": {
+          "de": "Beim Platzieren der Flüssigkeit wird der Kübel im beschriebenen Überlebensablauf wieder leer. Für mehrere gleichzeitig transportierte Füllungen brauchst du entsprechend viele Kübel.",
+          "en": "Placing the liquid empties the bucket in the described Survival procedure. Carrying several full buckets at once requires that many buckets."
+        }
+      },
+      {
+        "id": "creative",
+        "title": {
+          "de": "Kreativmodus in der RealmCraft-Wiki",
+          "en": "Creative mode in the RealmCraft wiki"
+        },
+        "text": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Aufnahme als Minecraft-Vergleich; der Kreativmodus-Hinweis stammt aus der RealmCraft-Wiki. Überlebensablauf und Controller sind auf Quest ungeprüft.",
+      "en": "Collection is a Minecraft comparison; the Creative note comes from the RealmCraft wiki. The Survival procedure and controllers are unverified on Quest."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "bucket",
+      "iron_ingot",
+      "obsidian"
+    ],
+    "sources": [
+      {
+        "id": "bucket",
+        "title": {
+          "de": "Mojang · Taking Inventory: Bucket",
+          "en": "Mojang · Taking Inventory: Bucket"
+        },
+        "url": "https://www.minecraft.net/de-de/article/taking-inventory-bucket",
+        "scope": {
+          "de": "Minecraft: Kübel aus 3 Eisenbarren; Wasser, Lava und Milch aufnehmen.",
+          "en": "Minecraft: bucket from 3 iron ingots; collecting water, lava and milk."
+        }
+      },
+      {
+        "id": "source-block",
+        "title": {
+          "de": "Minecraft Bedrock Wiki · Bucket",
+          "en": "Minecraft Bedrock Wiki · Bucket"
+        },
+        "url": "https://minecraftbedrock-archive.fandom.com/wiki/Bucket",
+        "scope": {
+          "de": "Minecraft: leeren Kübel an einem Wasser- oder Lavaquellblock benutzen; fließende Flüssigkeit lässt sich so nicht aufnehmen.",
+          "en": "Minecraft: use an empty bucket on a water or lava source block; flowing liquid cannot be collected this way."
+        }
+      },
+      {
+        "id": "realmcraft-creative",
+        "title": {
+          "de": "RealmCraft Wiki · Creative (RU)",
+          "en": "RealmCraft Wiki · Creative (RU)"
+        },
+        "url": "https://realmcraft.fandom.com/ru/wiki/%D0%A2%D0%B2%D0%BE%D1%80%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%BE",
+        "scope": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ]
+  },
+  {
+    "id": "water-bucket",
+    "items": [
+      "water_bucket"
+    ],
+    "aliases": [
+      "Wasserkübel",
+      "Wassereimer",
+      "Wasserkuebel",
+      "water bucket"
+    ],
+    "method": {
+      "de": "In der Welt · Kübel füllen",
+      "en": "In the world · Fill a bucket"
+    },
+    "summary": {
+      "de": "Einen Wasserkübel erhältst du durch Aufnehmen von Wasser, nicht durch Anordnen von Zutaten im Crafting-Feld.",
+      "en": "Obtain a water bucket by collecting water, rather than arranging ingredients in a crafting grid."
+    },
+    "requirements": {
+      "de": "1 leerer Kübel und 1 erreichbarer Wasserquellblock. Für den leeren Kübel: 3 Eisenbarren an der Werkbank; siehe verlinktes Rezept.",
+      "en": "1 empty bucket and 1 accessible water source block. The empty bucket requires 3 iron ingots at a crafting table; see the linked recipe."
+    },
+    "steps": [
+      {
+        "id": "equip",
+        "title": {
+          "de": "Kübel ausrüsten",
+          "en": "Equip the bucket"
+        },
+        "text": {
+          "de": "Wähle den leeren Kübel im Inventar und nimm ihn in die aktive Hand.",
+          "en": "Select the empty bucket in your inventory and hold it in the active hand."
+        }
+      },
+      {
+        "id": "collect",
+        "title": {
+          "de": "Quelle aufnehmen",
+          "en": "Collect the source"
+        },
+        "text": {
+          "de": "Visiere den Wasserquellblock an und betätige „Benutzen/Interagieren“. Der genaue Quest-Controllerknopf ist noch nicht geprüft.",
+          "en": "Aim at the water source block and use/interact. The exact Quest controller button has not been checked."
+        }
+      },
+      {
+        "id": "check",
+        "title": {
+          "de": "Füllung prüfen",
+          "en": "Check the result"
+        },
+        "text": {
+          "de": "Der Kübel enthält jetzt Wasser; im Überlebensablauf wird der aufgenommene Quellblock entfernt. Prüfe die Füllung im Inventar.",
+          "en": "The bucket now contains water; the collected source is removed in the Survival procedure. Check the filled bucket in your inventory."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "source",
+        "title": {
+          "de": "Wenn es nicht klappt",
+          "en": "If it does not work"
+        },
+        "text": {
+          "de": "Visiere den Quellblock statt der Strömung an. Verwende einen leeren Kübel und die Aktion „Benutzen“, nicht „Angreifen“. Halte vorsorglich einen Inventarplatz frei.",
+          "en": "Aim at the source instead of the flow. Select an empty bucket and use the interaction action, not attack. Keep a spare inventory slot available."
+        }
+      },
+      {
+        "id": "reuse",
+        "title": {
+          "de": "Ausgießen und wiederverwenden",
+          "en": "Pour and reuse"
+        },
+        "text": {
+          "de": "Beim Platzieren der Flüssigkeit wird der Kübel im beschriebenen Überlebensablauf wieder leer. Für mehrere gleichzeitig transportierte Füllungen brauchst du entsprechend viele Kübel.",
+          "en": "Placing the liquid empties the bucket in the described Survival procedure. Carrying several full buckets at once requires that many buckets."
+        }
+      },
+      {
+        "id": "creative",
+        "title": {
+          "de": "Kreativmodus in der RealmCraft-Wiki",
+          "en": "Creative mode in the RealmCraft wiki"
+        },
+        "text": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Aufnahme als Minecraft-Vergleich; der Kreativmodus-Hinweis stammt aus der RealmCraft-Wiki. Überlebensablauf und Controller sind auf Quest ungeprüft.",
+      "en": "Collection is a Minecraft comparison; the Creative note comes from the RealmCraft wiki. The Survival procedure and controllers are unverified on Quest."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "bucket",
+      "iron_ingot",
+      "bucket_of_cod"
+    ],
+    "sources": [
+      {
+        "id": "bucket",
+        "title": {
+          "de": "Mojang · Taking Inventory: Bucket",
+          "en": "Mojang · Taking Inventory: Bucket"
+        },
+        "url": "https://www.minecraft.net/de-de/article/taking-inventory-bucket",
+        "scope": {
+          "de": "Minecraft: Kübel aus 3 Eisenbarren; Wasser, Lava und Milch aufnehmen.",
+          "en": "Minecraft: bucket from 3 iron ingots; collecting water, lava and milk."
+        }
+      },
+      {
+        "id": "source-block",
+        "title": {
+          "de": "Minecraft Bedrock Wiki · Bucket",
+          "en": "Minecraft Bedrock Wiki · Bucket"
+        },
+        "url": "https://minecraftbedrock-archive.fandom.com/wiki/Bucket",
+        "scope": {
+          "de": "Minecraft: leeren Kübel an einem Wasser- oder Lavaquellblock benutzen; fließende Flüssigkeit lässt sich so nicht aufnehmen.",
+          "en": "Minecraft: use an empty bucket on a water or lava source block; flowing liquid cannot be collected this way."
+        }
+      },
+      {
+        "id": "realmcraft-creative",
+        "title": {
+          "de": "RealmCraft Wiki · Creative (RU)",
+          "en": "RealmCraft Wiki · Creative (RU)"
+        },
+        "url": "https://realmcraft.fandom.com/ru/wiki/%D0%A2%D0%B2%D0%BE%D1%80%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%BE",
+        "scope": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ]
+  },
+  {
+    "id": "milk-bucket",
+    "items": [
+      "milk_bucket"
+    ],
+    "aliases": [
+      "Milchkübel",
+      "Milcheimer",
+      "Milchkuebel"
+    ],
+    "method": {
+      "de": "In der Welt · Kuh melken",
+      "en": "In the world · Milk a cow"
+    },
+    "summary": {
+      "de": "Milch kommt durch Benutzen eines leeren Kübels an einer Kuh in den Kübel.",
+      "en": "Collect milk by using an empty bucket on a cow."
+    },
+    "requirements": {
+      "de": "1 leerer Kübel und eine erreichbare, lebende Kuh. Keine Crafting-Station.",
+      "en": "1 empty bucket and an accessible live cow. No crafting station."
+    },
+    "steps": [
+      {
+        "id": "equip",
+        "title": {
+          "de": "Leeren Kübel wählen",
+          "en": "Select an empty bucket"
+        },
+        "text": {
+          "de": "Halte einen leeren Kübel in der aktiven Hand und nähere dich einer Kuh.",
+          "en": "Hold an empty bucket in the active hand and approach a cow."
+        }
+      },
+      {
+        "id": "milk",
+        "title": {
+          "de": "Kuh benutzen",
+          "en": "Interact with the cow"
+        },
+        "text": {
+          "de": "Visiere die Kuh an und verwende „Benutzen/Interagieren“. Nicht angreifen. Prüfe danach den Milchkübel im Inventar.",
+          "en": "Aim at the cow and use/interact, without attacking. Check your inventory for the milk bucket."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "drink",
+        "title": {
+          "de": "Trinken und Effekte",
+          "en": "Drinking and effects"
+        },
+        "text": {
+          "de": "Im Minecraft-Vergleich entfernt getrunkene Milch sowohl schädliche als auch nützliche Statuseffekte; der leere Kübel bleibt übrig. Milch ist keine platzierbare Wasserquelle.",
+          "en": "In the Minecraft comparison, drinking milk removes both harmful and beneficial status effects and leaves an empty bucket. Milk is not a placeable water source."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "bucket",
+      "cake"
+    ],
+    "sources": [
+      {
+        "id": "milk",
+        "title": {
+          "de": "Mojang · Taking Inventory: Milk Bucket",
+          "en": "Mojang · Taking Inventory: Milk Bucket"
+        },
+        "url": "https://www.minecraft.net/pl-pl/article/taking-inventory--milk-bucket",
+        "scope": {
+          "de": "Minecraft: Kuh mit leerem Kübel melken und Statuseffekte durch Trinken entfernen.",
+          "en": "Minecraft: milk a cow with an empty bucket and clear status effects by drinking."
+        }
+      }
+    ]
+  },
+  {
+    "id": "fish-buckets",
+    "items": [
+      "bucket_of_cod",
+      "bucket_of_salmon",
+      "bucket_of_pufferfish",
+      "bucket_of_tropical_fish"
+    ],
+    "aliases": [
+      "Fischkübel",
+      "Fischeimer",
+      "Fischkuebel"
+    ],
+    "method": {
+      "de": "Im Wasser · Lebenden Fisch aufnehmen",
+      "en": "In water · Collect a live fish"
+    },
+    "summary": {
+      "de": "Ein Fischkübel enthält einen lebenden Fisch. Ein rohes Fisch-Item im Crafting-Feld ergibt keinen Fischkübel.",
+      "en": "A fish bucket contains a live fish. A raw fish item in a crafting grid does not produce a fish bucket."
+    },
+    "requirements": {
+      "de": "1 Wasserkübel und 1 lebender Fisch der gewünschten Art.",
+      "en": "1 water bucket and 1 live fish of the desired species."
+    },
+    "steps": [
+      {
+        "id": "water",
+        "title": {
+          "de": "Wasserkübel vorbereiten",
+          "en": "Prepare a water bucket"
+        },
+        "text": {
+          "de": "Fülle zuerst einen leeren Kübel an einer Wasserquelle.",
+          "en": "First fill an empty bucket at a water source."
+        }
+      },
+      {
+        "id": "catch",
+        "title": {
+          "de": "Fisch aufnehmen",
+          "en": "Collect the fish"
+        },
+        "text": {
+          "de": "Halte den Wasserkübel und benutze ihn am lebenden Fisch. Kontrolliere die Fischart im Ergebnis.",
+          "en": "Hold the water bucket and use it on the live fish. Check the species in the result."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "release",
+        "title": {
+          "de": "Wieder freilassen",
+          "en": "Release the fish"
+        },
+        "text": {
+          "de": "Benutze den Fischkübel in einem vorbereiteten Wasserbecken, um den Fisch freizusetzen. Pro Kübel wird ein Fisch transportiert; das ist kein Fang mit der Angel.",
+          "en": "Use the fish bucket in a prepared pool to release the fish. Each bucket carries one fish; this is separate from fishing with a rod."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "water_bucket",
+      "bucket"
+    ],
+    "sources": [
+      {
+        "id": "fish",
+        "title": {
+          "de": "Mojang · Taking Inventory: Bucket of Fish",
+          "en": "Mojang · Taking Inventory: Bucket of Fish"
+        },
+        "url": "https://www.minecraft.net/fi-fi/article/taking-inventory--bucket-fish",
+        "scope": {
+          "de": "Minecraft: Wasserkübel an lebendem Fisch benutzen und Fisch wieder aussetzen. Arten und Bedienung in RealmCraft VR sind offen.",
+          "en": "Minecraft: use a water bucket on a live fish and release it again. Species and controls in RealmCraft VR are unverified."
+        }
+      }
+    ]
+  },
+  {
+    "id": "obsidian",
+    "items": [
+      "obsidian"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Lava abkühlen und abbauen",
+      "en": "In the world · Cool lava and mine"
+    },
+    "summary": {
+      "de": "Obsidian entsteht beim Kontakt von Wasser mit einem Lavaquellblock.",
+      "en": "Obsidian forms when water meets a lava source block."
+    },
+    "requirements": {
+      "de": "Wasser, ein Lavaquellblock und eine Diamantspitzhacke zum Gewinnen des Blocks.",
+      "en": "Water, a lava source block and a diamond pickaxe to collect the block."
+    },
+    "steps": [
+      {
+        "id": "cool",
+        "title": {
+          "de": "Wasser zur Lava führen",
+          "en": "Bring water to lava"
+        },
+        "text": {
+          "de": "Lasse Wasser an den Lavaquellblock fließen. Warte, bis er sich zu Obsidian verwandelt.",
+          "en": "Let water flow onto the lava source. Wait for it to become obsidian."
+        }
+      },
+      {
+        "id": "mine",
+        "title": {
+          "de": "Block abbauen",
+          "en": "Mine the block"
+        },
+        "text": {
+          "de": "Baue den Obsidian mit der Diamantspitzhacke ab und sammle ihn auf.",
+          "en": "Mine the obsidian with the diamond pickaxe and collect the drop."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "flow",
+        "title": {
+          "de": "Quelle und Strömung unterscheiden",
+          "en": "Distinguish source and flow"
+        },
+        "text": {
+          "de": "Fließende Lava kann bei Wasserkontakt Bruchstein ergeben. Unter Obsidian kann weitere Lava liegen: sichere deinen Stand und die Sammelstelle.",
+          "en": "Flowing lava may form cobblestone when water touches it. More lava may remain under obsidian: secure your footing and collection area."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Ablauf nach der RealmCraft-Wiki; Spielversion und Bedienung auf Quest sind ungeprüft.",
+      "en": "Procedure from the RealmCraft wiki; game version and controls on Quest are unverified."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "water_bucket",
+      "lava_bucket",
+      "diamond_pickaxe"
+    ],
+    "sources": [
+      {
+        "id": "blocks",
+        "title": {
+          "de": "RealmCraft Game Wiki · Blocks",
+          "en": "RealmCraft Game Wiki · Blocks"
+        },
+        "url": "https://realmcraftgame.fandom.com/wiki/Blocks",
+        "scope": {
+          "de": "Wiki-Beleg für Wasser an Lavaquelle und Abbau mit Diamantspitzhacke; auf Quest nicht geprüft.",
+          "en": "Wiki evidence for water meeting a lava source and mining with a diamond pickaxe; not tested on Quest."
+        }
+      }
+    ]
+  },
+  {
+    "id": "lava-placed",
+    "items": [
+      "lava"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Flüssigkeit platzieren",
+      "en": "In the world · Place liquid"
+    },
+    "summary": {
+      "de": "Dieser Eintrag bezeichnet die Flüssigkeit in der Welt. Transportiere sie in einem gefüllten Kübel.",
+      "en": "This entry describes the fluid in the world. Carry it in a filled bucket."
+    },
+    "requirements": {
+      "de": "1 Lavakübel; siehe die Beschaffungsanleitung beim Kübel.",
+      "en": "1 lava bucket; see the bucket obtaining guide."
+    },
+    "steps": [
+      {
+        "id": "place",
+        "title": {
+          "de": "Kübel benutzen",
+          "en": "Use the bucket"
+        },
+        "text": {
+          "de": "Wähle den Lavakübel und benutze ihn an der vorgesehenen Stelle, um die Flüssigkeit zu platzieren.",
+          "en": "Select the lava bucket and use it at the intended location to place the fluid."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "mode",
+        "title": {
+          "de": "Spielmodus beachten",
+          "en": "Check the game mode"
+        },
+        "text": {
+          "de": "Die RealmCraft-Wiki beschreibt für Kübel ein anderes Verhalten im Kreativmodus. Die Kübelanleitung erklärt diesen Unterschied sowie das sichere Aufnehmen.",
+          "en": "The RealmCraft wiki describes different bucket behavior in Creative. The bucket guide explains that difference and how to collect the fluid safely."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "lava_bucket"
+    ],
+    "sources": [
+      {
+        "id": "bucket",
+        "title": {
+          "de": "Mojang · Taking Inventory: Bucket",
+          "en": "Mojang · Taking Inventory: Bucket"
+        },
+        "url": "https://www.minecraft.net/de-de/article/taking-inventory-bucket",
+        "scope": {
+          "de": "Minecraft: Kübel aus 3 Eisenbarren; Wasser, Lava und Milch aufnehmen.",
+          "en": "Minecraft: bucket from 3 iron ingots; collecting water, lava and milk."
+        }
+      },
+      {
+        "id": "realmcraft-creative",
+        "title": {
+          "de": "RealmCraft Wiki · Creative (RU)",
+          "en": "RealmCraft Wiki · Creative (RU)"
+        },
+        "url": "https://realmcraft.fandom.com/ru/wiki/%D0%A2%D0%B2%D0%BE%D1%80%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%BE",
+        "scope": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ]
+  },
+  {
+    "id": "water-placed",
+    "items": [
+      "water"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Flüssigkeit platzieren",
+      "en": "In the world · Place liquid"
+    },
+    "summary": {
+      "de": "Dieser Eintrag bezeichnet die Flüssigkeit in der Welt. Transportiere sie in einem gefüllten Kübel.",
+      "en": "This entry describes the fluid in the world. Carry it in a filled bucket."
+    },
+    "requirements": {
+      "de": "1 Wasserkübel; siehe die Beschaffungsanleitung beim Kübel.",
+      "en": "1 water bucket; see the bucket obtaining guide."
+    },
+    "steps": [
+      {
+        "id": "place",
+        "title": {
+          "de": "Kübel benutzen",
+          "en": "Use the bucket"
+        },
+        "text": {
+          "de": "Wähle den Wasserkübel und benutze ihn an der vorgesehenen Stelle, um die Flüssigkeit zu platzieren.",
+          "en": "Select the water bucket and use it at the intended location to place the fluid."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "mode",
+        "title": {
+          "de": "Spielmodus beachten",
+          "en": "Check the game mode"
+        },
+        "text": {
+          "de": "Die RealmCraft-Wiki beschreibt für Kübel ein anderes Verhalten im Kreativmodus. Die Kübelanleitung erklärt diesen Unterschied sowie das sichere Aufnehmen.",
+          "en": "The RealmCraft wiki describes different bucket behavior in Creative. The bucket guide explains that difference and how to collect the fluid safely."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "water_bucket"
+    ],
+    "sources": [
+      {
+        "id": "bucket",
+        "title": {
+          "de": "Mojang · Taking Inventory: Bucket",
+          "en": "Mojang · Taking Inventory: Bucket"
+        },
+        "url": "https://www.minecraft.net/de-de/article/taking-inventory-bucket",
+        "scope": {
+          "de": "Minecraft: Kübel aus 3 Eisenbarren; Wasser, Lava und Milch aufnehmen.",
+          "en": "Minecraft: bucket from 3 iron ingots; collecting water, lava and milk."
+        }
+      },
+      {
+        "id": "realmcraft-creative",
+        "title": {
+          "de": "RealmCraft Wiki · Creative (RU)",
+          "en": "RealmCraft Wiki · Creative (RU)"
+        },
+        "url": "https://realmcraft.fandom.com/ru/wiki/%D0%A2%D0%B2%D0%BE%D1%80%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%BE",
+        "scope": {
+          "de": "RealmCraft-Wiki: Im Kreativmodus füllen sich leere Kübel nicht mit Wasser/Lava; volle Kübel werden beim Ausgießen nicht leer. Kein Quest-Test.",
+          "en": "RealmCraft wiki: in Creative, empty buckets do not fill with water/lava and full buckets do not empty when poured. Not tested on Quest."
+        }
+      }
+    ]
+  },
+  {
+    "id": "concrete",
+    "items": [
+      "black_concrete",
+      "blue_concrete",
+      "brown_concrete",
+      "cyan_concrete",
+      "gray_concrete",
+      "green_concrete",
+      "light_blue_concrete",
+      "light_gray_concrete",
+      "lime_concrete",
+      "magenta_concrete",
+      "orange_concrete",
+      "pink_concrete",
+      "purple_concrete",
+      "red_concrete",
+      "white_concrete",
+      "yellow_concrete"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Trockenbeton härten",
+      "en": "In the world · Harden concrete powder"
+    },
+    "summary": {
+      "de": "Trockenbeton wird durch Kontakt mit Wasser zu Beton derselben Farbe.",
+      "en": "Concrete powder turns into concrete of the same color when it touches water."
+    },
+    "requirements": {
+      "de": "1 Trockenbeton pro Betonblock, Wasser und eine Spitzhacke.",
+      "en": "1 concrete powder per concrete block, water and a pickaxe."
+    },
+    "steps": [
+      {
+        "id": "wet",
+        "title": {
+          "de": "Trockenbeton ins Wasser setzen",
+          "en": "Place powder in water"
+        },
+        "text": {
+          "de": "Crafte Trockenbeton in der gewünschten Farbe und bringe den Block mit Wasser in Kontakt.",
+          "en": "Craft concrete powder of the desired color and bring the block into contact with water."
+        }
+      },
+      {
+        "id": "collect",
+        "title": {
+          "de": "Beton einsammeln",
+          "en": "Collect concrete"
+        },
+        "text": {
+          "de": "Baue den gehärteten Beton mit einer Spitzhacke ab.",
+          "en": "Mine the hardened concrete with a pickaxe."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "color",
+        "title": {
+          "de": "Farbe und Schwerkraft",
+          "en": "Color and gravity"
+        },
+        "text": {
+          "de": "Die Farbe stammt vom Trockenbeton. Das Pulver fällt ohne Unterlage; plane daher einen sicheren Platz zum Härten.",
+          "en": "The powder determines the color. Powder falls without support, so prepare a suitable place to harden it."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "black_concrete_powder",
+      "blue_concrete_powder",
+      "brown_concrete_powder",
+      "cyan_concrete_powder",
+      "gray_concrete_powder",
+      "green_concrete_powder",
+      "light_blue_concrete_powder",
+      "light_gray_concrete_powder",
+      "lime_concrete_powder",
+      "magenta_concrete_powder",
+      "orange_concrete_powder",
+      "pink_concrete_powder",
+      "purple_concrete_powder",
+      "red_concrete_powder",
+      "white_concrete_powder",
+      "yellow_concrete_powder",
+      "water_bucket"
+    ],
+    "sources": [
+      {
+        "id": "concrete",
+        "title": {
+          "de": "Mojang · Block of the Week: Concrete",
+          "en": "Mojang · Block of the Week: Concrete"
+        },
+        "url": "https://www.minecraft.net/en-us/article/block-week-concrete",
+        "scope": {
+          "de": "Minecraft: farbiges Pulver fällt und wird bei Wasserkontakt fest.",
+          "en": "Minecraft: colored powder falls and hardens on contact with water."
+        }
+      }
+    ]
+  },
+  {
+    "id": "logs",
+    "items": [
+      "oak_log",
+      "spruce_log",
+      "birch_log",
+      "jungle_log",
+      "acacia_log",
+      "dark_oak_log"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Baumstamm abbauen",
+      "en": "In the world · Harvest a tree trunk"
+    },
+    "summary": {
+      "de": "Sammle Stämme der passenden Baumart. Bretter sind ein weiterverarbeitetes Material.",
+      "en": "Collect logs from the matching tree species. Planks are a processed material."
+    },
+    "requirements": {
+      "de": "Ein Baum der gewünschten Art; eine Axt erleichtert den Abbau.",
+      "en": "A tree of the desired species; an axe helps with harvesting."
+    },
+    "steps": [
+      {
+        "id": "harvest",
+        "title": {
+          "de": "Stamm abbauen",
+          "en": "Harvest the trunk"
+        },
+        "text": {
+          "de": "Baue den Stamm ab und sammle die Holzblöcke auf. Verwende für ein bestimmtes Rezept die verlangte Holzart.",
+          "en": "Break the trunk and collect the log blocks. Use the wood species required by your chosen recipe."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "plant",
+        "title": {
+          "de": "Setzlinge aufheben",
+          "en": "Keep saplings"
+        },
+        "text": {
+          "de": "Sammle auch fallende Setzlinge, um später Bäume nachzupflanzen. Blätter ergeben nicht automatisch einen Stamm.",
+          "en": "Collect fallen saplings for replanting trees later. Leaves do not produce logs."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "oak_sapling",
+      "spruce_sapling",
+      "birch_sapling",
+      "jungle_sapling",
+      "acacia_sapling",
+      "dark_oak_sapling"
+    ],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/blocks/oak_log.json, data/minecraft/loot_tables/blocks/spruce_log.json, data/minecraft/loot_tables/blocks/birch_log.json, data/minecraft/loot_tables/blocks/jungle_log.json, data/minecraft/loot_tables/blocks/acacia_log.json, data/minecraft/loot_tables/blocks/dark_oak_log.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/blocks/oak_log.json, data/minecraft/loot_tables/blocks/spruce_log.json, data/minecraft/loot_tables/blocks/birch_log.json, data/minecraft/loot_tables/blocks/jungle_log.json, data/minecraft/loot_tables/blocks/acacia_log.json, data/minecraft/loot_tables/blocks/dark_oak_log.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "leaves",
+    "items": [
+      "oak_leaves",
+      "spruce_leaves",
+      "birch_leaves",
+      "jungle_leaves",
+      "acacia_leaves",
+      "dark_oak_leaves"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Laub mit geeignetem Werkzeug ernten",
+      "en": "In the world · Harvest leaves with the right tool"
+    },
+    "summary": {
+      "de": "Für den Laubblock selbst brauchst du eine Schere oder im Minecraft-Vergleich ein Werkzeug mit Behutsamkeit.",
+      "en": "To collect the leaf block itself, use shears or, in the Minecraft comparison, a Silk Touch tool."
+    },
+    "requirements": {
+      "de": "Laub der gewünschten Baumart und 1 Schere.",
+      "en": "Leaves of the desired tree species and 1 pair of shears."
+    },
+    "steps": [
+      {
+        "id": "shear",
+        "title": {
+          "de": "Laub abscheren",
+          "en": "Shear the leaves"
+        },
+        "text": {
+          "de": "Baue das Laub mit der ausgerüsteten Schere ab und sammle die Laubblöcke auf.",
+          "en": "Break the leaves with the equipped shears and collect the leaf blocks."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "drops",
+        "title": {
+          "de": "Laub statt Setzlinge",
+          "en": "Leaves versus saplings"
+        },
+        "text": {
+          "de": "Ohne Schere oder Behutsamkeit fällt kein Laubblock. Setzlinge sind eine andere, zufällige Beute; die Schere ist daher nicht der richtige Weg, wenn du Setzlinge suchst.",
+          "en": "Without shears or Silk Touch, leaves do not drop as leaf blocks. Saplings are a separate random drop; shears are therefore unsuitable when collecting saplings."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "shears",
+      "oak_sapling",
+      "spruce_sapling",
+      "birch_sapling",
+      "jungle_sapling",
+      "acacia_sapling",
+      "dark_oak_sapling"
+    ],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/blocks/oak_leaves.json, data/minecraft/loot_tables/blocks/spruce_leaves.json, data/minecraft/loot_tables/blocks/birch_leaves.json, data/minecraft/loot_tables/blocks/jungle_leaves.json, data/minecraft/loot_tables/blocks/acacia_leaves.json, data/minecraft/loot_tables/blocks/dark_oak_leaves.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/blocks/oak_leaves.json, data/minecraft/loot_tables/blocks/spruce_leaves.json, data/minecraft/loot_tables/blocks/birch_leaves.json, data/minecraft/loot_tables/blocks/jungle_leaves.json, data/minecraft/loot_tables/blocks/acacia_leaves.json, data/minecraft/loot_tables/blocks/dark_oak_leaves.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "saplings",
+    "items": [
+      "oak_sapling",
+      "spruce_sapling",
+      "birch_sapling",
+      "jungle_sapling",
+      "acacia_sapling",
+      "dark_oak_sapling"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Laub abbauen oder zerfallen lassen",
+      "en": "In the world · Break leaves or let them decay"
+    },
+    "summary": {
+      "de": "Setzlinge können aus dem Laub der passenden Baumart fallen.",
+      "en": "Saplings can drop from leaves of the matching tree species."
+    },
+    "requirements": {
+      "de": "Laub der gewünschten Baumart; keine Schere und kein Behutsamkeit-Werkzeug verwenden.",
+      "en": "Leaves of the desired tree species; use neither shears nor a Silk Touch tool."
+    },
+    "steps": [
+      {
+        "id": "leaves",
+        "title": {
+          "de": "Laub auflösen",
+          "en": "Break down leaves"
+        },
+        "text": {
+          "de": "Baue Laub normal ab oder entferne den zugehörigen Stamm und lasse das Laub zerfallen. Sammle die fallenden Setzlinge.",
+          "en": "Break leaves normally, or remove their supporting trunk and let them decay. Collect dropped saplings."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "random",
+        "title": {
+          "de": "Keine garantierte Menge",
+          "en": "No guaranteed quantity"
+        },
+        "text": {
+          "de": "Nicht jeder Laubblock ergibt einen Setzling. Plane zusätzliche Blätter ein und hebe die Setzlinge zum Nachpflanzen auf.",
+          "en": "Not every leaf block drops a sapling. Allow for extra leaves and keep the saplings for replanting."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "oak_log",
+      "spruce_log",
+      "birch_log",
+      "jungle_log",
+      "acacia_log",
+      "dark_oak_log"
+    ],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/blocks/oak_leaves.json, data/minecraft/loot_tables/blocks/spruce_leaves.json, data/minecraft/loot_tables/blocks/birch_leaves.json, data/minecraft/loot_tables/blocks/jungle_leaves.json, data/minecraft/loot_tables/blocks/acacia_leaves.json, data/minecraft/loot_tables/blocks/dark_oak_leaves.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/blocks/oak_leaves.json, data/minecraft/loot_tables/blocks/spruce_leaves.json, data/minecraft/loot_tables/blocks/birch_leaves.json, data/minecraft/loot_tables/blocks/jungle_leaves.json, data/minecraft/loot_tables/blocks/acacia_leaves.json, data/minecraft/loot_tables/blocks/dark_oak_leaves.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "stripped-wood",
+    "items": [
+      "stripped_acacia_log",
+      "stripped_acacia_wood",
+      "stripped_birch_log",
+      "stripped_birch_wood",
+      "stripped_crimson_hyphae",
+      "stripped_crimson_stem",
+      "stripped_dark_oak_log",
+      "stripped_dark_oak_wood",
+      "stripped_jungle_log",
+      "stripped_jungle_wood",
+      "stripped_oak_log",
+      "stripped_oak_wood",
+      "stripped_spruce_log",
+      "stripped_spruce_wood",
+      "stripped_warped_hyphae",
+      "stripped_warped_stem"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Mit einer Axt entrinden",
+      "en": "In the world · Strip with an axe"
+    },
+    "summary": {
+      "de": "Entrindete Stämme und Holzblöcke entstehen durch Benutzen einer Axt am entsprechenden normalen Block.",
+      "en": "Stripped logs and wood are made by using an axe on the corresponding unstripped block."
+    },
+    "requirements": {
+      "de": "1 unentrindeter Block der passenden Holzart und 1 Axt.",
+      "en": "1 unstripped block of the matching wood species and 1 axe."
+    },
+    "steps": [
+      {
+        "id": "place",
+        "title": {
+          "de": "Ausgangsblock platzieren",
+          "en": "Place the original block"
+        },
+        "text": {
+          "de": "Platziere den passenden Stamm, Holzblock, Nether-Stiel oder Hyphenblock.",
+          "en": "Place the matching log, wood, Nether stem or hyphae block."
+        }
+      },
+      {
+        "id": "strip",
+        "title": {
+          "de": "Axt benutzen",
+          "en": "Use the axe"
+        },
+        "text": {
+          "de": "Benutze die Axt am Block, statt ihn anzugreifen. Baue den entrindeten Block anschließend ab, wenn du ihn mitnehmen möchtest.",
+          "en": "Use the axe on the block instead of attacking it. Then break the stripped block if you want to carry it."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "type",
+        "title": {
+          "de": "Passende Variante wählen",
+          "en": "Choose the matching variant"
+        },
+        "text": {
+          "de": "Holzart und Blocktyp bleiben erhalten. Ein entrindeter Stamm ist nicht dasselbe wie ein rundum entrindeter Holzblock.",
+          "en": "The species and block type stay the same. A stripped log is distinct from stripped wood with bark removed on all sides."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "oak_log",
+      "spruce_log",
+      "birch_log",
+      "jungle_log",
+      "acacia_log",
+      "dark_oak_log",
+      "wooden_axe"
+    ],
+    "sources": [
+      {
+        "id": "stripping",
+        "title": {
+          "de": "Mojang · Update Aquatic Java",
+          "en": "Mojang · Update Aquatic Java"
+        },
+        "url": "https://www.minecraft.net/nb-no/article/update-aquatic-out-java",
+        "scope": {
+          "de": "Minecraft: Axt an Stämmen oder Holz benutzen, um die Rinde zu entfernen.",
+          "en": "Minecraft: use an axe on logs or wood to strip them."
+        }
+      },
+      {
+        "id": "hyphae",
+        "title": {
+          "de": "Mojang · Block of the Week: Hyphae",
+          "en": "Mojang · Block of the Week: Hyphae"
+        },
+        "url": "https://www.minecraft.net/pl-pl/article/block-week--hyphae",
+        "scope": {
+          "de": "Minecraft: Nether-Stiele und Hyphen sowie Entrinden mit einer Axt.",
+          "en": "Minecraft: Nether stems and hyphae, including stripping with an axe."
+        }
+      }
+    ]
+  },
+  {
+    "id": "potted-plants",
+    "items": [
+      "potted_acacia_sapling",
+      "potted_allium",
+      "potted_azure_bluet",
+      "potted_bamboo",
+      "potted_birch_sapling",
+      "potted_blue_orchid",
+      "potted_brown_mushroom",
+      "potted_cactus",
+      "potted_cornflower",
+      "potted_crimson_fungus",
+      "potted_crimson_roots",
+      "potted_dandelion",
+      "potted_dark_oak_sapling",
+      "potted_dead_bush",
+      "potted_fern",
+      "potted_jungle_sapling",
+      "potted_lily_of_the_valley",
+      "potted_oak_sapling",
+      "potted_orange_tulip",
+      "potted_oxeye_daisy",
+      "potted_pink_tulip",
+      "potted_poppy",
+      "potted_red_mushroom",
+      "potted_red_tulip",
+      "potted_spruce_sapling",
+      "potted_warped_fungus",
+      "potted_warped_roots",
+      "potted_white_tulip",
+      "potted_wither_rose"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Blumentopf bepflanzen",
+      "en": "In the world · Plant a flower pot"
+    },
+    "summary": {
+      "de": "Der bepflanzte Topf ist ein platzierter Zustand aus Topf und Pflanze.",
+      "en": "A potted plant is a placed state made from a pot and a plant."
+    },
+    "requirements": {
+      "de": "1 Blumentopf und 1 passende Pflanze laut Gegenstandsname.",
+      "en": "1 flower pot and 1 matching plant named by the entry."
+    },
+    "steps": [
+      {
+        "id": "pot",
+        "title": {
+          "de": "Topf aufstellen",
+          "en": "Place the pot"
+        },
+        "text": {
+          "de": "Stelle den leeren Blumentopf auf einen geeigneten Block.",
+          "en": "Place the empty flower pot on a suitable block."
+        }
+      },
+      {
+        "id": "plant",
+        "title": {
+          "de": "Pflanze einsetzen",
+          "en": "Insert the plant"
+        },
+        "text": {
+          "de": "Nimm die passende Pflanze in die Hand und benutze sie am Topf.",
+          "en": "Hold the matching plant and use it on the pot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "break",
+        "title": {
+          "de": "Beim Abbauen",
+          "en": "When broken"
+        },
+        "text": {
+          "de": "Im Minecraft-Vergleich fallen Topf und Inhalt beim Abbauen getrennt heraus. Es entsteht kein eigenes Rezept für jede Topfvariante.",
+          "en": "In the Minecraft comparison, breaking the pot drops the pot and its contents separately. Each planted state does not require a separate crafting recipe."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [
+      "flower_pot"
+    ],
+    "sources": [
+      {
+        "id": "flower-pot",
+        "title": {
+          "de": "Mojang · Taking Inventory: Flower Pot",
+          "en": "Mojang · Taking Inventory: Flower Pot"
+        },
+        "url": "https://www.minecraft.net/ja-jp/article/taking-inventory-flower-pot",
+        "scope": {
+          "de": "Minecraft: Topf bepflanzen; beim Abbau werden Topf und Inhalt getrennt abgegeben.",
+          "en": "Minecraft: plant a flower pot; breaking it drops pot and contents separately."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-bone",
+    "items": [
+      "bone"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Skelett.",
+      "en": "Possible loot source: skeleton."
+    },
+    "requirements": {
+      "de": "Beutequelle: Skelett. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A skeleton and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Skelett) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a skeleton and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/skeleton.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/skeleton.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-string",
+    "items": [
+      "string"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Spinne.",
+      "en": "Possible loot source: spider."
+    },
+    "requirements": {
+      "de": "Beutequelle: Spinne. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A spider and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Spinne) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a spider and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/spider.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/spider.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-gunpowder",
+    "items": [
+      "gunpowder"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Creeper.",
+      "en": "Possible loot source: creeper."
+    },
+    "requirements": {
+      "de": "Beutequelle: Creeper. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A creeper and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Creeper) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a creeper and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/creeper.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/creeper.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-feather",
+    "items": [
+      "feather"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Huhn.",
+      "en": "Possible loot source: chicken."
+    },
+    "requirements": {
+      "de": "Beutequelle: Huhn. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A chicken and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Huhn) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a chicken and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/chicken.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/chicken.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-leather",
+    "items": [
+      "leather"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Kuh.",
+      "en": "Possible loot source: cow."
+    },
+    "requirements": {
+      "de": "Beutequelle: Kuh. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A cow and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Kuh) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a cow and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/cow.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/cow.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-ink_sac",
+    "items": [
+      "ink_sac"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Tintenfisch.",
+      "en": "Possible loot source: squid."
+    },
+    "requirements": {
+      "de": "Beutequelle: Tintenfisch. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A squid and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Tintenfisch) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a squid and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/squid.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/squid.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-slime_ball",
+    "items": [
+      "slime_ball"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Kleiner Schleim.",
+      "en": "Possible loot source: small slime."
+    },
+    "requirements": {
+      "de": "Beutequelle: Kleiner Schleim. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A small slime and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Kleiner Schleim) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a small slime and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/slime.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/slime.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "drop-rotten_flesh",
+    "items": [
+      "rotten_flesh"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "In der Welt · Kreaturenbeute sammeln",
+      "en": "In the world · Collect creature drops"
+    },
+    "summary": {
+      "de": "Mögliche Beutequelle: Zombie.",
+      "en": "Possible loot source: zombie."
+    },
+    "requirements": {
+      "de": "Beutequelle: Zombie. Nimm geeignete Ausrüstung für die Begegnung mit.",
+      "en": "A zombie and equipment suitable for the encounter."
+    },
+    "steps": [
+      {
+        "id": "drop",
+        "title": {
+          "de": "Beute erhalten",
+          "en": "Obtain the drop"
+        },
+        "text": {
+          "de": "Besiege die Kreatur (Zombie) und sammle ihre fallengelassene Beute ein.",
+          "en": "Defeat a zombie and collect its dropped loot."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "chance",
+        "title": {
+          "de": "Zufällige Ausbeute",
+          "en": "Random yield"
+        },
+        "text": {
+          "de": "Die Ausbeute ist nicht garantiert. Es gibt keine feste Anzahl an Kreaturen pro benötigtem Material; sammle weiter, bis die Menge reicht.",
+          "en": "The drop is not guaranteed. There is no fixed number of creatures per required material; keep collecting until you have enough."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich; Verfahren und Gegenstandszuordnung sind in RealmCraft VR ungeprüft.",
+      "en": "Minecraft comparison; the procedure and item mapping are unverified in RealmCraft VR."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "loot",
+        "title": {
+          "de": "Mojang · Java 1.16.5 loot data (JAR)",
+          "en": "Mojang · Java 1.16.5 loot data (JAR)"
+        },
+        "url": "https://piston-data.mojang.com/v1/objects/37fd3c903861eeff3bc24b71eed48f828b5269c8/client.jar",
+        "scope": {
+          "de": "Minecraft-Droptabellen: data/minecraft/loot_tables/entities/zombie.json. Link lädt das originale Client-Archiv.",
+          "en": "Minecraft drop tables: data/minecraft/loot_tables/entities/zombie.json. Link downloads the original client archive."
+        }
+      }
+    ]
+  },
+  {
+    "id": "spawn-eggs",
+    "items": [
+      "allay_spawn_egg",
+      "axolotl_spawn_egg",
+      "bat_spawn_egg",
+      "bee_spawn_egg",
+      "blaze_spawn_egg",
+      "cat_spawn_egg",
+      "cave_spider_spawn_egg",
+      "chicken_spawn_egg",
+      "cod_spawn_egg",
+      "cow_spawn_egg",
+      "creeper_spawn_egg",
+      "dolphin_spawn_egg",
+      "donkey_spawn_egg",
+      "drowned_spawn_egg",
+      "elder_guardian_spawn_egg",
+      "enderman_spawn_egg",
+      "endermite_spawn_egg",
+      "evoker_spawn_egg",
+      "fox_spawn_egg",
+      "frog_spawn_egg",
+      "ghast_spawn_egg",
+      "glow_squid_spawn_egg",
+      "goat_spawn_egg",
+      "guardian_spawn_egg",
+      "hoglin_spawn_egg",
+      "horse_spawn_egg",
+      "husk_spawn_egg",
+      "iron_golem_spawn_egg",
+      "llama_spawn_egg",
+      "magma_cube_spawn_egg",
+      "mooshroom_spawn_egg",
+      "mule_spawn_egg",
+      "ocelot_spawn_egg",
+      "panda_spawn_egg",
+      "parrot_spawn_egg",
+      "phantom_spawn_egg",
+      "pig_spawn_egg",
+      "piglin_brute_spawn_egg",
+      "piglin_spawn_egg",
+      "pillager_spawn_egg",
+      "polar_bear_spawn_egg",
+      "pufferfish_spawn_egg",
+      "rabbit_spawn_egg",
+      "ravager_spawn_egg",
+      "salmon_spawn_egg",
+      "sheep_spawn_egg",
+      "shulker_spawn_egg",
+      "silverfish_spawn_egg",
+      "skeleton_horse_spawn_egg",
+      "skeleton_spawn_egg",
+      "slime_spawn_egg",
+      "spawn_egg",
+      "spider_spawn_egg",
+      "squid_spawn_egg",
+      "stray_spawn_egg",
+      "strider_spawn_egg",
+      "tadpole_spawn_egg",
+      "trader_llama_spawn_egg",
+      "tropical_fish_spawn_egg",
+      "turtle_spawn_egg",
+      "vex_spawn_egg",
+      "villager_spawn_egg",
+      "vindicator_spawn_egg",
+      "wandering_trader_spawn_egg",
+      "warden_spawn_egg",
+      "witch_spawn_egg",
+      "wither_skeleton_spawn_egg",
+      "wolf_spawn_egg",
+      "zoglin_spawn_egg",
+      "zombie_horse_spawn_egg",
+      "zombie_spawn_egg",
+      "zombie_villager_spawn_egg",
+      "zombified_piglin_spawn_egg"
+    ],
+    "aliases": [],
+    "method": {
+      "de": "Kreativmenü · Falls die Spielversion es anbietet",
+      "en": "Creative menu · If offered by the game version"
+    },
+    "summary": {
+      "de": "Spawn-Eier sind im normalen Minecraft-Überleben nicht craftbar. Suche im Kreativinventar nach dem Ei der gewünschten Kreatur.",
+      "en": "Spawn eggs cannot be crafted in normal Minecraft Survival. Look for the desired creature egg in the Creative inventory."
+    },
+    "requirements": {
+      "de": "Kreativmodus und ein von deiner Spielversion angebotenes Spawn-Ei.",
+      "en": "Creative mode and a spawn egg provided by your game version."
+    },
+    "steps": [
+      {
+        "id": "select",
+        "title": {
+          "de": "Im Menü suchen",
+          "en": "Find it in the menu"
+        },
+        "text": {
+          "de": "Öffne das Kreativinventar und suche nach dem Namen der Kreatur. Fehlt sie dort, ist ihre Verfügbarkeit in dieser RealmCraft-Version nicht belegt.",
+          "en": "Open the Creative inventory and search for the creature name. If absent, its availability in this RealmCraft version is not established."
+        }
+      },
+      {
+        "id": "use",
+        "title": {
+          "de": "Ei benutzen",
+          "en": "Use the egg"
+        },
+        "text": {
+          "de": "Nimm das angebotene Ei und benutze es an einer passenden Stelle, um die Kreatur zu erzeugen.",
+          "en": "Take the offered egg and use it at a suitable location to spawn the creature."
+        }
+      }
+    ],
+    "details": [
+      {
+        "id": "scope",
+        "title": {
+          "de": "Katalogname ist kein Spielnachweis",
+          "en": "A catalog name is not proof of availability"
+        },
+        "text": {
+          "de": "Der Companion führt auch Minecraft-Vergleichsnamen. Diese Anleitung bestätigt weder alle Kreaturen noch jedes Ei in RealmCraft. Ein gewöhnliches Hühnerei ersetzt kein Spawn-Ei.",
+          "en": "The Companion also lists Minecraft comparison names. This guide does not confirm every creature or egg in RealmCraft. A regular chicken egg is not a substitute for a spawn egg."
+        }
+      },
+      {
+        "id": "realmcraft-menu",
+        "title": {
+          "de": "RealmCraft-Menü und Shop",
+          "en": "RealmCraft menu and shop"
+        },
+        "text": {
+          "de": "Die RealmCraft-Wiki nennt Kreativmodus und Shop als Bezugswege für Spawn-Eier. Welche Eier deine Quest-Version anbietet, muss im Spiel geprüft werden.",
+          "en": "The RealmCraft wiki lists Creative mode and the shop as ways to obtain spawn eggs. Check which eggs your Quest version offers in the game."
+        }
+      }
+    ],
+    "evidence": {
+      "de": "Minecraft-Vergleich mit RealmCraft-Wiki-Beleg zu Bezugsweg und Benutzen. Einzelne Arten und Quest-Bedienung bleiben ungeprüft.",
+      "en": "Minecraft comparison with RealmCraft wiki evidence for obtaining and use. Individual species and Quest controls remain unverified."
+    },
+    "checked": "2026-09-13",
+    "relatedItems": [],
+    "sources": [
+      {
+        "id": "spawn-eggs",
+        "title": {
+          "de": "Mojang · Taking Inventory: Spawn Egg",
+          "en": "Mojang · Taking Inventory: Spawn Egg"
+        },
+        "url": "https://www.minecraft.net/de-de/article/taking-inventory--spawn-egg",
+        "scope": {
+          "de": "Minecraft-Grundprinzip: Kreativgegenstand zum Erzeugen von Kreaturen, kein normales Überlebensrezept.",
+          "en": "Minecraft principle: Creative item for spawning creatures, not a normal Survival recipe."
+        }
+      },
+      {
+        "id": "realmcraft-spawn",
+        "title": {
+          "de": "RealmCraft Game Wiki · Spawn egg",
+          "en": "RealmCraft Game Wiki · Spawn egg"
+        },
+        "url": "https://realmcraftgame.fandom.com/wiki/Spawn_egg",
+        "scope": {
+          "de": "RealmCraft-Wiki: Spawn-Eier aus Kreativmodus oder Shop; Benutzen an einer Oberfläche statt Werfen. Keine Bestätigung aller hier genannten Arten.",
+          "en": "RealmCraft wiki: spawn eggs from Creative or the shop; use on a surface rather than throw. Does not establish every species listed here."
+        }
+      }
+    ]
+  }
+]

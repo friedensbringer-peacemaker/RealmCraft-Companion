@@ -13,6 +13,10 @@ MINECRAFT_HASH = '8d9b65467c7913fcf6f5b2e729d44a1e00fde150'
 MINECRAFT = f'https://piston-data.mojang.com/v1/objects/{MINECRAFT_HASH}/client.jar'
 CHILD = None
 PROGRESS = None
+# 270°/90° gives south (+Z) up and north (−Z) down. The viewer also
+# reflects left/right to match the requested mirrored Atlas view.
+DEFAULT_CAMERA_ANGLE = 270
+DEFAULT_CAMERA_ELEVATION = 90
 
 class CancelledError(Exception):
     pass
@@ -165,7 +169,8 @@ def setup(support):
         progress('ready', 'Tectonicus 2.31 · Java 21 · Minecraft 1.17.1')
 
 
-def render(support, source, output, radius, detail, title, camera_angle=45, camera_elevation=45):
+def render(support, source, output, radius, detail, title,
+           camera_angle=DEFAULT_CAMERA_ANGLE, camera_elevation=DEFAULT_CAMERA_ELEVATION):
     from exporter import export_world
     folder, java = toolchain(support, probe=True)
     output = output.resolve(); source = source.resolve()
@@ -207,6 +212,10 @@ def render(support, source, output, radius, detail, title, camera_angle=45, came
 def viewer_html(directory):
     """Enhance new and existing renderings without changing their tile images."""
     page = (directory/'map.html').read_bytes()
+    mirror_marker = b'<!-- RealmCraft horizontal mirror v1 -->'
+    if mirror_marker not in page:
+        mirror = (HERE/'mirror.js').read_bytes()
+        page = page.replace(b'</body>', mirror_marker+b'<script>'+mirror+b'</script></body>')
     marker = b'<!-- RealmCraft auto-fit -->'
     if marker in page: return page
     try:
@@ -258,8 +267,8 @@ def main():
     p.add_argument('--source',type=Path);p.add_argument('--output',type=Path)
     p.add_argument('--radius',type=int,choices=[0,128,256,512,1024],default=0)
     p.add_argument('--detail',type=int,choices=[16,32,64],default=32)
-    p.add_argument('--camera-angle',type=int,choices=range(0,360,45),default=45)
-    p.add_argument('--camera-elevation',type=int,choices=[30,45,60,90],default=45)
+    p.add_argument('--camera-angle',type=int,choices=range(0,360,45),default=DEFAULT_CAMERA_ANGLE)
+    p.add_argument('--camera-elevation',type=int,choices=[30,45,60,90],default=DEFAULT_CAMERA_ELEVATION)
     p.add_argument('--title',default='RealmCraft render')
     p.add_argument('--accept-minecraft-resources',action='store_true')
     p.add_argument('--parent',type=int,default=0)

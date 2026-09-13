@@ -6,6 +6,8 @@
 
 AI contributor: **[Codex Astra](CONTRIBUTORS.md)**
 
+[RealmCraft Companion Wiki](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/wiki) · [Screenshot gallery · 1.7.54](docs/GALLERY.md)
+
 ![Project overview: the macOS Companion is the main project, with an experimental Android/Quest app and a browser demo. This is a conceptual illustration, not an app screenshot.](docs/project-overview.svg)
 
 <p align="center">
@@ -31,15 +33,15 @@ An independent community toolkit for **RealmCraft VR on Meta Quest**. The macOS 
 
 ## See the Companion in action
 
-Real captures of **macOS Companion 1.7.26**, using the approved **RealmCraft Companion Demo** snapshot saved on 6 September 2026. The overview includes the demo house; maps and 3D show saved terrain. Click an image for its full size.
+Real captures of **macOS Companion 1.7.54 (76)**, using the approved **RealmCraft Companion Demo** snapshot saved on 6 September 2026. The overview includes the demo house; maps and 3D show saved terrain. Click an image for its full size.
 
 | Demo world and library | 3D renderer · Beta |
 | --- | --- |
-| [![Companion overview with the demo house](docs/screenshots/01-companion-overview.png)](docs/screenshots/01-companion-overview.png) | [![3D preview of the demo landscape and house](docs/screenshots/06-demo-3d.png)](docs/screenshots/06-demo-3d.png) |
-| **Saved world map** | **Chest contents** |
-| [![Full saved demo map](docs/screenshots/02-demo-map.png)](docs/screenshots/02-demo-map.png) | [![Items in a demo chest](docs/screenshots/04-demo-chests.png)](docs/screenshots/04-demo-chests.png) |
+| [![Demo library](docs/screenshots/v1.7.54/demo-library.png)](docs/screenshots/v1.7.54/demo-library.png) | [![3D terrain preview · Beta](docs/screenshots/v1.7.54/demo-three-dimensional.png)](docs/screenshots/v1.7.54/demo-three-dimensional.png) |
+| **Saved world map** | **Help topics** |
+| [![Saved world map](docs/screenshots/v1.7.54/demo-map.png)](docs/screenshots/v1.7.54/demo-map.png) | [RealmCraft Companion Wiki](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/wiki) |
 
-**[All seven screenshots and captions →](docs/GALLERY.md)** · **[Route planning, AI export and turn-by-turn examples →](docs/AGENT-AND-NAVIGATION-EXAMPLES.md)**
+**[Screenshot gallery →](docs/GALLERY.md)** · **[Route planning, AI export and turn-by-turn examples →](docs/AGENT-AND-NAVIGATION-EXAMPLES.md)**
 
 Use the map to compare route candidates, export inventory and storage as Markdown or JSON, and pass optional navigation steps with nearby POIs to an agent. Navigation uses saved surface data and requires in-game checks; it does not track your live position.
 

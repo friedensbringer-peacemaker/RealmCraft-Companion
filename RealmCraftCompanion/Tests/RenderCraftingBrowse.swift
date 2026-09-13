@@ -14,7 +14,7 @@ import SwiftUI
             for block in [false, true] {
                 defaults.set(en ? "en" : "de", forKey: "appLanguage")
                 defaults.set(block ? "block" : "classic", forKey: "companionSkin")
-                let view = CraftingView(language: en ? "en" : "de", catalog: catalog, initialItem: "oak_boat", initialQuery: "boat", planURL: output.appendingPathComponent("unused-plan.json"))
+                let view = CraftingView(language: en ? "en" : "de", catalog: catalog, initialItem: "oak_boat", initialQuery: "boat", planURL: output.appendingPathComponent("unused-plan.json"), agentLibrary: CraftingAgentLibrary(url: output.appendingPathComponent("qa-agent.json")))
                     .companionAppearance().defaultAppStorage(defaults).environment(\.colorScheme, block ? .dark : .light)
                 let host = NSHostingView(rootView: view)
                 let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1080, height: 700), styleMask: [.borderless], backing: .buffered, defer: false)

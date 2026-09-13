@@ -273,8 +273,31 @@ def discover(base):
             item = entry("document", ref["path"], {"de": path.read_text(), "en": other.read_text()}, ref)
             item["note"] = "Whole document; preserve Markdown, commands, links and safety statements."
             entries.append(item)
+    # Bundled skills have German and English entrypoints with the same stable folder ID.
+    for path in sorted((base / "Resources/AgentSkills").glob("*/SKILL.md")):
+        other = path.with_name("SKILL-en.md")
+        if other.exists():
+            ref = {"path": path.relative_to(base).as_posix(), "englishPath": other.relative_to(base).as_posix()}
+            entries.append(entry("document", ref["path"], {"de": path.read_text(), "en": other.read_text()}, ref))
     # Scope new authored sections explicitly: historical local notes may contain user data.
     for relative, heading, identity in (
+        ("Resources/CHANGELOG.md", '# 1.7.54 · Public documentation workflow · 2026-09-13', "public-docs-1.7.54"),
+        ("Resources/BACKLOG.md", '## Public documentation workflow · 1.7.54 (76) · 2026-09-13', "public-docs-1.7.54"),
+        ("Resources/CHANGELOG.md", "# 1.7.54 · Recipe Markdown for agents · 2026-09-13", "crafting-agent-1.7.54"),
+        ("Resources/BACKLOG.md", "## Recipe Markdown for agents · 1.7.54 (76) · 2026-09-13", "crafting-agent-1.7.54"),
+        ("Resources/CRAFTING-SOURCES.md", "## Personal verification and agent exports · 1.7.54", "crafting-agent-1.7.54"),
+        ("Resources/CHANGELOG.md", '# 1.7.53 · GitHub feedback · 2026-09-13', "github-feedback-1.7.53"),
+        ("Resources/BACKLOG.md", '## GitHub feedback · 1.7.53 (75) · 2026-09-13', "github-feedback-1.7.53"),
+        ("Resources/CHANGELOG.md", "# 1.7.52 · Tectonicus map space and mirroring · 2026-09-13", "tectonicus-mirror-1.7.52"),
+        ("Resources/BACKLOG.md", "## Tectonicus map space and mirroring · 1.7.52 (74) · 2026-09-13", "tectonicus-mirror-1.7.52"),
+        ("docs/UI-UX-AUDIT-2026-09-12.md", "## Tectonicus map space and mirroring · 1.7.52 (74) · 2026-09-13", "tectonicus-mirror-1.7.52"),
+        ("Resources/CHANGELOG.md", "# 1.7.51 · Obtaining guides and recipe filters · 2026-09-13", "crafting-obtaining-1.7.51"),
+        ("Resources/BACKLOG.md", "## Obtaining guides and recipe filters · 1.7.51 (73) · 2026-09-13", "crafting-obtaining-1.7.51"),
+        ("Resources/CRAFTING-SOURCES.md", "## Obtaining guides · 1.7.51", "crafting-obtaining-1.7.51"),
+        ("Resources/CRAFTING-SOURCES.md", "## Interpretation", "crafting-interpretation"),
+        ("Resources/CHANGELOG.md", "# 1.7.50 · List-scoped search · 2026-09-13", "list-search-1.7.50"),
+        ("Resources/BACKLOG.md", "## List-scoped search · 1.7.50 (72) · 2026-09-13", "list-search-1.7.50"),
+        ("docs/UI-UX-AUDIT-2026-09-12.md", "## List-scoped search · 1.7.50 (72) · 2026-09-13", "list-search-1.7.50"),
         ("Resources/CHANGELOG.md", "# 1.7.49 · Map and layer controls · 2026-09-13", "map-layer-1.7.49"),
         ("Resources/BACKLOG.md", "## Map and layer controls · 1.7.49 (71) · 2026-09-13", "map-layer-1.7.49"),
         ("docs/UI-UX-AUDIT-2026-09-12.md", "## Map and layer controls · 1.7.49 (71) · 2026-09-13", "map-layer-1.7.49"),

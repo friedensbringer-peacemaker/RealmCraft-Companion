@@ -1,5 +1,23 @@
 # Companion UI/UX and integration audit · 2026-09-12
 
+## Tectonicus map space and mirroring · 1.7.52 (74) · 2026-09-13
+
+Tectonicus-specific follow-up: the large always-visible form left little space for the actual map, and camera angle alone did not reproduce the requested mirrored Atlas view. The implementation keeps source selection, primary action, Help, consent and progress in view. Render settings and source/result details use accessible popovers following the Maps information pattern. Saved/not-live and next-render state remain visible. Actual rendered perspective stays separate from pending settings.
+
+The viewer mirrors both tiles and projected world positions, while controls and marker glyphs remain upright. World-coordinate links retain their meaning. Existing map files can be served with this enhancement without tile rewrites. The mirror switch restores the original display. Synthetic projection, tile-boundary, idempotence and worker tests cover the implementation; native/browser visual checks are recorded separately in the local acceptance artifacts. Full VoiceOver and physical trackpad acceptance remain open.
+
+
+## List-scoped search · 1.7.50 (72) · 2026-09-13
+
+UX-012 follow-up: place local search at the top of its result pane, following
+Savegames, with 16-point insets and no fixed toolbar search width. Applied to
+Builds, Videos, Recipes, Mobs, Chests, Help, Assistant instructions and the comparison
+browser. Single-column Links/Checklist search remains directly above its content.
+Search remains visible when the result list is empty; original query/filter and
+selection bindings are reused. Global Quick find is intentionally app-scoped;
+map search already belongs to its local result area. Code-level
+placement and build checks do not close native keyboard/VoiceOver acceptance.
+
 ## Map and layer controls · 1.7.49 (71) · 2026-09-13
 
 The Maps header now aligns a compact Area selector to Generate map and places

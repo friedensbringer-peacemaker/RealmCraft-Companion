@@ -1,0 +1,102 @@
+{
+  "repository": "https://github.com/friedensbringer-peacemaker/RealmCraft-Companion",
+  "labels": {
+    "home": {
+      "de": "RealmCraft Companion – Wiki",
+      "en": "RealmCraft Companion Wiki"
+    },
+    "intro": {
+      "de": "Erkunde gespeicherte Welten, finde Materialien und plane dein nächstes Bauvorhaben. Beginne mit der Demo oder den ersten Schritten. Die macOS-App ist das Hauptprojekt; Android/Quest und Website bieten kleinere, eigenständige Funktionsumfänge.",
+      "en": "Explore saved worlds, find materials and plan your next build. Start with the demo or the first steps. The macOS app is the main project; Android/Quest and the website offer smaller, separate feature sets."
+    },
+    "versionNotice": {
+      "de": "Diese Wiki folgt dem unten angegebenen Quellstand. App-Downloads können älter sein; vergleiche die Version im Release. Screenshots sind einzeln versioniert.",
+      "en": "This wiki follows the source version below. App downloads may be older; compare the release version. Screenshots are versioned individually."
+    },
+    "credit": {
+      "de": "100 % mit OpenAI Codex entwickelt. KI-Contributor: Codex Astra.",
+      "en": "100% vibe-coded with OpenAI Codex. AI contributor: Codex Astra."
+    },
+    "contents": {
+      "de": "Hilfethemen",
+      "en": "Help topics"
+    },
+    "related": {
+      "de": "Verwandte Themen",
+      "en": "Related topics"
+    },
+    "source": {
+      "de": "Quellstand",
+      "en": "Source version"
+    },
+    "gallery": {
+      "de": "Screenshot-Galerie",
+      "en": "Screenshot gallery"
+    },
+    "maintenance": {
+      "de": "Wiki und Screenshots pflegen",
+      "en": "Maintain the wiki and screenshots"
+    },
+    "galleryIntro": {
+      "de": "Echte App-Aufnahmen aus einem isolierten Profil mit ausschließlich der freigegebenen Demo. Referenzwissen und synthetische Pläne sind gesondert gekennzeichnet. Alte Versionsgalerien bleiben erhalten.",
+      "en": "Real app captures from an isolated profile using only the approved demo. Reference content and synthetic plans are labeled separately. Earlier version galleries are preserved."
+    },
+    "gettingStarted": {
+      "de": "Erste Schritte",
+      "en": "Getting started"
+    },
+    "downloads": {
+      "de": "App-Downloads",
+      "en": "App downloads"
+    },
+    "demo": {
+      "de": "Website mit Demo ausprobieren",
+      "en": "Try the website demo"
+    },
+    "generatedNotice": {
+      "de": "Aus der App-Hilfe erzeugt. Änderungen bitte an den verknüpften Quellen vornehmen.",
+      "en": "Generated from app help. Please make changes in the linked sources."
+    }
+  },
+  "screenshots": [
+    {
+      "path": "docs/screenshots/v1.7.54/demo-library.png",
+      "sha256": "21dce3d34dce443368bc99564c6dcc06afff86615c8790e1466ccd860b67b57b",
+      "version": "1.7.54 (76)",
+      "title": {
+        "de": "Demo-Bibliothek",
+        "en": "Demo library"
+      },
+      "caption": {
+        "de": "Die freigegebene Demo in einer isolierten Bibliothek mit gespeichertem Haus-Vorschaubild und Backup-Status. Keine Quest ist verbunden.",
+        "en": "The approved demo in an isolated library, with its saved house preview and backup status. No headset is connected."
+      }
+    },
+    {
+      "path": "docs/screenshots/v1.7.54/demo-map.png",
+      "sha256": "53ef7eab7f64c6acc7b00d124356a9b19146bb3c272c9abc75b1842ad775d894",
+      "version": "1.7.54 (76)",
+      "title": {
+        "de": "Karte der gespeicherten Welt",
+        "en": "Saved world map"
+      },
+      "caption": {
+        "de": "Gelände um den Demo-Ursprung mit Schildersuche, Ebenen und Planungsanzeigen für Portale und Metro. Gespeicherte Daten, kein Live-Spiel.",
+        "en": "Terrain around the demo origin, with sign search, layer controls and planned portal and metro overlays. This is saved data, not live gameplay."
+      }
+    },
+    {
+      "path": "docs/screenshots/v1.7.54/demo-three-dimensional.png",
+      "sha256": "9cfd327a6bb9377d3ca75a5552a96f4f408a601c2820ac9a912a33691ebdfdb1",
+      "version": "1.7.54 (76)",
+      "title": {
+        "de": "3D-Geländevorschau · Beta",
+        "en": "3D terrain preview · Beta"
+      },
+      "caption": {
+        "de": "Ein 128 × 128 Blöcke großer Bereich der freigegebenen Demo. Übersicht, Gehen und Fliegen zeigen vereinfachte Würfel; Wasser und Glas sind undurchsichtig, Figuren fehlen.",
+        "en": "A 128 × 128 block area of the approved demo. Overview, Walk and Fly inspect simplified cubes; water and glass are opaque and characters are absent."
+      }
+    }
+  ]
+}

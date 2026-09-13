@@ -11,6 +11,10 @@ struct AIContextExportView: View {
     @Binding var openLatest: Bool
     var openSkills: () -> Void = {}
     @ObservedObject private var skills = AgentSkillLibrary.shared
+    @ObservedObject private var craftingLibrary = CraftingAgentLibrary.shared
+    @AppStorage("craftingAgent.include") private var includeCrafting = true
+    @State private var showCraftingSelection = false
+    private let craftingIndex = Result { try CraftingCatalog.load().index() }
     @AppStorage("agentSkill.selectedID") private var selectedSkillID = "realmcraft-world-context"
     @AppStorage("agentSkill.includeInExport") private var includeSkill = true
     @AppStorage("agentSkill.includeProfile") private var includeProfile = false
@@ -48,6 +52,11 @@ struct AIContextExportView: View {
 
     var body: some View {
         exportSelectionEvents
+        .onChange(of: craftingLibrary.state) { _, _ in clear() }
+        .onChange(of: includeCrafting) { _, _ in clear() }
+        .sheet(isPresented: $showCraftingSelection) {
+            if case .success(let index) = craftingIndex { CraftingAgentSelectionView(library: craftingLibrary, index: index, english: en) }
+        }
         .onChange(of: videoSelection) { _, _ in clear() }
         .onChange(of: includeVideos) { _, _ in clear() }
         .onChange(of: separateVideos) { _, _ in clear() }
@@ -113,6 +122,7 @@ struct AIContextExportView: View {
                         MapToolsSetup(model: model, maps: maps, english: en)
                     }
                     NavigationExportOptions(scope: model.selected?.annotationScope ?? "", english: en, enabled: $includeNavigation, includePOIs: $includeNavigationPOIs, pack: $navigationPack).disabled(generating || model.busy)
+                    craftingOptions
                     videoOptions
                     if generating {
                         VStack(alignment: .leading, spacing: 8) {
@@ -194,6 +204,7 @@ struct AIContextExportView: View {
     private var lifecycleEvents: some View {
         page
          .onAppear {
+            craftingLibrary.reload()
             try? skills.reload()
             maps.check(model)
             if generateRequest == nil { restoreLast(force: openLatest) }
@@ -211,6 +222,19 @@ struct AIContextExportView: View {
         .onChange(of: includeProfile) { _, _ in clear() }
         .onChange(of: model.selection) { _, _ in clear() }
         .onChange(of: model.library.root) { _, _ in clear() }
+    }
+    private var craftingOptions: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Toggle(en ? "Include selected crafting and obtaining guides" : "Ausgewählte Rezepte und Beschaffungsanleitungen einbeziehen", isOn: $includeCrafting).toggleStyle(.checkbox)
+            Text(en ? "\(craftingLibrary.state.selectedIDs.count) guides selected. Complete Markdown and JSON include quantities, steps, sources and personal verification status." : "\(craftingLibrary.state.selectedIDs.count) Anleitungen ausgewählt. Vollständiges Markdown und JSON enthalten Mengen, Schritte, Quellen und persönlichen Prüfstatus.")
+                .font(.caption).foregroundStyle(.secondary)
+            switch craftingIndex {
+            case .success:
+                Button(en ? "Choose guides and add verified ones…" : "Anleitungen auswählen und verifizierte hinzufügen …") { showCraftingSelection = true }
+            case .failure(let error): Text(error.localizedDescription).font(.caption).foregroundStyle(.red)
+            }
+            CraftingAgentErrorView(library: craftingLibrary, english: en)
+        }.disabled(generating || model.busy)
     }
     private var videoOptions: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -271,6 +295,9 @@ struct AIContextExportView: View {
         let profile = includeProfile ? skills.state.profile : nil
         let videos = includeVideos ? VideoKnowledgeExport.selected(videoTips, value: videoSelection) : []
         let splitVideos = separateVideos
+        let crafting: CraftingAgentSnapshot?
+        do { crafting = includeCrafting ? try craftingLibrary.snapshot(index: craftingIndex.get(), english: english) : nil }
+        catch { failure = error.localizedDescription; return }
         let navigation = includeNavigation ? navigationPack?.selectingPOIs(includeNavigationPOIs) : nil
         if includeNavigation && navigation == nil { failure = english ? "Load a route from Maps first." : "Zuerst eine Route aus Karten laden."; return }
         let supplement = AIContextSupplement.capture(save: selected, resources: Bundle.main.resourceURL)
@@ -282,7 +309,7 @@ struct AIContextExportView: View {
             let result = Result {
                 let rawBase = try backend.makeAIContext(selected, python: python, engine: engine, names: names, ownedIDs: owned, places: places, english: english, supplement: supplement)
                 let base = navigation?.attach(to: rawBase) ?? rawBase
-                let value = AgentSkillExport.attach(skill, profile: profile, to: base, english: english).addingVideos(videos, english: english, separate: splitVideos)
+                let value = AgentSkillExport.attach(skill, profile: profile, to: base, english: english).addingCrafting(crafting).addingVideos(videos, english: english, separate: splitVideos)
                 let file = try CompanionExportArchive.write(markdown: value.markdown, json: value.json, root: root, videoMarkdown: value.videoMarkdown)
                 return (value, file, Date())
             }

@@ -11,6 +11,11 @@ import worker
 
 class WorkerTests(unittest.TestCase):
     def test_perspective_config_result_and_portable_framing(self):
+        for angles, expected in [((), (270,90)), ((135,30), (135,30))]:
+            with self.subTest(angles=angles):
+                self.check_render_perspective(angles, expected)
+
+    def check_render_perspective(self, angles, expected):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);source=root/'source';source.mkdir();output=root/'render'
             manifest=dict(bounds=[-32,-16,31,47],source_sha256={},chunks=24,placeholders=0,limitations=[])
@@ -23,15 +28,47 @@ class WorkerTests(unittest.TestCase):
                 (output/'map/map.html').write_text('<body>synthetic map</body>')
                 return 'Render complete'
             with patch('worker.toolchain',return_value=(root,root/'java')), patch('exporter.export_world',side_effect=export), patch('worker.run',side_effect=render):
-                worker.render(root,source,output,0,64,'Synthetic',135,30)
+                worker.render(root,source,output,0,64,'Synthetic',*angles)
             config=ET.parse(output/'tectonicus.xml').find('map')
-            self.assertEqual(config.get('cameraAngle'),'135')
-            self.assertEqual(config.get('cameraElevation'),'30')
+            self.assertEqual(config.get('cameraAngle'),str(expected[0]))
+            self.assertEqual(config.get('cameraElevation'),str(expected[1]))
             result=json.loads((output/'result.json').read_text())
-            self.assertEqual((result['camera_angle'],result['camera_elevation']),(135,30))
+            self.assertEqual((result['camera_angle'],result['camera_elevation']),expected)
             page=(output/'map/map.html').read_bytes()
             self.assertIn(b'[-32, -16, 31, 47]',page)
             self.assertEqual(worker.viewer_html(output/'map'),page)
+
+    def test_existing_viewer_gets_mirror_without_rewriting_tiles(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);site=root/'map';site.mkdir()
+            original=b'<body><!-- RealmCraft auto-fit --><script>legacyFit()</script></body>'
+            (site/'map.html').write_bytes(original)
+            (site/'tile.png').write_bytes(b'synthetic tile remains unchanged')
+            page=worker.viewer_html(site)
+            self.assertEqual(page.count(b'<!-- RealmCraft horizontal mirror v1 -->'),1)
+            self.assertEqual(page.count(b'legacyFit()'),1)
+            self.assertEqual((site/'map.html').read_bytes(),original)
+            self.assertEqual((site/'tile.png').read_bytes(),b'synthetic tile remains unchanged')
+            (site/'map.html').write_bytes(page)
+            self.assertEqual(worker.viewer_html(site),page)
+
+    def test_mirror_without_export_bounds(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);(root/'map.html').write_text('<body>synthetic map</body>')
+            page=worker.viewer_html(root)
+            self.assertIn(b'<!-- RealmCraft horizontal mirror v1 -->',page)
+            self.assertNotIn(b'<!-- RealmCraft auto-fit -->',page)
+
+    def test_cli_default_and_custom_perspective(self):
+        for flags, expected in [([], (270,90)), (['--camera-angle','135','--camera-elevation','30'], (135,30))]:
+            with self.subTest(flags=flags), tempfile.TemporaryDirectory() as folder:
+                root=Path(folder)
+                argv=['worker.py','render','--support',folder,'--source',str(root/'source'),
+                      '--output',str(root/'render'),'--progress',str(root/'progress.json'),*flags]
+                with patch.object(sys,'argv',argv), patch('worker.render') as render, \
+                     patch('worker.PROGRESS',None), patch('worker.signal.signal'):
+                    self.assertEqual(worker.main(),0)
+                    self.assertEqual(render.call_args.args[-2:],expected)
 
     def test_cancellation_reaps_child(self):
         with tempfile.TemporaryDirectory() as folder:

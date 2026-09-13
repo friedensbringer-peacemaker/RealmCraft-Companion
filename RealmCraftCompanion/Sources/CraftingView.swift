@@ -15,11 +15,15 @@ struct CraftingView: View {
     @State private var history: [String] = []
     @State private var showMaterialPlan = false
     @State private var showIcons = false
+    @State private var showAgentSelection = false
+    @State private var onlyVerified = false
+    @ObservedObject private var agentLibrary: CraftingAgentLibrary
     @State private var planAddition: (recipe: CraftingRecipe, quantity: Int)?
     private var english: Bool { language == "en" }
-    init(language: String, catalog: CraftingCatalog? = nil, initialItem: String = "crafting_table", initialQuery: String = "", planURL: URL = CraftingPlanStorage.defaultURL) {
+    init(language: String, catalog: CraftingCatalog? = nil, initialItem: String = "crafting_table", initialQuery: String = "", planURL: URL = CraftingPlanStorage.defaultURL, agentLibrary: CraftingAgentLibrary = .shared) {
         self.language = language
         self.planURL = planURL
+        self.agentLibrary = agentLibrary
         result = catalog.map { .success($0.index()) } ?? Self.bundled
         _selected = State(initialValue: initialItem)
         _query = State(initialValue: initialQuery)
@@ -28,11 +32,11 @@ struct CraftingView: View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Crafting / Recipes" : "Crafting / Rezepte") {
                 Button { showIcons = true } label: { Label(english ? "Item icons" : "Gegenstands-Icons", systemImage: "photo") }
+                Button(english ? "For agents" : "Für Agenten") { showAgentSelection = true }
+                    .disabled({ if case .failure = result { return true }; return false }())
                 Button(english ? "Material plan" : "Materialplan") {
                     planAddition = nil; showMaterialPlan = true
                 }.disabled({ if case .failure = result { return true }; return false }())
-                TextField(english ? "Item, alias or ID" : "Gegenstand, Begriff oder ID", text: $query)
-                    .textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
             }
             switch result {
             case .failure(let error):
@@ -44,7 +48,7 @@ struct CraftingView: View {
         .sheet(isPresented: $showIcons) { ItemIconSettings(english: english) }
     }
     private func content(_ index: CraftingIndex) -> some View {
-        let visible = index.filtered(query: query, category: category, station: station, coverage: coverage, english: english)
+        let visible = visibleItems(index)
         let groups = CraftingBrowseGroup.make(visible, english: english)
         return VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 10) {
@@ -52,42 +56,40 @@ struct CraftingView: View {
                 Text(english ? "\(index.catalog.items.filter { $0.itemID != nil }.count) catalog entries · \(index.catalog.recipes.count) comparison recipes · \(index.recipes.count) items with recipes"
                      : "\(index.catalog.items.filter { $0.itemID != nil }.count) Katalogeinträge · \(index.catalog.recipes.count) Vergleichsrezepte · \(index.recipes.count) Gegenstände mit Rezept")
                     .font(.subheadline.weight(.semibold))
+                    Text(english ? "\(index.acquisitions.count) entries with obtaining instructions" : "\(index.acquisitions.count) Einträge mit Beschaffungsanleitung")
+                        .font(.subheadline)
                 }.font(.caption)
-                Text(english ? "Recipes, stations and name mappings are Minecraft references, unverified in RealmCraft VR. RealmCraft wiki evidence is noted separately. This is not a complete, confirmed list of game content."
-                     : "Rezepte, Stationen und Namenszuordnungen sind Minecraft-Referenzen, in RealmCraft VR ungeprüft. RealmCraft-Wiki-Belege stehen separat dabei. Dies ist keine vollständige, bestätigte Liste der Spielinhalte.")
+                Text(english ? "Recipes, obtaining methods and name mappings are Minecraft references, unverified in RealmCraft VR. RealmCraft wiki evidence is noted separately. This is not a complete, confirmed list of game content."
+                     : "Rezepte, Beschaffungswege und Namenszuordnungen sind Minecraft-Referenzen, in RealmCraft VR ungeprüft. RealmCraft-Wiki-Belege stehen separat dabei. Dies ist keine vollständige, bestätigte Liste der Spielinhalte.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                HStack {
-                    Text(english ? "\(visible.count) matches · \(activeFilterCount) active filters" : "\(visible.count) Treffer · \(activeFilterCount) aktive Filter").font(.caption)
-                    Spacer()
-                    if activeFilterCount > 0 || !query.isEmpty {
-                        Button(english ? "Reset" : "Zurücksetzen") { resetFilters() }.font(.caption)
-                    }
-                }
-                DisclosureGroup(english ? "Category, station & evidence" : "Kategorie, Herstellungsort & Datenlage", isExpanded: $showFilters) {
-                  VStack(alignment: .leading, spacing: 8) {
-                    Picker(english ? "Category" : "Kategorie", selection: $category) {
-                        Text(english ? "All categories" : "Alle Kategorien").tag("all")
-                        ForEach(["blocks", "tools", "armor", "food", "transport", "circuits", "materials"], id: \.self) { key in
-                            Text(categoryTitle(key)).tag(key)
-                        }
-                    }
-                    Picker(english ? "Station" : "Herstellungsort", selection: $station) {
-                        Text(english ? "All stations" : "Alle Stationen").tag("all")
-                        ForEach(CraftingStation.allCases, id: \.rawValue) { value in Text(value.title(english)).tag(value.rawValue) }
-                    }
-                    Picker(english ? "Coverage" : "Datenlage", selection: $coverage) {
-                        Text(english ? "All entries" : "Alle Einträge").tag("all")
-                        Text(english ? "With recipe" : "Mit Rezept").tag("recipes")
-                        Text(english ? "Recipe open" : "Rezept offen").tag("open")
-                        Text(english ? "Wiki evidence" : "Mit Wiki-Beleg").tag("wiki")
-                    }
-                  }.font(.caption).padding(.top, 6)
-                }
+
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
             HSplitView {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(english ? "\(visible.count) matches · by type" : "\(visible.count) Treffer · nach Typ").font(.caption).foregroundStyle(.secondary).padding(12)
+                    HStack(spacing: 8) {
+                        TextField(english ? "Item, alias or ID" : "Gegenstand, Begriff oder ID", text: $query)
+                            .textFieldStyle(.roundedBorder)
+                            .accessibilityIdentifier("crafting.search")
+                        Button { showFilters.toggle() } label: {
+                            Image(systemName: activeFilterCount > 0 ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                                .foregroundStyle(activeFilterCount > 0 ? Color.accentColor : .secondary)
+                        }
+                        .buttonStyle(.plain).font(.title3)
+                        .accessibilityLabel(english ? "Filter items" : "Gegenstände filtern")
+                        .accessibilityValue(english ? "\(activeFilterCount) active filters" : "\(activeFilterCount) aktive Filter")
+                        .accessibilityIdentifier("crafting.filters")
+                        .help(english ? "Category, station and coverage" : "Kategorie, Herstellungsort und Datenlage")
+                        .popover(isPresented: $showFilters, arrowEdge: .top) { filterPopover }
+                    }.padding(.horizontal, 12).padding(.top, 12).padding(.bottom, 8)
+                    HStack {
+                        Text(english ? "\(visible.count) matches · \(activeFilterCount) filters" : "\(visible.count) Treffer · \(activeFilterCount) Filter")
+                            .foregroundStyle(.secondary)
+                        Spacer(minLength: 4)
+                        if activeFilterCount > 0 || !query.isEmpty {
+                            Button(english ? "Reset" : "Zurücksetzen") { resetFilters() }.buttonStyle(.plain)
+                        }
+                    }.font(.caption).padding(.horizontal, 12).padding(.bottom, 8)
                     if visible.isEmpty {
                         Text(english ? "No matches. Clear search or filters." : "Keine Treffer. Suche oder Filter zurücksetzen.")
                             .foregroundStyle(.secondary).padding()
@@ -117,7 +119,7 @@ struct CraftingView: View {
                         }.padding(.horizontal, 20).padding(.top, 12)
                     }
                     if let selected, let item = index.items[selected] {
-                        CraftingItemDetail(item: item, index: index, english: english, openItem: openItem, addToPlan: { recipe, quantity in
+                        CraftingItemDetail(item: item, index: index, english: english, agentLibrary: agentLibrary, openItem: openItem, addToPlan: { recipe, quantity in
                             planAddition = (recipe, quantity); showMaterialPlan = true
                         }).id(selected)
                     } else {
@@ -126,15 +128,61 @@ struct CraftingView: View {
                 }.frame(minWidth: 420, maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .onAppear { applyLookup(index) }
+        .onAppear { agentLibrary.reload(); applyLookup(index) }
         .onChange(of: lookup) { _, _ in applyLookup(index) }
         .onChange(of: query) { _, _ in synchronizeSelection(index) }
         .onChange(of: category) { _, _ in synchronizeSelection(index) }
         .onChange(of: station) { _, _ in synchronizeSelection(index) }
         .onChange(of: coverage) { _, _ in synchronizeSelection(index) }
+        .onChange(of: onlyVerified) { _, _ in synchronizeSelection(index) }
+        .onChange(of: agentLibrary.state) { _, _ in if onlyVerified { synchronizeSelection(index) } }
+        .sheet(isPresented: $showAgentSelection) {
+            CraftingAgentSelectionView(library: agentLibrary, index: index, english: english)
+        }
         .sheet(isPresented: $showMaterialPlan) {
             CraftingPlanView(index: index, english: english, addition: planAddition, url: planURL)
         }
+    }
+    private var filterPopover: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text(english ? "Filter items" : "Gegenstände filtern").font(.headline)
+                Spacer()
+                Button { showFilters = false } label: { Image(systemName: "xmark") }
+                    .buttonStyle(.plain).accessibilityLabel(english ? "Close filters" : "Filter schließen")
+            }
+            Picker(english ? "Category" : "Kategorie", selection: $category) {
+                Text(english ? "All categories" : "Alle Kategorien").tag("all")
+                ForEach(["blocks", "tools", "armor", "food", "transport", "circuits", "materials"], id: \.self) { key in
+                    Text(categoryTitle(key)).tag(key)
+                }
+            }
+            Picker(english ? "Station" : "Herstellungsort", selection: $station) {
+                Text(english ? "All methods" : "Alle Herstellungswege").tag("all")
+                Text(english ? "Obtain outside crafting" : "Außerhalb von Crafting beschaffen").tag("acquisition")
+                ForEach(CraftingStation.allCases, id: \.rawValue) { value in Text(value.title(english)).tag(value.rawValue) }
+            }
+            Divider()
+            Text(english ? "Show entries" : "Einträge anzeigen").font(.subheadline.weight(.semibold))
+            VStack(alignment: .leading, spacing: 10) {
+                coverageOption("all", title: english ? "All entries" : "Alle Einträge")
+                coverageOption("recipes", title: english ? "With recipe" : "Mit Rezept")
+                coverageOption("acquisition", title: english ? "With obtaining guide" : "Mit Beschaffungsanleitung")
+                coverageOption("open", title: english ? "Instructions still open" : "Anleitung noch offen")
+                coverageOption("wiki", title: english ? "RealmCraft wiki evidence" : "Mit RealmCraft-Wiki-Beleg")
+            }
+            Toggle(english ? "Only personally verified guides" : "Nur persönlich verifizierte Anleitungen", isOn: $onlyVerified).toggleStyle(.checkbox)
+                .disabled(!agentLibrary.failure.isEmpty)
+            CraftingAgentErrorView(library: agentLibrary, english: english)
+            Button(english ? "Reset filters" : "Filter zurücksetzen") { category = "all"; station = "all"; coverage = "all"; onlyVerified = false }
+                .disabled(activeFilterCount == 0)
+            Text(english ? "Filters apply to the item list. The search term stays when you reset filters here." : "Filter gelten für die Gegenstandsliste. Beim Zurücksetzen hier bleibt dein Suchbegriff erhalten.")
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+        }.padding(20).frame(width: 350)
+    }
+    private func coverageOption(_ key: String, title: String) -> some View {
+        Toggle(title, isOn: Binding(get: { coverage == key }, set: { enabled in coverage = enabled ? key : "all" }))
+            .toggleStyle(.checkbox)
     }
     private func applyLookup(_ index: CraftingIndex) {
         guard let lookup, lookup.kind == .crafting, index.items[lookup.item] != nil else { return }
@@ -146,18 +194,25 @@ struct CraftingView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title.value(english)).foregroundStyle(.primary).lineLimit(2)
                 let recipes = index.recipes[item.id, default: []]
-                Text(recipes.isEmpty ? (english ? "Recipe open" : "Rezept offen") : (english ? "\(recipes.count) reference recipe(s)" : "\(recipes.count) Rezeptreferenz(en)"))
+                Text(recipes.isEmpty ? (index.acquisitions[item.id] != nil ? (english ? "Obtaining guide" : "Beschaffung erklärt") : (english ? "Instructions open" : "Anleitung offen")) : (english ? "\(recipes.count) reference recipe(s)" : "\(recipes.count) Rezeptreferenz(en)"))
                     .font(.caption2).foregroundStyle(.secondary)
             }
         }.padding(.vertical, 4).tag(item.id)
     }
+    private func visibleItems(_ index: CraftingIndex) -> [CraftingItem] {
+        let items = index.filtered(query: query, category: category, station: station, coverage: coverage, english: english)
+        guard onlyVerified else { return items }
+        guard agentLibrary.failure.isEmpty else { return [] }
+        let verified = Set(CraftingInstruction.all(index).filter { agentLibrary.state.records[$0.id]?.isVerified($0, index: index) == true }.map(\.itemID))
+        return items.filter { verified.contains($0.id) }
+    }
     private func synchronizeSelection(_ index: CraftingIndex) {
-        let visible = CraftingBrowseGroup.make(index.filtered(query: query, category: category, station: station, coverage: coverage, english: english), english: english).flatMap(\.items)
+        let visible = CraftingBrowseGroup.make(visibleItems(index), english: english).flatMap(\.items)
         if !visible.contains(where: { $0.id == selected }) { selected = visible.first?.id }
         history = []
     }
-    private func resetFilters() { query = ""; category = "all"; station = "all"; coverage = "all" }
-    private var activeFilterCount: Int { [category, station, coverage].filter { $0 != "all" }.count }
+    private func resetFilters() { query = ""; category = "all"; station = "all"; coverage = "all"; onlyVerified = false }
+    private var activeFilterCount: Int { [category, station, coverage].filter { $0 != "all" }.count + (onlyVerified ? 1 : 0) }
     private func openItem(_ id: String) {
         guard id != selected else { return }
         if let selected { history.append(selected) }
@@ -181,6 +236,7 @@ private struct CraftingItemDetail: View {
     let item: CraftingItem
     let index: CraftingIndex
     let english: Bool
+    @ObservedObject var agentLibrary: CraftingAgentLibrary
     let openItem: (String) -> Void
     var addToPlan: (CraftingRecipe, Int) -> Void = { _, _ in }
     @State private var recipeID = ""
@@ -207,14 +263,17 @@ private struct CraftingItemDetail: View {
                 }
                 if let recipe {
                     recipeContent(recipe)
-                } else {
+                } else if index.acquisitions[item.id] == nil {
                     GroupBox {
                         Text(english ? "No recipe is documented for this entry in this catalog. This does not mean it cannot be crafted. It may be obtained by mining, harvesting, loot, trading, breeding or another process, or belong to a different game version. Check the in-game recipe list."
                              : "Für diesen Eintrag ist hier kein Rezept dokumentiert. Das bedeutet nicht, dass er nicht herstellbar ist. Mögliche Bezugswege sind Abbau, Ernte, Beute, Handel, Zucht oder ein anderes Verfahren; auch eine andere Spielversion ist möglich. Prüfe die Rezeptliste im Spiel.")
                         if item.itemID == nil {
                             Text(english ? "This ingredient belongs to the Minecraft source and has no mapping in the Companion catalog." : "Diese Zutat stammt aus der Minecraft-Quelle und hat keine Zuordnung im Companion-Katalog.").foregroundStyle(.secondary)
                         }
-                    } label: { Label(english ? "Recipe open" : "Rezept offen", systemImage: "questionmark.circle") }
+                    } label: { Label(english ? "Instructions open" : "Anleitung offen", systemImage: "questionmark.circle") }
+                }
+                if let guide = index.acquisitions[item.id] {
+                    CraftingAcquisitionView(item: item, guide: guide, index: index, english: english, agentLibrary: agentLibrary, openItem: openItem)
                 }
                 DisclosureGroup(english ? "How crafting works in RealmCraft" : "So funktioniert Crafting in RealmCraft", isExpanded: $showBasics) {
                     VStack(alignment: .leading, spacing: 12) {
@@ -237,7 +296,8 @@ private struct CraftingItemDetail: View {
                         }.padding(.top, 10)
                     }
                 }
-                Text(english ? "100% vibe-coded with OpenAI Codex · Sources checked \(index.catalog.checked)." : "100 % mit OpenAI Codex entwickelt · Quellen geprüft am \(index.catalog.checked).")
+                let checked = index.acquisitions[item.id]?.checked ?? index.catalog.checked
+                Text(english ? "100% vibe-coded with OpenAI Codex · Sources checked \(checked)." : "100 % mit OpenAI Codex entwickelt · Quellen geprüft am \(checked).")
                     .font(.caption2).foregroundStyle(.secondary)
             }.textSelection(.enabled).padding(24).frame(maxWidth: 920, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -251,7 +311,7 @@ private struct CraftingItemDetail: View {
                     }
                 }
             }
-            Label(english ? "Minecraft comparison · unverified in RealmCraft VR" : "Minecraft-Vergleich · in RealmCraft VR ungeprüft", systemImage: "info.circle")
+            Label(english ? "Catalog source: Minecraft comparison · no project test in RealmCraft VR" : "Katalogquelle: Minecraft-Vergleich · kein Projekttest in RealmCraft VR", systemImage: "info.circle")
                 .font(.callout.weight(.medium)).foregroundStyle(.orange)
             if let evidence = recipe.corroboration {
                 VStack(alignment: .leading, spacing: 6) {
@@ -259,6 +319,7 @@ private struct CraftingItemDetail: View {
                     Link(evidence.title, destination: evidence.url).font(.caption)
                 }
             }
+            CraftingAgentControls(library: agentLibrary, instruction: .recipe(recipe), index: index, english: english, desired: desired)
             HStack(alignment: .top, spacing: 20) {
                 VStack(alignment: .leading, spacing: 5) {
                     Text(english ? "Reference station" : "Herstellungsort laut Referenz").font(.caption).foregroundStyle(.secondary)
@@ -379,5 +440,78 @@ private struct CraftingRecipeGrid: View {
                     .accessibilityElement(children: .combine)
             }
         }.frame(maxWidth: 350)
+    }
+}
+
+private struct CraftingAcquisitionView: View {
+    let item: CraftingItem
+    let guide: CraftingAcquisition
+    let index: CraftingIndex
+    let english: Bool
+    @ObservedObject var agentLibrary: CraftingAgentLibrary
+    let openItem: (String) -> Void
+    @State private var copied = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Label(english ? "How to obtain this item" : "So bekommst du den Gegenstand", systemImage: "hand.point.up.left")
+                .font(.title3.weight(.semibold))
+            CraftingAgentControls(library: agentLibrary, instruction: .acquisition(item: item.id, guide: guide), index: index, english: english)
+            Text(guide.method.value(english)).font(.headline)
+            Text(guide.summary.value(english))
+            Label(guide.evidence.value(english), systemImage: "info.circle")
+                .font(.caption).foregroundStyle(.orange)
+            GroupBox {
+                Text(guide.requirements.value(english)).frame(maxWidth: .infinity, alignment: .leading).padding(8)
+            } label: { Text(english ? "You need" : "Du brauchst").font(.headline) }
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(Array(guide.steps.enumerated()), id: \.element.id) { number, step in
+                    HStack(alignment: .top, spacing: 12) {
+                        Text("\(number + 1)").font(.headline).frame(width: 28, height: 28).background(.quaternary, in: Circle())
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(step.title.value(english)).font(.headline)
+                            Text(step.text.value(english))
+                        }
+                    }
+                }
+            }
+            GroupBox {
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(guide.details) { detail in
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(detail.title.value(english)).font(.subheadline.weight(.semibold))
+                            Text(detail.text.value(english))
+                        }
+                    }
+                }.frame(maxWidth: .infinity, alignment: .leading).padding(8)
+            } label: { Text(english ? "Things to know" : "Besonderheiten").font(.headline) }
+            if !guide.relatedItems.isEmpty {
+                DisclosureGroup(english ? "Look up prerequisites & related items" : "Voraussetzungen & passende Gegenstände nachschlagen") {
+                    LazyVStack(alignment: .leading, spacing: 10) {
+                        ForEach(guide.relatedItems, id: \.self) { id in
+                            if let related = index.items[id] {
+                                Button { openItem(id) } label: {
+                                    Label(related.title.value(english), systemImage: "arrow.turn.down.right")
+                                }.buttonStyle(.plain)
+                            }
+                        }
+                    }.padding(.top, 10)
+                }
+            }
+            Button {
+                NSPasteboard.general.clearContents()
+                copied = NSPasteboard.general.setString(guide.report(item: item, english: english), forType: .string)
+            } label: { Label(copied ? (english ? "Guide copied" : "Anleitung kopiert") : (english ? "Copy guide & sources" : "Anleitung & Quellen kopieren"), systemImage: "doc.on.doc") }
+            DisclosureGroup(english ? "Sources & evidence · checked \(guide.checked)" : "Quellen & Datenlage · geprüft \(guide.checked)") {
+                VStack(alignment: .leading, spacing: 14) {
+                    ForEach(guide.sources) { source in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Link(source.title.value(english), destination: source.url)
+                            Text(source.scope.value(english)).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }.padding(.top, 10)
+            }
+        }.fixedSize(horizontal: false, vertical: true)
     }
 }

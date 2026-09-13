@@ -1,3 +1,40 @@
+# 1.7.54 · Public documentation workflow · 2026-09-13
+
+- Add a bilingual public-documentation skill to Assistant instructions and a project-wiki link. Generate the English wiki from existing help with stable topic links, version/source manifests and a versioned screenshot gallery. Keep screenshot capture isolated to the approved demo; capture provenance and exact image checksums are reviewed separately.
+- Include bundled skill texts in the central translation catalog and package the wiki generator and audit launcher with the source. Generation writes a fresh candidate and does not publish automatically.
+
+# 1.7.54 · Recipe Markdown for agents · 2026-09-13
+
+- Add complete single-guide Markdown saving and copying for all recipe variants and obtaining entries. Export the chosen quantity for single recipes and one batch per recipe in combined selections; retain grids, prerequisites, steps, special cases and source limitations.
+- Persist independent personal-verification and AI-export checkboxes per recipe variant or obtaining item. Changed bilingual instruction content or provenance invalidates the personal confirmation; shared guide families do not share checkmarks.
+- Add a selection overview, bulk addition of currently personally verified guides, a verified-only list filter, and complete Markdown/JSON inclusion in AI export. Missing selected instructions block export; malformed local preferences are preserved for recovery. Update bilingual help and the central translation catalog.
+
+# 1.7.53 · GitHub feedback · 2026-09-13
+
+- Add copy-ready GitHub Markdown for bugs, data corrections and feature requests. Copy the title separately or copy the description and open the project’s blank issue form. Sign-in, review, attachments and submission remain in the browser; no token or automatic issue creation is used.
+- Keep report text out of URLs and limit automatic GitHub metadata to app version, operating system and language. Entry context, source links and attachments remain excluded; user-written text still requires review before public sharing. Preserve Mail, ZIP export and unsaved-draft protection.
+- Update bilingual feedback help and the central translation catalog.
+
+# 1.7.52 · Tectonicus map space and mirroring · 2026-09-13
+
+- Give the Tectonicus map the main workspace. Keep Backup, Render, Help, a next-render summary, consent and active progress visible; move camera/detail/area controls into Render settings and source/result metadata into the information popover. Reuse the shared header, popup, button and source components with a narrow-width fallback.
+- Mirror the tile grid and world projection together by default. Existing renders update on opening, without rerendering or modifying tile files. Support immediate mirror on/off, aligned markers and world-coordinate links, readable controls and a compass drawn from projected world axes. Camera angle/elevation changes still require a new render.
+- Update bilingual help and the central translation catalog. Synthetic coverage includes existing-viewer upgrades, projection round trips, tile boundaries, explicit links, mirror opt-out and repeated loading.
+
+# 1.7.51 · Obtaining guides and recipe filters · 2026-09-13
+
+- Add 22 bilingual obtaining guides covering 170 catalog entries, including lava/water/milk/fish buckets, obsidian, concrete, logs, stripped wood, leaves, saplings, potted plants, creature drops and spawn eggs. Show prerequisites, steps, mode/tool differences, reusable containers and scoped sources; link back to existing prerequisite recipes.
+- Put recipe filters in a popover beside list search, following the Quick find filter entry point. Keep match/active-filter counts with the list, add obtaining and still-open coverage, and distinguish resetting filters from clearing search as well.
+- Reuse obtaining instructions in conversation retrieval and copied guides. Keep collection, conversion and random drops separate from crafting quantities and material-plan arithmetic. Capture changed UI, help, data and release documentation in the central translation catalog.
+- Reference coverage is not confirmed RealmCraft VR availability. No Quest test, complete game-content inventory, Android/web synchronization or public release is implied.
+
+# 1.7.50 · List-scoped search · 2026-09-13
+
+- Default new Tectonicus renders to a top-down view with north at the bottom, matching Atlas at 180° (View from: North; Elevation: 90°). Apply the same defaults in the render worker and CLI, retain saved camera choices and legacy result metadata, and update the bilingual help and translation catalog. Existing tile maps require a new render to change perspective.
+- Follow the Savegames search placement in Build guides, Videos, Crafting/Recipes, Mobs, Chests, Help, Assistant instructions and Links/Knowledge: search stays above its own result list, outside the scrolling rows, instead of occupying page-header actions.
+- Preserve existing queries, filters, selection/draft bindings and lookup routes. Keep search available when Mobs or Chests has no matches. Single-column knowledge sections retain search immediately above their content; global Quick find and map-specific search keep their existing scopes.
+- Full native keyboard and VoiceOver acceptance remains open. No savegame changes or platform synchronization are included.
+
 # 1.7.49 · Map and layer controls · 2026-09-13
 
 - Prepare the public universal macOS release from sanitized source. Exclude generated analysis caches from publication and the bundled source archive; keep the approved demo as a separate checksum-pinned download.

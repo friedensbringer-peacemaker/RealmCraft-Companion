@@ -29,7 +29,7 @@ struct QuickFindCatalog {
         guard !query.isEmpty else { return [] }
         var matches: [QuickFindMatch] = []
         matches += (crafting?.filtered(query: query, english: english) ?? []).map {
-            .init(kind: .crafting, item: $0.id, title: $0.title.value(english), detail: english ? "Comparison recipe · RealmCraft unverified" : "Vergleichsrezept · RealmCraft ungeprüft")
+            .init(kind: .crafting, item: $0.id, title: $0.title.value(english), detail: english ? "Crafting & obtaining · RealmCraft unverified" : "Crafting & Beschaffung · RealmCraft ungeprüft")
         }
         matches += (builds?.guides.filter { $0.matches(query) } ?? []).map {
             .init(kind: .builds, item: $0.id, title: $0.title.value(english), detail: $0.summary.value(english))

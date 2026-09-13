@@ -24,12 +24,12 @@ struct AgentSkillsView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: en ? "Assistant instructions" : "Assistenten-Anweisungen") {
-                TextField(en ? "Search skills" : "Skills suchen", text: $query).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
                 Button(en ? "New skill" : "Neuer Skill") {
                     isNew = true; editing = AgentSkill(title: "", summary: "", instructions: "")
                 }.buttonStyle(CompanionButtonStyle(prominent: true))
             } menu: {
                 Group {
+                    Button(en ? "Open project wiki" : "Projekt-Wiki öffnen") { NSWorkspace.shared.open(URL(string: "https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/wiki")!) }
                     Button(en ? "Personal context…" : "Persönliche Angaben …") { showProfile = true }
                     Button(en ? "Import skill package…" : "Skill-Paket importieren …", action: importPackage)
                     Button(en ? "Export entire library…" : "Gesamte Bibliothek exportieren …") { exportPackage(library.state.skills) }
@@ -41,9 +41,11 @@ struct AgentSkillsView: View {
             if let error = library.error { Text(error).foregroundStyle(.red).textSelection(.enabled).padding(16) }
             HStack(spacing: 0) {
                 VStack(spacing: 12) {
+                    TextField(en ? "Search skills" : "Skills suchen", text: $query)
+                        .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
                     Picker(en ? "Collection" : "Sammlung", selection: $archived) {
                         Text(en ? "Active" : "Aktiv").tag(false); Text(en ? "Archive" : "Archiv").tag(true)
-                    }.pickerStyle(.segmented).labelsHidden().padding(.horizontal, 16).padding(.top, 16)
+                    }.pickerStyle(.segmented).labelsHidden().padding(.horizontal, 16)
                     List(selection: $selected) {
                         ForEach(filtered) { skill in
                             VStack(alignment: .leading, spacing: 4) {

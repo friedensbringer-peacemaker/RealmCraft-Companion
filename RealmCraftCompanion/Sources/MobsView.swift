@@ -38,7 +38,6 @@ struct MobsView: View {
                     .font(.caption).foregroundStyle(.secondary)
                 }.font(.caption)
                 HStack {
-                    TextField(english ? "Search name, dimension, biome or update…" : "Name, Dimension, Biom oder Update suchen …", text: $query).textFieldStyle(.roundedBorder)
                     Picker(english ? "Category" : "Kategorie", selection: $kind) {
                         Text(english ? "All types" : "Alle Arten").tag("all")
                         Text(english ? "Animals" : "Tiere").tag("animal")
@@ -58,11 +57,11 @@ struct MobsView: View {
             Divider()
             if let error {
                 ContentUnavailableView(english ? "Catalog unavailable" : "Katalog nicht verfügbar", systemImage: "exclamationmark.triangle", description: Text(error))
-            } else if entries.isEmpty {
-                ContentUnavailableView.search(text: query)
-                Button(english ? "Reset filters" : "Filter zurücksetzen") { query = ""; kind = "all"; status = "all" }.padding()
             } else {
                 HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                    TextField(english ? "Search name, dimension, biome or update…" : "Name, Dimension, Biom oder Update suchen …", text: $query)
+                        .textFieldStyle(.roundedBorder).padding(16)
                     List(selection: $selection) {
                         ForEach(entries) { entry in
                             HStack(alignment: .center, spacing: 10) {
@@ -73,9 +72,15 @@ struct MobsView: View {
                                 }
                             }.padding(.vertical, 7).tag(entry.id)
                         }
-                    }.listStyle(.sidebar).scrollContentBackground(.hidden).frame(width: CompanionLayout.illustratedSidebarWidth)
+                    }.listStyle(.sidebar).scrollContentBackground(.hidden)
+                    }.frame(width: CompanionLayout.illustratedSidebarWidth)
                     Divider()
-                    if let entry = current {
+                    if entries.isEmpty {
+                        VStack {
+                            ContentUnavailableView.search(text: query)
+                            Button(english ? "Reset filters" : "Filter zurücksetzen") { query = ""; kind = "all"; status = "all" }.padding()
+                        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if let entry = current {
                         ScrollView {
                             MobDetail(entry: entry, english: english) { report(context(for: entry)) }
                                 .padding(CompanionLayout.pageInset).frame(maxWidth: .infinity, alignment: .leading)

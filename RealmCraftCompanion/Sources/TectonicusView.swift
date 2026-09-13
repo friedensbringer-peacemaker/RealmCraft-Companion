@@ -219,11 +219,29 @@ struct TectonicusView: View {
     @ObservedObject var tectonicus: TectonicusController
     let language: String
     @AppStorage("tectonicus.minecraftResourcesConsent") private var consent = false
-    @AppStorage("tectonicus.cameraAngle") private var angle = 45
-    @AppStorage("tectonicus.cameraElevation") private var elevation = 45
+    @AppStorage("tectonicus.cameraAngle") private var angle = TectonicusDirection.north.rawValue
+    @AppStorage("tectonicus.cameraElevation") private var elevation = 90
+    @AppStorage("tectonicus.mirrorHorizontally") private var mirrored = true
     @State private var radius = 0
     @State private var detail = 32
+    @State private var settings = false
+    @State private var information = false
     private var en: Bool { language == "en" }
+    private var previewURL: URL? {
+        guard let url = tectonicus.mapURL, var parts = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+        parts.queryItems = (parts.queryItems ?? []).filter { $0.name != "mirror" } + [URLQueryItem(name: "mirror", value: mirrored ? "1" : "0")]
+        return parts.url
+    }
+    private var areaOptions: [(Int, String)] {
+        [(0, en ? "All saved chunks" : "Alle gespeicherten Chunks")] + [128,256,512,1024].map { ($0, "±\($0) · " + (en ? "origin" : "Ursprung")) }
+    }
+    private var detailOptions: [(Int, String)] {
+        [(64, en ? "Fast" : "Schnell"), (32, "Standard"), (16, en ? "High" : "Hoch")]
+    }
+    private var renderSummary: String {
+        [areaOptions.first { $0.0 == radius }?.1 ?? "", detailOptions.first { $0.0 == detail }?.1 ?? "",
+         TectonicusDirection(rawValue: angle)?.title(en) ?? "—", "\(elevation)°"].joined(separator: " · ")
+    }
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: "Tectonicus · Beta") {
@@ -231,12 +249,13 @@ struct TectonicusView: View {
                     Button(en ? "Cancel" : "Abbrechen") { tectonicus.cancel() }.disabled(!tectonicus.cancellable)
                 } else {
                     Button(tectonicus.ready ? (en ? "Render savegame" : "Spielstand rendern") : (en ? "Set up & render" : "Einrichten & rendern")) {
+                        settings = false
                         tectonicus.start(model, save: model.selected, radius: radius, detail: detail, angle: angle, elevation: elevation, consent: consent, english: en)
                     }.buttonStyle(CompanionButtonStyle(prominent: true))
                         .disabled(model.busy || tectonicus.checking || model.selected == nil || (!consent && !tectonicus.ready))
                 }
             } menu: {
-                Button(en ? "Open in browser" : "Im Browser öffnen") { if let url = tectonicus.mapURL { NSWorkspace.shared.open(url) } }.disabled(tectonicus.mapURL == nil)
+                Button(en ? "Open in browser" : "Im Browser öffnen") { if let url = previewURL { NSWorkspace.shared.open(url) } }.disabled(previewURL == nil)
                 Button(en ? "Show render folder" : "Render-Ordner anzeigen") { if let output = tectonicus.output { NSWorkspace.shared.activateFileViewerSelecting([output]) } }.disabled(tectonicus.output == nil)
                 Divider()
                 Button(en ? "Set up / check tools" : "Werkzeuge einrichten / prüfen") {
@@ -244,48 +263,35 @@ struct TectonicusView: View {
                 }.disabled(model.busy || tectonicus.checking || (!consent && !tectonicus.ready))
                 Link(en ? "Tectonicus project" : "Tectonicus-Projekt", destination: URL(string: "https://github.com/tectonicus/tectonicus")!)
             }
-            VStack(alignment: .leading, spacing: 10) {
-                VStack(alignment: .leading, spacing: 12) {
-                    SourceContextBar(saves: model.saves, selection: $model.selection, language: language).frame(maxWidth: .infinity)
-                    VStack(alignment: .leading, spacing: 12) {
-                    CompanionPopup(title: en ? "Overworld" : "Oberwelt", selection: $radius,
-                        options: [(0, en ? "All saved chunks" : "Alle gespeicherten Chunks")] + [128,256,512,1024].map { ($0, "±\($0) · " + (en ? "origin" : "Ursprung")) }).companionField(en ? "Overworld" : "Oberwelt")
-                    CompanionPopup(title: en ? "Detail" : "Details", selection: $detail,
-                        options: [(64, en ? "Fast" : "Schnell"), (32, en ? "Standard" : "Standard"), (16, en ? "High" : "Hoch")]).companionField(en ? "Detail" : "Details")
-                    }.companionActionAligned()
-                }.disabled(model.busy)
-                VStack(alignment: .leading, spacing: 12) {
-                    CompanionPopup(title: en ? "View from" : "Blick von", selection: $angle,
-                        options: TectonicusDirection.allCases.map { ($0.rawValue, $0.title(en)) }).companionField(en ? "View from" : "Blick von")
-                    CompanionPopup(title: en ? "Elevation" : "Neigung", selection: $elevation,
-                        options: [(30, en ? "30° · Low" : "30° · Flach"), (45, "45° · Standard"), (60, en ? "60° · Steep" : "60° · Steil"), (90, en ? "90° · Top-down" : "90° · Draufsicht")]).companionField(en ? "Elevation" : "Neigung")
-                    Text(en ? "Saved automatically for the next render." : "Wird automatisch für das nächste Rendering gespeichert.")
-                        .font(.caption).foregroundStyle(.secondary)
-                }.companionActionAligned().disabled(model.busy)
-                if !tectonicus.ready {
-                    Toggle(en ? "I own Minecraft Java and allow the download of its rendering resources." : "Ich besitze Minecraft Java und erlaube den Download seiner Render-Ressourcen.", isOn: $consent).disabled(model.busy)
-                    Text(en ? "Setup downloads Tectonicus 2.31, a verified Java 21 installer and Minecraft 1.17.1 resources. Python is prepared automatically if needed. Internet and several hundred MB of free space are required." : "Die Einrichtung lädt Tectonicus 2.31, einen geprüften Java-21-Installer und Minecraft-1.17.1-Ressourcen. Python wird bei Bedarf automatisch eingerichtet. Internet und mehrere hundert MB freier Speicher werden benötigt.")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                Text(en ? "Experimental rendering copy · Overworld only. Block states and lighting are approximate; sign text and entities are omitted. Unknown blocks appear magenta. Each run keeps its own output; large worlds may require several GB. The source savegame stays unchanged." : "Experimentelle Render-Kopie · nur Oberwelt. Blockzustände und Beleuchtung sind vereinfacht; Schildtexte und Entitäten fehlen. Unbekannte Blöcke erscheinen magenta. Jeder Lauf behält seine eigene Ausgabe; große Welten können mehrere GB benötigen. Der Quell-Spielstand bleibt unverändert.")
-                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-                if tectonicus.working || tectonicus.checking {
-                    HStack {
-                        ProgressView().controlSize(.small)
-                        Text(tectonicus.event.map { $0.title(en) + " · " + $0.detail } ?? (tectonicus.checking ? (en ? "Checking tools…" : "Werkzeuge werden geprüft …") : tr(model.status))).font(.callout)
+            VStack(alignment: .leading, spacing: 6) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .bottom, spacing: 16) {
+                        backupControl.frame(minWidth: 220)
+                        settingsButton
                     }
-                    if let fraction = tectonicus.event?.fraction { ProgressView(value: fraction) }
+                    VStack(alignment: .leading, spacing: 8) {
+                        backupControl
+                        settingsButton.frame(maxWidth: .infinity, alignment: .trailing)
+                    }
+                }.companionActionAligned()
+                if let save = model.selected {
+                    Text((en ? "Saved game state: " : "Gespeicherter Spielstand: ") + displayDate(save.gameDate, language: language) + (en ? " · not live" : " · nicht live"))
+                        .font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
                 }
-                if let result = tectonicus.result {
-                    Text("\(result.chunks) " + (en ? "chunks rendered" : "Chunks gerendert") + " · \(result.placeholders) " + (en ? "placeholder blocks" : "Platzhalter-Blöcke") + " · " + Date(timeIntervalSince1970: result.date).formatted()).font(.caption)
-                    Text((en ? "Rendered from " : "Gerendert von ") + (TectonicusDirection(rawValue: result.camera_angle ?? 45)?.title(en) ?? "—") + " · \(result.camera_elevation ?? 45)°")
-                        .font(.caption).foregroundStyle(.secondary)
+                Text((en ? "Next render: " : "Nächstes Rendering: ") + renderSummary)
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if let result = tectonicus.result, result.placeholders > 0 {
+                    Text(en ? "The displayed map contains \(result.placeholders) placeholder blocks. See map information." : "Die angezeigte Karte enthält \(result.placeholders) Platzhalter-Blöcke. Siehe Karteninfos.")
+                        .font(.caption).foregroundStyle(.orange)
                 }
+                if !tectonicus.ready { setupConsent }
+                if tectonicus.working || tectonicus.checking { progress }
                 if !tectonicus.notice.isEmpty { Text(tectonicus.notice).font(.caption).foregroundStyle(.orange).textSelection(.enabled).lineLimit(4) }
-            }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 12)
+            }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 10)
             Divider()
-            if let url = tectonicus.mapURL { TectonicusWebView(url: url).id(url) }
-            else {
+            if let url = previewURL {
+                TectonicusWebView(url: url).id(url).frame(maxWidth: .infinity, maxHeight: .infinity).layoutPriority(1)
+            } else {
                 VStack(spacing: 12) {
                     Image(systemName: "map.fill").font(.system(size: 44)).foregroundStyle(.secondary)
                     Text(en ? "Render your saved world with Tectonicus" : "Deine gesicherte Welt mit Tectonicus rendern").font(.title3)
@@ -295,6 +301,98 @@ struct TectonicusView: View {
         }
         .onAppear { tectonicus.check(model) }
         .onChange(of: model.selection) { _, _ in if !tectonicus.working { tectonicus.restore(model.selected) } }
+    }
+    private var backupControl: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Text(en ? "Backup" : "Sicherung").font(.caption)
+                Button { information.toggle() } label: { Image(systemName: "info.circle") }
+                    .buttonStyle(.plain)
+                    .help(en ? "Source and map information" : "Quelle und Karteninfos")
+                    .accessibilityLabel(en ? "Source and map information" : "Quelle und Karteninfos")
+                    .accessibilityIdentifier("tectonicus.information")
+                    .popover(isPresented: $information) {
+                        ScrollView { mapInformation.padding(20) }.frame(width: 420, height: 430)
+                    }
+            }
+            SourceContextBar(saves: model.saves, selection: $model.selection, language: language).backupPicker.disabled(model.busy)
+        }
+    }
+    private var settingsButton: some View {
+        Button { settings.toggle() } label: {
+            Label(en ? "Render settings" : "Render-Einstellungen", systemImage: "slider.horizontal.3")
+        }.buttonStyle(CompanionButtonStyle()).frame(width: CompanionLayout.primaryActionWidth)
+            .accessibilityIdentifier("tectonicus.settings")
+            .popover(isPresented: $settings) {
+                ScrollView { renderSettings.padding(20) }.frame(width: 440, height: 430)
+            }
+    }
+    private var renderSettings: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(en ? "Render settings" : "Render-Einstellungen").font(.headline)
+                Spacer()
+                Button { settings = false } label: { Image(systemName: "xmark") }
+                    .buttonStyle(.plain).accessibilityLabel(en ? "Close" : "Schließen")
+            }
+            Group {
+                CompanionPopup(title: en ? "Overworld" : "Oberwelt", selection: $radius, options: areaOptions).companionField(en ? "Overworld" : "Oberwelt")
+                CompanionPopup(title: en ? "Detail" : "Details", selection: $detail, options: detailOptions).companionField(en ? "Detail" : "Details")
+                CompanionPopup(title: en ? "View from" : "Blick von", selection: $angle,
+                    options: TectonicusDirection.allCases.map { ($0.rawValue, $0.title(en)) }).companionField(en ? "View from" : "Blick von")
+                CompanionPopup(title: en ? "Elevation" : "Neigung", selection: $elevation,
+                    options: [(30, en ? "30° · Low" : "30° · Flach"), (45, en ? "45° · Oblique" : "45° · Schräg"), (60, en ? "60° · Steep" : "60° · Steil"), (90, en ? "90° · Top-down · Standard" : "90° · Draufsicht · Standard")]).companionField(en ? "Elevation" : "Neigung")
+                Text(en ? "Direction and elevation are saved for the next render. Changing them requires a new render." : "Blickrichtung und Neigung werden für das nächste Rendering gespeichert. Änderungen benötigen einen neuen Renderlauf.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Divider()
+                Toggle(en ? "Mirror left and right" : "Links und rechts spiegeln", isOn: $mirrored)
+                    .accessibilityIdentifier("tectonicus.mirror")
+                Text(en ? "Mirroring applies immediately to the displayed map and browser view, including existing renders. Controls and markers stay readable." : "Die Spiegelung gilt sofort für die angezeigte Karte und die Browser-Ansicht, auch bei bestehenden Renderings. Bedienelemente und Marker bleiben lesbar.")
+                    .font(.caption).foregroundStyle(.secondary)
+                Button(en ? "Use standard view" : "Standardansicht verwenden") {
+                    angle = TectonicusDirection.north.rawValue; elevation = 90; mirrored = true
+                }
+                Text(en ? "Standard: North, 90° top-down, mirrored left and right." : "Standard: Norden, 90° Draufsicht, links und rechts gespiegelt.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }.disabled(model.busy)
+        }
+    }
+    private var mapInformation: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(en ? "Source and map information" : "Quelle und Karteninfos").font(.headline)
+            if let save = model.selected {
+                Text(save.title).font(.subheadline.bold())
+                Text((en ? "Backup created: " : "Sicherung erstellt: ") + displayDate(save.date, language: language))
+                Text((en ? "World ID: " : "Welt-ID: ") + save.world + "\n" + (en ? "Backup ID: " : "Sicherungs-ID: ") + save.id)
+            }
+            if let result = tectonicus.result {
+                Divider()
+                Text(en ? "Displayed map" : "Angezeigte Karte").font(.subheadline.bold())
+                Text("\(result.chunks) " + (en ? "chunks rendered" : "Chunks gerendert") + " · \(result.placeholders) " + (en ? "placeholder blocks" : "Platzhalter-Blöcke") + " · " + Date(timeIntervalSince1970: result.date).formatted())
+                // Older results without perspective metadata used 45°/45°.
+                Text((en ? "Rendered from " : "Gerendert von ") + (TectonicusDirection(rawValue: result.camera_angle ?? 45)?.title(en) ?? "—") + " · \(result.camera_elevation ?? 45)°")
+                Text(mirrored ? (en ? "Display: mirrored left and right" : "Anzeige: links und rechts gespiegelt") : (en ? "Display: original orientation" : "Anzeige: ursprüngliche Ausrichtung"))
+            }
+            Divider()
+            Text(en ? "Experimental rendering copy · Overworld only. Block states and lighting are approximate; sign text and entities are omitted. Unknown blocks appear magenta. Each run keeps its own output; large worlds may require several GB. The source savegame stays unchanged." : "Experimentelle Render-Kopie · nur Oberwelt. Blockzustände und Beleuchtung sind vereinfacht; Schildtexte und Entitäten fehlen. Unbekannte Blöcke erscheinen magenta. Jeder Lauf behält seine eigene Ausgabe; große Welten können mehrere GB benötigen. Der Quell-Spielstand bleibt unverändert.")
+        }.font(.callout).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+    }
+    private var setupConsent: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Toggle(en ? "I own Minecraft Java and allow the download of its rendering resources." : "Ich besitze Minecraft Java und erlaube den Download seiner Render-Ressourcen.", isOn: $consent).disabled(model.busy)
+            DisclosureGroup(en ? "Setup details" : "Einrichtungsdetails") {
+                Text(en ? "Setup downloads Tectonicus 2.31, a verified Java 21 installer and Minecraft 1.17.1 resources. Python is prepared automatically if needed. Internet and several hundred MB of free space are required." : "Die Einrichtung lädt Tectonicus 2.31, einen geprüften Java-21-Installer und Minecraft-1.17.1-Ressourcen. Python wird bei Bedarf automatisch eingerichtet. Internet und mehrere hundert MB freier Speicher werden benötigt.")
+            }.font(.caption).foregroundStyle(.secondary)
+        }
+    }
+    private var progress: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                ProgressView().controlSize(.small)
+                Text(tectonicus.event.map { $0.title(en) + " · " + $0.detail } ?? (tectonicus.checking ? (en ? "Checking tools…" : "Werkzeuge werden geprüft …") : tr(model.status))).font(.callout)
+            }
+            if let fraction = tectonicus.event?.fraction { ProgressView(value: fraction) }
+        }
     }
 }
 

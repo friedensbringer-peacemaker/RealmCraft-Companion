@@ -53,13 +53,6 @@ struct HelpView: View {
                     Picker("Language / Sprache", selection: $language) { Text("Deutsch").tag("de"); Text("English").tag("en") }
                         .labelsHidden().frame(width: 110)
                 }
-                TextField(english ? "Search all help · DE / EN" : "Gesamte Hilfe suchen · DE / EN", text: $search)
-                    .textFieldStyle(.roundedBorder).frame(maxWidth: CompanionLayout.searchWidth)
-                    .accessibilityIdentifier("help.search")
-                if !search.isEmpty {
-                    Button { search = "" } label: { Image(systemName: "xmark.circle") }
-                        .accessibilityLabel(english ? "Clear search" : "Suche zurücksetzen")
-                }
             }
             switch result {
             case .failure(let error):
@@ -68,6 +61,14 @@ struct HelpView: View {
             case .success:
                 HStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            TextField(english ? "Search all help · DE / EN" : "Gesamte Hilfe suchen · DE / EN", text: $search)
+                                .textFieldStyle(.roundedBorder).accessibilityIdentifier("help.search")
+                            if !search.isEmpty {
+                                Button { search = "" } label: { Image(systemName: "xmark.circle") }
+                                    .buttonStyle(.plain).accessibilityLabel(english ? "Clear search" : "Suche zurücksetzen")
+                            }
+                        }.padding(16)
                         Text(english ? "\(articles.count) topics" : "\(articles.count) Themen")
                             .font(.caption).foregroundStyle(.secondary).padding(12)
                         List(selection: $selected) {

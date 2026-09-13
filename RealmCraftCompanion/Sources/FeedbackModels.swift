@@ -70,3 +70,34 @@ struct FeedbackReport: Codable {
         try Data(contentsOf: archive).write(to: destination, options: .atomic)
     }
 }
+
+extension FeedbackReport {
+    // Open only the fixed form URL: report text never enters browser history or URL logs.
+    static let githubIssueURL = URL(string: "https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/issues/new")!
+
+    func githubMarkdown(english: Bool) -> String {
+        func t(_ de: String, _ en: String) -> String { english ? en : de }
+        var sections: [String] = []
+        func add(_ heading: String, _ value: String) {
+            guard !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+            sections.append("## \(heading)\n\n\(value)")
+        }
+        let reportType: String
+        switch type {
+        case "bug": reportType = t("Anwendungsfehler", "Application bug")
+        case "suggestion": reportType = t("Funktionswunsch", "Feature request")
+        default: reportType = t("Datenkorrektur", "Data correction")
+        }
+        add(t("Art der Meldung", "Report type"), reportType)
+        add(t("Kurztitel", "Summary"), summary)
+        add(t("Beschreibung", "Description"), description)
+        add(t("Schritte zum Nachstellen", "Steps to reproduce"), stepsToReproduce)
+        add(t("Erwartetes Ergebnis", "Expected result"), expectedResult)
+        add(t("Tatsächliches Ergebnis", "Actual result"), actualResult)
+        // Deliberate allowlist. No context, source links, timestamps, filenames or images.
+        add(t("Companion-Version", "Companion version"), application["version"] ?? "")
+        add(t("Betriebssystem", "Operating system"), application["os"] ?? "")
+        add(t("Sprache", "Language"), application["language"] ?? "")
+        return sections.joined(separator: "\n\n") + "\n"
+    }
+}

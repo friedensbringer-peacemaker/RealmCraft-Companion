@@ -20,6 +20,10 @@ PATTERNS = {
 
 # Explicitly reviewed demo-only captures. Replacements require a fresh visual review.
 REVIEWED_SCREENSHOTS = {
+    'docs/screenshots/v1.7.54/demo-library.png': '21dce3d34dce443368bc99564c6dcc06afff86615c8790e1466ccd860b67b57b',
+    'docs/screenshots/v1.7.54/demo-map.png': '53ef7eab7f64c6acc7b00d124356a9b19146bb3c272c9abc75b1842ad775d894',
+    'docs/screenshots/v1.7.54/demo-three-dimensional.png': '9cfd327a6bb9377d3ca75a5552a96f4f408a601c2820ac9a912a33691ebdfdb1',
+
     "docs/screenshots/01-companion-overview.png": "be073787d8714e3c893428dfe6fe9865d2b300f763a90d39a98fbc4860b4fa3e",
     "docs/screenshots/02-demo-map.png": "80524ecad52eeb1fa1ab269ad4337e87827295fd0a15d13ae887eb77f7848aa4",
     "docs/screenshots/03-player-inventory.png": "8aa9c9b581051b5780abaffa595db753c1ebc178141e1d442cf3b8c7fda517f2",

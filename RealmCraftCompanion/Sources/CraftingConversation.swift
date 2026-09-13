@@ -11,7 +11,7 @@ struct CraftingConversation {
     static func tokens(_ text: String) -> [String] {
         CraftingCatalog.normalized(text).components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
     }
-    static let filler = Set("wie was welche welchen welches wird werden ich mir man du ein eine einen einer eines der die das den dem des fur von bitte brauche benotige braucht benotigt crafte craften crafting rezept rezepte herstellen herstelle stelle her mache machen mach baue bauen erklare erklar erklaren kannst konntest erstelle erstellen suche such zeige finde how what which do does i you a an the for of please need needs craft recipe recipes make making build explain find search show me to can could would is are it ingredients materials zutaten materialien stuck items und and davon dafur dazu noch einmal".split(separator: " ").map(String.init))
+    static let filler = Set("bekomme bekommen beschaffe beschaffen erhalte erhalten sammeln get obtain collect wie was welche welchen welches wird werden ich mir man du ein eine einen einer eines der die das den dem des fur von bitte brauche benotige braucht benotigt crafte craften crafting rezept rezepte herstellen herstelle stelle her mache machen mach baue bauen erklare erklar erklaren kannst konntest erstelle erstellen suche such zeige finde how what which do does i you a an the for of please need needs craft recipe recipes make making build explain find search show me to can could would is are it ingredients materials zutaten materialien stuck items und and davon dafur dazu noch einmal".split(separator: " ").map(String.init))
     mutating func answer(_ question: String, english: Bool) -> Reply? {
         let words = Self.tokens(question), q = words.joined(separator: " ")
         let stock = ["habe ich", "kann ich", "fehlt mir", "in meinen kisten", "do i have", "can i", "my chests", "am i missing"].contains { q.contains($0) }
@@ -58,6 +58,14 @@ struct CraftingConversation {
         lastItem = item.id; lastQuantity = desired
         let recipes = index.recipes[item.id, default: []].sorted { $0.id < $1.id }
         let caveat = english ? "Minecraft comparison, unverified in RealmCraft VR. " : "Minecraft-Vergleich, in RealmCraft VR ungeprüft. "
+        let obtainingRequest = words.contains { ["bekomme", "bekommen", "beschaffe", "beschaffen", "erhalte", "erhalten", "sammeln", "get", "obtain", "collect"].contains($0) }
+        if recipes.isEmpty || obtainingRequest, let guide = index.acquisitions[item.id] {
+            let quantityNote = desired > 1 ? (english ? "Requested quantity: \(desired). This guide describes obtaining the item; it does not calculate a crafting bill of materials.\n\n" : "Gewünschte Menge: \(desired). Diese Anleitung beschreibt die Beschaffung; sie berechnet dafür keine Crafting-Stückliste.\n\n") : ""
+            let text = quantityNote + guide.report(item: item, english: english)
+            let spoken = item.title.value(english) + ". " + guide.evidence.value(english) + " " + guide.requirements.value(english) + " " + guide.steps.map { $0.text.value(english) }.joined(separator: " ")
+                + (english ? " Things to know and sources are included in the written guide." : " Besonderheiten und Quellen stehen in der Textanleitung.")
+            return Reply(text: text, spoken: spoken)
+        }
         guard !recipes.isEmpty else { return reply(item.title.value(english) + ": " + (english ? "No recipe documented here. This does not mean it cannot be crafted. Check in the game." : "Hier ist kein Rezept dokumentiert. Das bedeutet nicht, dass der Gegenstand nicht herstellbar ist. Im Spiel prüfen.")) }
         if variantRequest {
             guard let number = numeric.first, (1...recipes.count).contains(number) else {

@@ -29,7 +29,7 @@ struct ResourcesView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Links & Knowledge" : "Links & Wissen") {
-                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query).textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
+                EmptyView()
             }
             HStack {
                 Picker(english ? "Section" : "Bereich", selection: $section) {
@@ -40,8 +40,12 @@ struct ResourcesView: View {
                 Spacer()
             }.padding(.horizontal, CompanionLayout.pageInset).padding(.bottom, 16)
             Divider()
+            if section != "knowledge" {
+                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
+                    .textFieldStyle(.roundedBorder).padding(16)
+            }
             if section == "knowledge" {
-                MinecraftComparisonView(english: english, query: query)
+                MinecraftComparisonView(english: english, query: $query)
             } else if section == "checklist" {
                 MinecraftChecklistView(english: english, query: query)
             } else {
@@ -119,7 +123,7 @@ private struct MinecraftComparison: Decodable, Identifiable {
 private struct MinecraftComparisonView: View {
     @Environment(\.companionTheme) private var theme
     let english: Bool
-    let query: String
+    @Binding var query: String
     @State private var category = "all"
     @State private var selectedTopic: String?
     private let categories = ["all", "blocks", "items", "mobs", "mechanics", "world"]
@@ -164,9 +168,11 @@ private struct MinecraftComparisonView: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 12) {
+                TextField(english ? "Search this section" : "Diesen Bereich durchsuchen", text: $query)
+                    .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
                 Picker(english ? "Category" : "Kategorie", selection: $category) {
                     ForEach(["all"] + sortedCategories, id: \.self) { Text(categoryTitle($0)).tag($0) }
-                }.labelsHidden().padding(.horizontal, 16).padding(.top, 16)
+                }.labelsHidden().padding(.horizontal, 16)
                 List(selection: Binding<String?>(get: { current?.id }, set: { selectedTopic = $0 })) {
                     ForEach(sortedCategories, id: \.self) { group in
                         let items = filtered.filter { $0.category == group }

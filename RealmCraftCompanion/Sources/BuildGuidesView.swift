@@ -43,8 +43,7 @@ struct OfflineBuildGuidesView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Build guides" : "Bauanleitungen") {
-                TextField(english ? "Find build or material" : "Aufbau oder Material suchen", text: $query)
-                    .textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
+                EmptyView()
             }
             Divider()
             HStack(spacing: 0) {
@@ -64,9 +63,11 @@ struct OfflineBuildGuidesView: View {
     }
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 12) {
+            TextField(english ? "Find build or material" : "Aufbau oder Material suchen", text: $query)
+                .textFieldStyle(.roundedBorder).padding(.horizontal, 16).padding(.top, 16)
             Picker(english ? "Topic" : "Thema", selection: $category) {
                 ForEach(["all"] + BuildGuideTopic.ids, id: \.self) { Text(buildCategory($0, english)).tag($0) }
-            }.labelsHidden().padding(.horizontal, 16).padding(.top, 16)
+            }.labelsHidden().padding(.horizontal, 16)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ForEach(BuildGuideTopic.ids, id: \.self) { topic in
@@ -643,14 +644,15 @@ struct VideoTipsView: View {
     var body: some View {
         VStack(spacing: 0) {
             CompanionPageHeader(title: english ? "Video tips & guides" : "Video-Tipps & Anleitungen") {
-                TextField(english ? "Search topic, material or tip" : "Thema, Material oder Tipp suchen", text: $query)
-                    .textFieldStyle(.roundedBorder).frame(width: CompanionLayout.searchWidth)
+                EmptyView()
             }
             Divider()
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 12) {
+                    TextField(english ? "Search topic, material or tip" : "Thema, Material oder Tipp suchen", text: $query)
+                        .textFieldStyle(.roundedBorder).padding(.top, 16)
                     CompanionPopup(title: english ? "Topic" : "Thema", selection: $category,
-                        options: ["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].map { ($0, buildCategory($0, english)) }).companionField(english ? "Topic" : "Thema").padding(.top, 16)
+                        options: ["all", "farms", "processing", "transport", "building", "equipment", "exploration", "survival", "other"].map { ($0, buildCategory($0, english)) }).companionField(english ? "Topic" : "Thema")
                     CompanionPopup(title: english ? "Source game" : "Spiel der Quelle", selection: $sourceGame,
                         options: [("all", english ? "All games" : "Alle Spiele"), ("realmcraft", "RealmCraft"), ("minecraft", "Minecraft")]).companionField(english ? "Source game" : "Spiel der Quelle")
                     CompanionPopup(title: english ? "Content" : "Inhalt", selection: $coverage, options: [

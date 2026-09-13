@@ -1,5 +1,37 @@
 BACKLOG
 
+## Public documentation workflow · 1.7.54 (76) · 2026-09-13
+
+Implemented: help-derived English wiki generation, source manifests, bilingual documentation skill and versioned screenshot records. Grow tutorials and screenshots from verified app workflows. Preserve independently written wiki pages; review regenerated files before publishing. Android/Quest and browser parity remain separate work.
+
+## Recipe Markdown for agents · 1.7.54 (76) · 2026-09-13
+
+Implemented: per-variant and per-item local verification, export selection, source-change invalidation, standalone Markdown and combined AI Markdown/JSON. Personal confirmations do not record a platform or game version and do not establish official Quest evidence. Remaining acceptance: physical keyboard/VoiceOver and external-agent file attachment. Android/web parity remains open.
+
+## GitHub feedback · 1.7.53 (75) · 2026-09-13
+
+Implemented: public-issue Markdown preview, title/body copy and browser handoff with a fixed URL. No GitHub authentication or direct submission is embedded. Remaining acceptance: browser sign-in/paste flow, clipboard/browser failures, long reports and narrow-window keyboard/VoiceOver checks. Test with synthetic reports without publishing test issues.
+
+## Tectonicus map space and mirroring · 1.7.52 (74) · 2026-09-13
+
+Implemented: a compact source/settings strip, map-first layout, separate source/result information and optional immediate horizontal mirroring of existing and new previews. Original renders and library data stay intact. Direction/elevation remain render-time settings. Reuse the existing map worker and shared native controls.
+
+Remaining: full VoiceOver and physical trackpad acceptance, original block states/lighting/biomes, Nether support and repeat-render cache reuse.
+
+## Obtaining guides and recipe filters · 1.7.51 (73) · 2026-09-13
+
+Implemented: 22 obtaining guides for 170 catalog entries; 160 previously recipe-less entries now have a documented method. The 821 crafting variants remain unchanged. Of 618 catalog entries without imported recipes, 458 still have no specific obtaining guide; these stay visibly open rather than being declared uncraftable. Modern comparison names and block states do not establish the actual RealmCraft item set.
+
+Next evidence work: test bucket source targeting, controller actions and Creative differences on a known Quest version; confirm RealmCraft-specific content, remaining obtaining routes and special/brewing recipes. Do not infer modern Minecraft mechanics. Android/web parity and full VoiceOver acceptance remain open.
+
+
+## List-scoped search · 1.7.50 (72) · 2026-09-13
+
+Search placement now follows the Savegames list pattern in Builds, Videos,
+Recipes, Mobs, Chests, Help, Assistant instructions and Links/Knowledge. Existing query
+and filtering behavior is retained. Follow-up acceptance: native tab order,
+VoiceOver, long search hints, zero-result recovery and narrow list panes.
+
 ## Map and layer controls · 1.7.49 (71) · 2026-09-13
 
 Compact action-aligned Maps controls, source information popover, readable map

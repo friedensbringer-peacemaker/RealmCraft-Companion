@@ -1,3 +1,31 @@
+# Screenshot gallery · 1.7.54 (76)
+
+Real app captures from an isolated profile using only the approved demo. Reference content and synthetic plans are labeled separately. Earlier version galleries are preserved.
+
+This wiki follows the source version below. App downloads may be older; compare the release version. Screenshots are versioned individually.
+
+## Demo library
+
+![Demo library](screenshots/v1.7.54/demo-library.png)
+
+The approved demo in an isolated library, with its saved house preview and backup status. No headset is connected.
+
+## Saved world map
+
+![Saved world map](screenshots/v1.7.54/demo-map.png)
+
+Terrain around the demo origin, with sign search, layer controls and planned portal and metro overlays. This is saved data, not live gameplay.
+
+## 3D terrain preview · Beta
+
+![3D terrain preview · Beta](screenshots/v1.7.54/demo-three-dimensional.png)
+
+A 128 × 128 block area of the approved demo. Overview, Walk and Fly inspect simplified cubes; water and glass are opaque and characters are absent.
+
+[RealmCraft Companion Wiki](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/wiki) · [Maintain the wiki and screenshots](https://github.com/friedensbringer-peacemaker/RealmCraft-Companion/wiki/Maintaining-the-wiki)
+
+---
+
 # Inside RealmCraft Companion
 
 **100% vibe-coded with OpenAI Codex · 100 % mit OpenAI Codex entwickelt.** AI contributor: [Codex Astra](../CONTRIBUTORS.md).

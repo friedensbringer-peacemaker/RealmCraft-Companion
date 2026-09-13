@@ -313,7 +313,6 @@ struct ChestsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 SourceContextBar(saves: model.saves, selection: $model.selection, language: language).disabled(model.busy)
                 HStack(spacing: CompanionLayout.actionSpacing) {
-                    searchField
                     filterButton
                     sortingMenu
                     Button { showInfo.toggle() } label: {
@@ -361,6 +360,8 @@ struct ChestsView: View {
             Divider()
             if chests.index != nil {
                 HStack(spacing: 0) {
+                    VStack(spacing: 0) {
+                    searchField.padding(16)
                     List(locations, selection: $selected) { group in
                         VStack(alignment: .leading, spacing: 6) {
                             Label(group.members.count == 1 ? (chestName(group.anchor) ?? (english ? "Storage location" : "Lagerort")) : (english ? "Storage location" : "Lagerort"), systemImage: "shippingbox.fill").font(.headline)
@@ -373,7 +374,8 @@ struct ChestsView: View {
                             Button(english ? "Hide listed chests at location" : "Angezeigte Kisten am Ort ausblenden") { mark(group.members, hidden: true) }
                             Button(english ? "Show listed chests at location" : "Angezeigte Kisten am Ort einblenden") { mark(group.members, hidden: false) }
                         }
-                    }.listStyle(.sidebar).scrollContentBackground(.hidden).frame(width: CompanionTheme.sidebarWidth).background(theme.surface)
+                    }.listStyle(.sidebar).scrollContentBackground(.hidden)
+                    }.frame(width: CompanionTheme.sidebarWidth).background(theme.surface)
                     Divider()
                     ScrollView {
                         if let chest = current {

@@ -131,6 +131,47 @@ struct CraftingCorroboration: Decodable {
     let scope: CraftingText
 }
 
+struct CraftingAcquisitionStep: Decodable, Identifiable {
+    let id: String
+    let title: CraftingText
+    let text: CraftingText
+}
+
+struct CraftingAcquisitionSource: Decodable, Identifiable {
+    let id: String
+    let title: CraftingText
+    let url: URL
+    let scope: CraftingText
+}
+
+/// Authored obtaining instructions stay separate from craftable recipes and material-plan arithmetic.
+struct CraftingAcquisition: Decodable, Identifiable {
+    let id: String
+    let items: [String]
+    let aliases: [String]
+    let method: CraftingText
+    let summary: CraftingText
+    let requirements: CraftingText
+    let steps: [CraftingAcquisitionStep]
+    let details: [CraftingAcquisitionStep]
+    let evidence: CraftingText
+    let checked: String
+    let relatedItems: [String]
+    let sources: [CraftingAcquisitionSource]
+
+    var hasRealmCraftWikiEvidence: Bool {
+        sources.contains { ["realmcraftgame.fandom.com", "realmcraft.fandom.com"].contains($0.url.host ?? "") }
+    }
+    func report(item: CraftingItem, english en: Bool) -> String {
+        let instruction = steps.enumerated().map { offset, step in "\(offset + 1). " + step.title.value(en) + ": " + step.text.value(en) }.joined(separator: "\n\n")
+        let notes = details.map { $0.title.value(en) + ": " + $0.text.value(en) }.joined(separator: "\n\n")
+        let links = sources.map { $0.title.value(en) + "\n" + $0.scope.value(en) + "\n" + $0.url.absoluteString }.joined(separator: "\n\n")
+        return [item.title.value(en), method.value(en), summary.value(en),
+                (en ? "You need: " : "Du brauchst: ") + requirements.value(en), instruction,
+                (en ? "Things to know\n" : "Besonderheiten\n") + notes, evidence.value(en), links].joined(separator: "\n\n")
+    }
+}
+
 struct CraftingRecipe: Decodable, Identifiable {
     let id: String
     let output: String
@@ -159,13 +200,22 @@ struct CraftingCatalog: Decodable {
     let sourceSHA1: String
     let items: [CraftingItem]
     let recipes: [CraftingRecipe]
+    var acquisitionGuides: [CraftingAcquisition] = []
+    // The sibling authored resource is the sole source; it is not copied into the generated recipe JSON.
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion, referenceVersion, checked, sourceURL, sourceSHA1, items, recipes
+    }
     enum CatalogError: LocalizedError {
         case invalid
         var errorDescription: String? { "Crafting catalog is missing or invalid. / Crafting-Katalog fehlt oder ist ungültig." }
     }
     static func load(from url: URL? = Bundle.main.url(forResource: "CraftingCatalog", withExtension: "json")) throws -> Self {
         guard let url else { throw CatalogError.invalid }
-        let catalog = try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
+        var catalog = try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
+        let acquisitionURL = url.deletingLastPathComponent().appendingPathComponent("CraftingAcquisition.json")
+        if FileManager.default.fileExists(atPath: acquisitionURL.path) {
+            catalog.acquisitionGuides = try JSONDecoder().decode([CraftingAcquisition].self, from: Data(contentsOf: acquisitionURL))
+        }
         try catalog.validate()
         return catalog
     }
@@ -189,6 +239,19 @@ struct CraftingCatalog: Decodable {
                 }
             } else if !r.grid.isEmpty { throw CatalogError.invalid }
         }
+        let covered = acquisitionGuides.flatMap(\.items)
+        guard Set(acquisitionGuides.map(\.id)).count == acquisitionGuides.count,
+              Set(covered).count == covered.count, covered.allSatisfy(ids.contains) else { throw CatalogError.invalid }
+        for guide in acquisitionGuides {
+            let texts = [guide.method, guide.summary, guide.requirements, guide.evidence] + (guide.steps + guide.details).flatMap { [$0.title, $0.text] }
+            guard !guide.items.isEmpty, !guide.steps.isEmpty, !guide.details.isEmpty, !guide.sources.isEmpty,
+                  texts.allSatisfy({ !$0.de.isEmpty && !$0.en.isEmpty }),
+                  guide.relatedItems.allSatisfy(ids.contains),
+                  Set(guide.steps.map(\.id)).count == guide.steps.count,
+                  Set(guide.details.map(\.id)).count == guide.details.count,
+                  Set(guide.sources.map(\.id)).count == guide.sources.count,
+                  guide.sources.allSatisfy({ $0.url.scheme == "https" && !$0.title.de.isEmpty && !$0.title.en.isEmpty && !$0.scope.de.isEmpty && !$0.scope.en.isEmpty }) else { throw CatalogError.invalid }
+        }
     }
     static func normalized(_ value: String) -> String {
         value.replacingOccurrences(of: "ß", with: "ss").folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "de_AT"))
@@ -201,11 +264,14 @@ struct CraftingIndex {
     let items: [String: CraftingItem]
     let recipes: [String: [CraftingRecipe]]
     let uses: [String: [CraftingRecipe]]
+    let acquisitions: [String: CraftingAcquisition]
     private let search: [String: String]
     init(catalog: CraftingCatalog) {
         self.catalog = catalog
         items = Dictionary(uniqueKeysWithValues: catalog.items.map { ($0.id, $0) })
         recipes = Dictionary(grouping: catalog.recipes, by: \.output)
+        let acquisitions = Dictionary(uniqueKeysWithValues: catalog.acquisitionGuides.flatMap { guide in guide.items.map { ($0, guide) } })
+        self.acquisitions = acquisitions
         var uses: [String: [CraftingRecipe]] = [:]
         for recipe in catalog.recipes {
             for id in Set(recipe.ingredients.flatMap(\.options)) { uses[id, default: []].append(recipe) }
@@ -218,6 +284,8 @@ struct CraftingIndex {
             if item.id.contains("redstone") { value += " Electrium Elektrium" }
             if item.id.contains("planks") { value += " Holzbretter" }
             if item.id == "stick" { value += " Stöcke Stoecke sticks" }
+            if item.id == "bucket" { value += " Eimer Kübel Kuebel leerer Kübel" }
+            if let guide = acquisitions[item.id] { value += " " + guide.aliases.joined(separator: " ") }
             let compactNames = [item.title.de, item.title.en].map { CraftingCatalog.normalized($0).filter { $0.isLetter || $0.isNumber } }.joined(separator: " ")
             return (item.id, CraftingCatalog.normalized(value) + " " + compactNames)
         })
@@ -235,11 +303,14 @@ struct CraftingIndex {
                       return forms.contains { search[item.id, default: ""].contains($0) }
                   }) else { return false }
             let candidates = recipes[item.id, default: []]
-            if station != "all" && !candidates.contains(where: { $0.station.rawValue == station }) { return false }
+            if station == "acquisition" {
+                if acquisitions[item.id] == nil { return false }
+            } else if station != "all" && !candidates.contains(where: { $0.station.rawValue == station }) { return false }
             switch coverage {
             case "recipes": return !candidates.isEmpty
-            case "open": return candidates.isEmpty
-            case "wiki": return candidates.contains { $0.corroboration != nil }
+            case "open": return candidates.isEmpty && acquisitions[item.id] == nil
+            case "acquisition": return acquisitions[item.id] != nil
+            case "wiki": return candidates.contains { $0.corroboration != nil } || acquisitions[item.id]?.hasRealmCraftWikiEvidence == true
             default: return true
             }
         }.sorted { $0.title.value(english).localizedStandardCompare($1.title.value(english)) == .orderedAscending }

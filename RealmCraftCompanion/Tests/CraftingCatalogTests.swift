@@ -25,7 +25,7 @@ import Foundation
         check(index.filtered(query: "3157", english: false).map(\.id) == ["diamond"], "Numeric catalog lookup")
         check(index.filtered(query: "unfindable fixture", english: true).isEmpty, "No matches is empty")
         check(index.filtered(query: "", station: "furnace", coverage: "open", english: false).isEmpty, "Combine filters consistently")
-        check(index.filtered(query: "", coverage: "wiki", english: true).count == 2, "Field-scoped wiki evidence only")
+        check(Set(index.filtered(query: "", coverage: "wiki", english: true).map(\.id)).isSuperset(of: ["crafting_table", "enchanting_table"]), "Field-scoped wiki evidence only")
         check(index.filtered(query: "oak planks", coverage: "recipes", english: true).contains { $0.id == "oak_planks" }, "AND search retains multiword variants")
         check(index.recipes["saddle"] == nil && index.filtered(query: "saddle", coverage: "open", english: true).count == 1, "No fabricated recipe for missing entry")
         check(index.items["carrot"]?.itemID == nil && index.items["carrots"]?.itemID != nil, "Do not confuse crop block with food ingredient")

@@ -41,3 +41,6 @@
 **/.objects/
 /RealmcraftMap/output/
 /RealmcraftMap/preview/
+
+# Public, reviewed agent instructions.
+!/.agents/

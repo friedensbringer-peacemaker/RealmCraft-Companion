@@ -99,7 +99,7 @@ struct FeedbackView: View {
                     Picker(english ? "Report type" : "Art der Meldung", selection: $kind) {
                         Text(english ? "Incorrect data" : "Falsche Daten").tag("data")
                         Text(english ? "Application bug" : "Anwendungsfehler").tag("bug")
-                        Text(english ? "Suggestion" : "Vorschlag").tag("suggestion")
+                        Text(english ? "Feature request" : "Funktionswunsch").tag("suggestion")
                     }.pickerStyle(.segmented)
                     TextField(english ? "Summary (required)" : "Kurztitel (Pflichtfeld)", text: $summary)
                     Text(english ? "Description / correction (required)" : "Beschreibung / Korrektur (Pflichtfeld)").font(.headline)
@@ -129,6 +129,25 @@ struct FeedbackView: View {
                         Text((try? report.document()) ?? "").font(.system(size: 11, design: .monospaced)).textSelection(.enabled)
                             .frame(maxWidth: .infinity, alignment: .leading).padding(10).companionPanel()
                     }
+                    GroupBox {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(english ? "GitHub issues are public. Review your text for personal information. Only your form entries, app version, operating system and language are copied; images and entry context are not included."
+                                 : "GitHub-Issues sind öffentlich. Prüfe deinen Text auf persönliche Angaben. Kopiert werden nur deine Formularangaben, App-Version, Betriebssystem und Sprache; Bilder und Eintragskontext sind nicht enthalten.")
+                                .font(.caption).foregroundStyle(.secondary)
+                            DisclosureGroup(english ? "Preview GitHub text · Markdown" : "GitHub-Text prüfen · Markdown") {
+                                Text(report.githubMarkdown(english: english))
+                                    .font(.system(size: 11, design: .monospaced)).textSelection(.enabled)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            ViewThatFits(in: .horizontal) {
+                                HStack { githubActions }
+                                VStack(alignment: .leading) { githubActions }
+                            }.disabled(!ready)
+                            Text(english ? "Open GitHub copies the text and opens a blank issue form. Sign in there, paste the text, add a title and publish it yourself. For screenshots, review and attach them manually on GitHub. Copy also works offline."
+                                 : "GitHub öffnen kopiert den Text und öffnet ein leeres Issue-Formular. Melde dich dort an, füge den Text ein, ergänze den Titel und veröffentliche selbst. Screenshots prüfst du separat und hängst sie auf GitHub an. Kopieren funktioniert auch offline.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                    } label: { Text(english ? "Bugs & feature requests on GitHub" : "Bugs & Funktionswünsche auf GitHub") }
                     TextField(english ? "Mail recipient (optional; can be filled in Mail)" : "Mail-Empfänger (optional; in Mail ergänzbar)", text: $recipient)
                     Text(english ? "Mail opens a draft with the report and images. You choose the recipient and send it yourself. ZIP export works without a mail app."
                          : "Mail öffnet einen Entwurf mit Meldung und Bildern. Du wählst den Empfänger und sendest selbst. Der ZIP-Export funktioniert ohne Mailprogramm.")
@@ -154,6 +173,36 @@ struct FeedbackView: View {
                         kind = "data"; summary = ""; details = ""; steps = ""; expected = ""; actual = ""; recipient = ""; images = []; savedToken = nil
                     })
         .interactiveDismissDisabled(dirty)
+    }
+
+    @ViewBuilder private var githubActions: some View {
+        Button(english ? "Copy title" : "Titel kopieren") {
+            if copyGitHubText(summary) {
+                message = english ? "Issue title copied." : "Issue-Titel kopiert."
+            }
+        }
+        Button(english ? "Copy GitHub text" : "GitHub-Text kopieren") {
+            if copyGitHubText(report.githubMarkdown(english: english)) {
+                message = english ? "Markdown copied. Paste it into the issue description." : "Markdown kopiert. Füge ihn in die Issue-Beschreibung ein."
+            }
+        }
+        Button(english ? "Copy & open GitHub…" : "Kopieren & GitHub öffnen …") {
+            guard copyGitHubText(report.githubMarkdown(english: english)) else { return }
+            if NSWorkspace.shared.open(FeedbackReport.githubIssueURL) {
+                message = english ? "GitHub opened; paste the copied description, add a title and review before submitting. Nothing has been published by Companion." : "GitHub geöffnet; kopierte Beschreibung einfügen, Titel ergänzen und vor dem Absenden prüfen. Der Companion hat nichts veröffentlicht."
+            } else {
+                message = english ? "The browser could not open. Your Markdown is on the clipboard; open the project's GitHub Issues page manually." : "Der Browser konnte nicht geöffnet werden. Dein Markdown liegt in der Zwischenablage; öffne die GitHub-Issues des Projekts manuell."
+            }
+        }
+    }
+
+    private func copyGitHubText(_ text: String) -> Bool {
+        NSPasteboard.general.clearContents()
+        guard NSPasteboard.general.setString(text, forType: .string) else {
+            message = english ? "Could not copy the text. Select it in the preview and copy manually." : "Der Text konnte nicht kopiert werden. Markiere ihn in der Vorschau und kopiere ihn manuell."
+            return false
+        }
+        return true
     }
 
     private func perform(_ action: () throws -> Void) {
